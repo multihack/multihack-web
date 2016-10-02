@@ -1,0 +1,367 @@
+@font-face {
+    font-family: SourceCodeRegular;
+    src: url('sourcecoderegular.ttf') format('truetype');
+    /* others */
+}
+
+@font-face {
+    font-family: SourceCodeLight;
+    src: url('sourcecodelight.ttf') format('truetype');
+    /* others */
+}
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    color: #7ea1b1;
+    background: #182A33;
+}
+
+* {
+    font-family: SourceCodeLight;
+}
+
+.nav {
+    height: 60px;
+    background: #182A33;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    width: 100%;
+}
+
+.nav .logo {
+    color: white;
+    font-family: SourceCodeLight;
+    margin-top: 10px;
+    margin-left: 30px;
+    font-size: 30px;
+}
+
+.toolbar {
+    height: 240px;
+    background: #182A33;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-bottom: solid #5A6D76 1px;
+}
+
+.noselect, .userlist *, .tree *, .topbar *, .logo {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.sidebar {
+    width: 150px;
+    background: #40525B;
+    position: fixed;
+    left: 0;
+    top: 60px;
+    bottom: 240px;
+    z-index: 1;
+    overflow: auto;
+}
+
+.panel-topbar {
+    height: 20px;
+    border-bottom: solid #5A6D76 1px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    text-align: center;
+    padding: 5px;
+}
+
+.panel {
+    position: absolute;
+    top: 20px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+    margin: 15px 0 5px 0;
+}
+
+.workspace {
+    position: fixed;
+    background: gray;
+    top: 60px;
+    left: 150px;
+    right: 0;
+    bottom: 240px;
+}
+
+.nav .camera{
+    position: absolute;
+    top: 9px;
+    right: 10px;
+    background: #40525B;
+}
+
+.nav .mic{
+    position: absolute;
+    top: 9px;
+    right: 60px;
+    background: #40525B;
+}
+
+.workspace .delete{
+    background: firebrick;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    border-color: red;
+    z-index: 10;
+}
+
+.icon-button{
+    padding: 5px;
+}
+.icon-button:hover{
+    border-style: solid;
+    border-width: 2px;
+    padding:  3px 5px 4px 3px;
+}
+
+.icon-button img {
+    width: 20px;
+    height: 20px;
+}
+
+.workspace .editor {
+    background: black;
+    height: 100%;
+}
+
+.workspace .statusbar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 18px;
+    background: #263238;
+    z-index: 999999;
+    border-top: solid #5A6D76 1px;
+    font-size: 12px;
+    padding: 2px 5px 0 5px;
+}
+
+.toolbar .userlist {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+}
+
+.toolbar .roomlist {
+    right: 0;
+}
+
+.toolbar .onlinelist {
+    left: 0;
+    border-right: solid #5A6D76 1px;
+}
+
+.userlist .panel {
+    padding: 8px;
+}
+
+.userlist .square {
+    height: 71px;
+    width: 71px;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: all .2s;
+    margin: 5px;
+}
+
+.userlist .square:hover {
+    padding: 2px;
+    width: 67px;
+    height: 67px;
+}
+
+.userlist .square > label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: black;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    overflow: hidden;
+    pointer-events: none;
+    padding-left: 1px;
+}
+
+.userlist .square img {
+    height: 100%;
+    width: 100%;
+}
+
+.modal {
+    margin: auto;
+    width: 500px;
+    max-width: 80%;
+    background: blue;
+    z-index: 99999;
+    position: relative;
+    top: 40%;
+    transform: translateY(-50%);
+    background: #0D2029;
+    border: #182A33 10px solid;
+    display: none;
+    padding: 20px;
+}
+
+.blocking-overlay {
+    background: black;
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+}
+
+button {
+    height: 33px;
+    padding: 10px 15px 10px 15px;
+    padding-bottom: 25px;
+    margin: 5px;
+    display: inline-block;
+    position: relative;
+    bottom: 2px;
+    background: #182A33;
+    border: 0;
+    cursor: pointer;
+    outline: none;
+    transition: all .3s;
+    color: white;
+    font-size: 13px;
+}
+
+.go-button:hover, .no-button:hover {
+    border: 5px solid #5A6D76;
+    margin: 0;
+}
+
+button:active {
+    background-color: #5A6D76;
+}
+
+.go-button {
+    background: #40525B;
+}
+
+.no-button {
+    background: #182A33;
+}
+
+.text-center {
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+    color: #9a9a9a;
+}
+
+.red {
+    color: firebrick;
+}
+
+.pull-right {
+    float: right;
+}
+
+input[type="text"] {
+    color: white;
+    background: black;
+    border: 3px #182A33 solid;
+    outline: none;
+    font-size: 16px;
+    padding: 5px;
+    transition: all .3s;
+}
+
+input[type="text"]:focus {
+    border-color: #40525B;
+    padding: 11px;
+    position: relative;
+}
+
+.CodeMirror {
+    height: 100%;
+}
+
+
+/* Custom scrollbars */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    border: solid 1px #5A6D76;
+    border-radius: 0;
+    background: #182A33;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    background: #5A6D76;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    border-radius: 0;
+    background: #648a9b;
+}
+
+
+/* Custom, iPhone Retina */
+
+@media only screen and (min-width: 320px) {}
+
+
+/* Extra Small Devices, Phones */
+
+@media only screen and (min-width: 480px) {}
+
+
+/* Small Devices, Tablets */
+
+@media only screen and (min-width: 768px) {
+    .workspace {
+        left: 340px;
+    }
+    .sidebar {
+        width: 340px;
+    }
+}
+
+
+/* Medium Devices, Desktops */
+
+@media only screen and (min-width: 992px) {}
+
+
+/* Large Devices, Wide Screens */
+
+@media only screen and (min-width: 1200px) {}
