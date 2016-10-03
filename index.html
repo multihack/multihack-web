@@ -1,6 +1,12 @@
+<!doctype html>
 <html lang="en">
 
 <head>
+    <meta charset="utf-8" />
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <title>TETHYS - Collaboration Tool</title>
+    
+    
     <link rel="stylesheet" href="css/codemirror.css">
     <link rel="stylesheet" href="css/codemirror-themes/material.css">
     <link rel="stylesheet" href="css/filetree/treestyles.css">
@@ -19,7 +25,7 @@
     </div>
     <div class="workspace">
         <textarea class="editor"id="editor"></textarea>
-        <div class="statusbar"><span id="workingFile">index.html</span><span id="saveStatus"> - Saved</span><span class="pull-right" id="connectionStatus">Connecting...</span></div>
+        <div class="statusbar"><span id="workingFile">index.html</span><span id="saveStatus"> - Saved</span><span class="pull-right" id="connectionStatus">Connected</span></div>
         <button id="delete" class="icon-button delete"><img src="img/garbage.png"></button>
     </div>
     <div class="toolbar">
@@ -43,11 +49,14 @@
     
     </div>
 </body>
-<script src="js/codemirror.js"></script>
-<script src="js/syntaxmodes/javascript.js"></script>
+<script src="js/vendor/codemirror.js"></script>
+<script src="js/vendor/syntaxmodes/javascript.js"></script>
+<script src="js/vendor/socket.io.js"></script>
+    
 <script src="js/microstache.js"></script>
 <script src="js/modal.js"></script>
+<script src="js/socket.js"></script>
 <script src="js/files.js"></script>
-<script src="js/app.js"></script>
+<script src="js/main.js"></script>
 
 </html>

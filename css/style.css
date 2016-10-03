@@ -53,13 +53,14 @@ body {
     border-bottom: solid #5A6D76 1px;
 }
 
-.noselect, .userlist *, .tree *, .topbar *, .logo {
+.noselect, .userlist *, .tree *,.topbar ,.topbar *, .logo, .panel-topbar {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    cursor: default;
 }
 
 .sidebar {
@@ -121,18 +122,17 @@ body {
     background: firebrick;
     position: absolute;
     right: 10px;
-    top: 10px;
+    bottom: 30px;
     border-color: red;
     z-index: 10;
 }
 
 .icon-button{
     padding: 5px;
+    transition: none;
 }
 .icon-button:hover{
-    border-style: solid;
-    border-width: 2px;
-    padding:  3px 5px 4px 3px;
+    outline: solid white 2px;
 }
 
 .icon-button img {
@@ -176,6 +176,7 @@ body {
 
 .userlist .panel {
     padding: 8px;
+    padding-top: 3px;
 }
 
 .userlist .square {
@@ -212,6 +213,7 @@ body {
 .userlist .square img {
     height: 100%;
     width: 100%;
+    cursor: pointer;
 }
 
 .modal {

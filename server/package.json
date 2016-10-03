@@ -1,0 +1,18 @@
+{
+  "name": "tethys",
+  "version": "1.0.0",
+  "description": "Server for Tethys live collab tool.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Thomas Mullen",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.14.0",
+    "sanitize-html": "^1.13.0",
+    "socket.io": "^1.4.8",
+    "socket.io-p2p": "^2.2.0",
+    "socket.io-p2p-server": "^1.2.0"
+  }
+}

@@ -18,6 +18,11 @@ var Modal = (function (my, MicroMustache) {
             modalElement.style.display = 'block';
             blockingElement.style.display = 'block';
             state = templateName;
+        
+            var primaryInput = document.querySelector('.modal-input');
+            if (primaryInput){
+                primaryInput.focus();
+            }
         }
         // Closes the dialog
     my.close = function () {
@@ -34,7 +39,12 @@ var Modal = (function (my, MicroMustache) {
             if (clicked === 'close') {
                 Modal.close();
             }else{
-                my.onsubmit[state](clicked, input);
+                if (my.onsubmit[state]){
+                    my.onsubmit[state](clicked, input);
+                }else{
+                    console.error("Modal '"+state+"' has no submit function!");
+                }
+                
             }    
         }
     });
@@ -55,10 +65,10 @@ var Modal = (function (my, MicroMustache) {
 
 /* Modal definitions */
 Modal.templates['intro'] = `<h1>WELCOME TO TETHYS</h1>
-    <h3>A P2P Social Programming Tool</h3>
+    <h3>A Social Programming Tool</h3>
     <p>First, choose a USERNAME.</p>
     <br>
-    <input class="modal-input" type="text">
+    <input class="modal-input" type="text" placeholder="Guest">
     <button data-value="submit" class="go-button">GO</button>
     <p>{{flash}}</p>
 `;
@@ -66,7 +76,7 @@ Modal.templates['intro'] = `<h1>WELCOME TO TETHYS</h1>
 Modal.templates['welcome'] = `<h1>WELCOME TO TETHYS</h1>
     <h3>Great!</h3>
     <p>You are now ready to use TETHYS.</p>
-    <p>TETHYS uses social P2P technology to connect coders of all skill level, from around the world.</p>
+    <p>TETHYS uses websocket technology to connect coders of all skill level, from around the world.</p>
     <br>
     <button data-value="submit" class="go-button">Tell Me More</button>
     <button data-value="close" class="no-button">I'll Figure It Out</button>`;
@@ -164,4 +174,31 @@ Modal.templates["confirmDelete"] = `<h1>Are you sure you want to delete \"{{name
 <p>It will be deleted for everyone in the room!</p>
 <button data-value="yes" class="go-button">Delete</button>
 <button data-value="no" class="no-button">Cancel</button>
+`;
+
+
+Modal.templates["confirmKick"] = `<h1>Are you sure you want to kick \"{{name}}\"?</h1>
+<p>They will not be allowed to rejoin!</p>
+<button data-value="accept" class="go-button">Kick</button>
+<button data-value="close" class="no-button">Cancel</button>
+`;
+
+
+Modal.templates["request-join"] = `
+<h1>{{name}} would like to join your room</h1>
+<p>Allow them to view and edit your code?</p>
+<button data-value="accept" class="go-button">Accept</button>
+<button data-value="close" class="no-button">Decline</button>
+`;
+
+Modal.templates['join-response'] = `
+<h1>{{name}} accepted your join request!</h1>
+<p>You can now view and edit their code.</p>
+<button data-value="close" class="go-button">Ok</button>
+`;
+
+Modal.templates['kick-alert'] = `
+<h1>You have been kicked from the room!</h1>
+<p>You will be returned to your original room.</p>
+<button data-value="close" class="go-button">Ok</button>
 `

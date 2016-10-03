@@ -19,3 +19,24 @@ var MicroMustache = (function (my) {
     }
     return my;
 }({}));
+
+/*
+
+Takes an HTML string with mustache notation in it:
+
+"<h1>{{ title }}</h1>"
+
+and a data object:
+
+{
+    title : "My Title!"
+}
+
+and returns the templated result:
+
+"<h1>My Title!</h1>"
+
+
+Simple! (Those regexes were NOT)
+
+*/

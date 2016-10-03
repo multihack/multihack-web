@@ -9,6 +9,7 @@ li {
     position: relative;
     margin-left: -15px;
     list-style: none;
+    cursor: pointer;
 }
 
 li.file {
@@ -19,6 +20,7 @@ li.file a {
     color: #fff;
     text-decoration: none;
     display: block;
+    cursor: pointer;
 }
 
 li.file a:hover {
@@ -29,6 +31,7 @@ li.file a:hover {
     color: #7ea1b1;
     position: relative;
     left: 9px;
+    cursor: pointer !important;
 }
 
 li input {
@@ -41,6 +44,7 @@ li input {
     height: 1em;
     width: 1em;
     top: 0;
+    cursor: pointer !important;
 }
 
 li input:after{
@@ -56,16 +60,18 @@ li input + ol {
     margin: -0.938em 0 0 -44px;
     /* 15px */
     height: 1.12em;
+    cursor: pointer;
 }
 
 li input + ol > li {
     display: none;
     margin-left: -14px !important;
     padding-left: 1px;
+    cursor: pointer;
 }
 
 li label {
-    cursor: pointer;
+    cursor: pointer !important;
     display: block;
     padding-left: 8px;
 }

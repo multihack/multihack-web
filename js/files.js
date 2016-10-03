@@ -1,10 +1,9 @@
 /* Module to handle files */
-var FileSystem = (function (my) {
+var FileSystem = (function (my, Modal, SocketAPI) {
     'use strict';
-    var counter = 0;
 
     function getUniqueId() {
-        return ++counter;
+        return Math.random().toString();
     }
 
 
@@ -13,30 +12,35 @@ var FileSystem = (function (my) {
             name: "Starter Folder",
             nodes: [{
                 name: "index.html",
-                id: "defaultHtml",
+                fileId: "defaultHtml",
                 content: "<html>\n\t<head>\n\n\t</head>\n\t<body>\n\n\t</body>\n</html>"
             }, {
                 name: "script.js",
-                id: "defaultScript",
+                fileId: "defaultScript",
                 content: "var anAwesomeScript = \"here\";"
             }, {
                 name: "style.css",
-                id: "defaultCSS",
+                fileId: "defaultCSS",
                 content: "html {\n\n}"
             }]
         },
         {
             name: "start.js",
-            id: "startScript",
+            fileId: "startScript",
             content: "var greeting = 'Welcome to TETHYS!'\n\n//Please direct bug reports and feature requests to https://github.com/RationalCoding/TETHYS/issues"
         }
     ];
+    
+    SocketAPI.onAllCode = function(newFileTree){
+        fileTree=newFileTree;
+        my.init();
+    }
 
     var rootTreeElement = document.getElementById('tree');
     var rootPlusElement;
 
-    var editor;
-    my.workingFile=null;
+    my.editor = null;
+    my.workingFile = null;
 
     function renderFullTree(treeElement, nodeList, parentId, parent) {
         while (treeElement.firstChild) { //Empty the tree
@@ -45,130 +49,177 @@ var FileSystem = (function (my) {
         for (var i = 0; i < nodeList.length; i++) { //Iterate childre
             var file = nodeList[i];
             if (file.isRemoved) continue;
-            file.id = file.id || getUniqueId();
-            file.parentElement = file.parentElement || (parent && parent.el) || rootTreeElement;
+            file.fileId = file.fileId || getUniqueId();
+            file.parentElement = (parent && parent.el) || rootTreeElement;
 
             var li = document.createElement('li');
 
             if (file.nodes) {
-                li.innerHTML = '<label for="' + file.id + '">' + file.name + '</label><input type="checkbox" id="' + file.id + '" />'
+                li.innerHTML = '<label for="' + file.fileId + '">' + file.name + '</label><input type="checkbox" id="' + file.fileId + '" />'
 
                 var ol = document.createElement('ol');
                 file.el = ol;
-                renderFullTree(ol, file.nodes, file.id, file); //Recursive call
+                renderFullTree(ol, file.nodes, file.fileId, file); //Recursive call
                 li.appendChild(ol);
             } else {
                 li.className = "file";
-                li.innerHTML = '<a data-id="' + file.id + '" href="#" class="filelink">' + file.name + '</a></li>';
-                file.el=li;
+                li.innerHTML = '<a data-fileid="' + file.fileId + '" href="#" class="filelink" id="'+file.fileId+'">' + file.name + '</a></li>';
+                file.el = li;
             }
             treeElement.appendChild(li);
         }
         var plusEl = document.createElement('li');
-        plusEl.innerHTML = '<a data-id="new" data-parent="' + parentId + '" href="#" class="filelink plus">+</a></li>';
-        if (parent){
+        plusEl.innerHTML = '<a data-fileid="new" data-parent="' + parentId + '" href="#" class="filelink plus">+</a></li>';
+        if (parent) {
             parent.plusElement = plusEl;
-        }else{
+        } else {
             rootPlusElement = plusEl;
         }
         treeElement.appendChild(plusEl);
     }
 
-    function getElement(id, nodeList) {
+    function getNode(fileId, nodeList) {
         for (var i = 0; i < nodeList.length; i++) { //Iterate children
             if (nodeList[i].isRemoved) continue;
-            if (nodeList[i].id == id || (id==="*" && !nodeList[i].nodes)) {
+            if (nodeList[i].fileId == fileId || (fileId == "*" && !nodeList[i].nodes)) {
                 return nodeList[i];
             }
             if (nodeList[i].nodes) {
-                var recursiveResult = getElement(id, nodeList[i].nodes);
+                var recursiveResult = getNode(fileId, nodeList[i].nodes);
                 if (recursiveResult) {
                     return recursiveResult;
                 }
             }
         }
-        return false;
+        return undefined;
     }
 
+    function deleteNode(child) {
+        child.parentElement.removeChild(child.el);
+        child.isRemoved = true;
+    }
+
+    function openAny() {
+        my.workingFile = getNode("*", fileTree);
+        if (!my.workingFile) {
+            my.mkfile('root', 'start.js');
+        }
+        my.workingFile = getNode("*", fileTree);
+        document.getElementById("workingFile").innerHTML = my.workingFile.name;
+        LOCK=true;
+        my.editor.getDoc().setValue(my.workingFile.content || "");
+        setTimeout(function(){
+            LOCK=false;
+        },500);
+        document.getElementById(my.workingFile.fileId).style.color = "";
+    }
+    
+    my.getFile = function(fileId){
+        return getNode(fileId, fileTree);
+    }
+    
+    my.getFileTree = function(){
+        return fileTree;
+    }
+
+    my.delCurrent = function () {
+        deleteNode(getNode(my.workingFile.fileId, fileTree));
+        SocketAPI.deleteFile(my.workingFile.fileId);
+        openAny();
+    }
+    
     function addChild(parent, child, childElement) {
         (parent.nodes || parent).push(child);
         (parent.el || rootTreeElement).appendChild(childElement);
         var plusEl = (parent.el || rootTreeElement).removeChild((parent.plusElement || rootPlusElement));
         (parent.el || rootTreeElement).appendChild(plusEl);
-        child.parentElement=(parent.el || rootTreeElement);
-    }
-    
-    function deleteNode(child){
-        child.parentElement.removeChild(child.el);
-        child.isRemoved = true;
-    }
-    
-    function openAny(){
-        my.workingFile = getElement("*", fileTree);
-        if (!my.workingFile){
-            my.mkfile('root', 'start.js');
-        }
-        my.workingFile = getElement("*", fileTree);
-        document.getElementById("workingFile").innerHTML = my.workingFile.name;
-        editor.getDoc().setValue(my.workingFile.content || "");
-    }
-    
-    my.delCurrent = function(id){
-        deleteNode(getElement(my.workingFile.id, fileTree));
-        openAny();
+        child.parentElement = (parent.el || rootTreeElement);
     }
 
-
-    my.mkdir = function (parentID, name) {
+    my.mkdir = function (parentId, name, fileId) {
         var file = {
             name: name,
-            id: getUniqueId(),
+            fileId: fileId || getUniqueId(),
             nodes: []
         }
 
         var li = document.createElement('li');
-        li.innerHTML = '<label for="' + file.id + '">' + file.name + '</label><input type="checkbox" id="' + file.id + '" />';
+        li.innerHTML = '<label for="' + file.fileId + '">' + file.name + '</label><input type="checkbox" id="' + file.fileId + '" />';
         var ol = document.createElement('ol');
         li.appendChild(ol);
         var plusEl = document.createElement('li');
-        plusEl.innerHTML = '<a data-id="new" data-parent="' + file.id + '" href="#" class="filelink plus">+</a></li>';
+        plusEl.innerHTML = '<a data-fileid="new" data-parent="' + file.fileId + '" href="#" class="filelink plus">+</a></li>';
         ol.appendChild(plusEl);
         file.plusElement = plusEl;
         file.el = ol;
 
 
-        if (parentID === 'root') {
+        if (parentId === 'root') {
             addChild(fileTree, file, li);
         } else {
-            addChild(getElement(parentID, fileTree), file, li);
+            addChild(getNode(parentId, fileTree), file, li);
+        }
+        
+        if (!fileId){
+            SocketAPI.addFile({parentId:parentId, name:file.name, fileId:file.fileId, type:'folder'});
         }
     }
 
-    my.mkfile = function (parentID, name) {
+    my.mkfile = function (parentId, name, fileId) {
         var file = {
             name: name,
-            id: getUniqueId(),
+            fileId: fileId || getUniqueId(),
             content: ""
         }
 
         var li = document.createElement('li');
         li.className = "file";
-        li.innerHTML = '<a data-id="' + file.id + '" href="#" class="filelink">' + file.name + '</a></li>';   
-        file.el=li;
+        li.innerHTML = '<a data-fileid="' + file.fileId + '" href="#" id="'+file.fileId+'" class="filelink">' + file.name + '</a></li>';
+        file.el = li;
 
-        if (parentID === 'root') {
+        if (parentId === 'root') {
             addChild(fileTree, file, li);
         } else {
-            addChild(getElement(parentID, fileTree), file, li);
+            addChild(getNode(parentId, fileTree), file, li);
+        }
+        
+        if (!fileId){
+            SocketAPI.addFile({parentId:parentId, name:file.name, fileId:file.fileId, type:'file'});
         }
     }
 
-    my.open = function (fileID) {
-        my.workingFile = getElement(fileID, fileTree);
+    my.open = function (fileId) {
+        my.workingFile = getNode(fileId, fileTree);
         document.getElementById("workingFile").innerHTML = my.workingFile.name;
-        editor.getDoc().setValue(my.workingFile.content || "");
+        LOCK=true;
+        my.editor.getDoc().setValue(my.workingFile.content || "");
+        setTimeout(function(){
+            LOCK=false;
+        },500);
+        document.getElementById(fileId).style.color = "";
     }
 
+    my.getTree = function () {
+        return fileTree;
+    }
+
+    // Set the content of a file to some string
+    function hardUpdateFile (fileId, content) {
+        function a(file) { //Pass through function to maintain reference
+            file.content = content;
+
+            if (file.fileId == my.workingFile.fileId) {
+                my.editor.getDoc().setValue(my.workingFile.content || "");
+            }
+        }(getNode(fileId, fileTree));
+    }
+
+    my.softUpdateFile = function (fileId, change) {
+        //TODO: Only update difference
+        alert("not implemented softUpdateFile");
+    }
+
+    var LOCK = false; //true when Javascript is changing file to prevent event feedback
     my.init = function () {
         var textArea = document.getElementById("editor");
         var options = {
@@ -180,15 +231,49 @@ var FileSystem = (function (my) {
             lineWrapping: true,
             styleActiveLine: true
         };
-        editor = CodeMirror.fromTextArea(textArea, options);
+        my.editor = CodeMirror.fromTextArea(textArea, options);
 
-        editor.on('change', function (cm, change) {
-            my.workingFile.content = cm.getValue();
-            //StreamModule.sendChange(change) //TODO send this differencing to the stream
+        my.editor.on('change', function (cm, change) {
+            if (!LOCK){ //Change is not from user but from javascript
+                my.workingFile.content = cm.getValue();
+                SocketAPI.changeFile(my.workingFile.fileId, my.workingFile.content); //TODO: Only send changes
+            }
         });
 
         renderFullTree(rootTreeElement, fileTree, 'root', null);
+        
+        openAny();
+    }
+    
+    SocketAPI.onChangeFile = function(fileId, change){
+        LOCK=true;
+        if (fileId == my.workingFile.fileId){
+            my.workingFile.content = change;
+            my.editor.getDoc().setValue(my.workingFile.content || ""); //TODO: Only send/receive changes
+        }else{
+            getNode(fileId, fileTree).content=change;//TODO: Only send/receive changes
+            document.getElementById(fileId).style.color = "red";
+        }
+        
+        setTimeout(function(){
+            LOCK=false;
+        },100); 
+    }
+    
+    SocketAPI.onAddFile = function(parentId, name, fileId, type){
+        if (type === 'file'){
+            my.mkfile(parentId, name, fileId);
+        }else if (type === 'folder'){
+            my.mkdir(parentId, name, fileId);
+        }
+    }
+    
+    SocketAPI.onDeleteFile = function(fileId){
+        deleteNode(getNode(fileId, fileTree));
+        if (fileId == my.workingFile.fileId){
+            openAny();
+        }
     }
 
     return my;
-}({}));
+}({}, Modal, SocketAPI));
