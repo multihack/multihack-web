@@ -1,12 +1,13 @@
 var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var cfenv = require('cfenv');
 
 var sanitizeHtml = require('sanitize-html');
 
 
 app.get('/', function (req, res) {
-    res.sendfile(__dirname + '/index.html');
+    res.sendfile(__dirname + '/public/index.html');
 });
 
 
@@ -184,10 +185,10 @@ io.on('connection', function (socket) {
         }
     });
 
-
-
 });
 
 
-server.listen(3030);
-console.log("Freeing the web on port 3030");
+var appEnv = cfenv.getAppEnv();
+server.listen(appEnv.port);
+console.log("Freeing the web at " + appEnv.url);
+
