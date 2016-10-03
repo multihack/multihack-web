@@ -2,7 +2,7 @@
 var SocketAPI =(function(){
     var my = {};
     
-    var HOSTNAME = "localhost:3030";
+    var HOSTNAME = "https://tethys.mybluemix.net";
     var socket = io(HOSTNAME, 
         {
         'reconnect': true,
