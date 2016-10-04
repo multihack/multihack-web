@@ -226,7 +226,7 @@ var SocketAPI = (function () {
         }
     }
 
-    document.querySelector("#mic > img").addEventListener('click', function (e) {
+    document.querySelector("#mic").addEventListener('click', function (e) {
         toggleCall();
     });
 

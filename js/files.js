@@ -193,7 +193,6 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
             "html" : "htmlmixed",
             "xml":"xml"
         }
-        console.log(mapping[ext]);
         return mapping[ext]||null;
     }
     
@@ -267,7 +266,7 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
         }
     }
     
-    document.querySelector("#deploy > img").addEventListener('click', function (e) {
+    document.querySelector("#deploy").addEventListener('click', function (e) {
         HyperHost.handleTethys(fileTree);
     });
     

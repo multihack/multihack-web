@@ -11,24 +11,25 @@ var Modal = (function (my, MicroMustache) {
 
     //Opens a specific dialog
     my.open = function (templateName, data) {
-            if (!data) data = {};
-            if (!my.templates[templateName]) console.error("No template with name "+templateName);
-            modalElement.innerHTML = MicroMustache.template(my.templates[templateName], data);
-            modalElement.className = "modal text-center " + templateName;
-            modalElement.style.display = 'block';
-            blockingElement.style.display = 'block';
-            state = templateName;
-        
-            var primaryInput = document.querySelector('.modal-input');
-            if (primaryInput){
-                primaryInput.focus();
-            }
+        if (!data) data = {};
+        if (!my.templates[templateName]) console.error("No template with name " + templateName);
+        modalElement.innerHTML = MicroMustache.template(my.templates[templateName], data);
+        modalElement.className = "modal text-center " + templateName;
+        modalElement.style.display = 'block';
+        blockingElement.style.display = 'block';
+        state = templateName;
+
+        var primaryInput = document.querySelector('.modal-input');
+        if (primaryInput) {
+            primaryInput.focus();
         }
+    }
         // Closes the dialog
     my.close = function () {
         modalElement.style.display = 'none';
         blockingElement.style.display = 'none';
         state = 'closed';
+        
     }
     document.querySelector('#modal').addEventListener('click', function (event) {
         if (event.target.tagName.toLowerCase() === 'button') {
@@ -38,14 +39,14 @@ var Modal = (function (my, MicroMustache) {
             });
             if (clicked === 'close') {
                 Modal.close();
-            }else{
-                if (my.onsubmit[state]){
+            } else {
+                if (my.onsubmit[state]) {
                     my.onsubmit[state](clicked, input);
-                }else{
-                    console.error("Modal '"+state+"' has no submit function!");
+                } else {
+                    console.error("Modal '" + state + "' has no submit function!");
                 }
-                
-            }    
+
+            }
         }
     });
     document.querySelector('body').addEventListener('keyup', function (event) {
@@ -208,13 +209,13 @@ Modal.templates['general-alert'] = `
 <p>{{msg}}</p>
 <button data-value="close" class="go-button">Ok</button>
 `
-Modal.onsubmit['general-alert']=function(){};
+Modal.onsubmit['general-alert'] = function () {};
 
 
-Modal.templates['url']=`
+Modal.templates['url'] = `
 <h1>Deployed!</h1>
 <p>Your site is ready at...</p>
 <p class="red"><a target="_blank" href="{{url}}">{{url}}</a></p>
 <button data-value="close" class="go-button">Ok</button>
 `;
-Modal.onsubmit['url']=function(){};
+Modal.onsubmit['url'] = function () {};

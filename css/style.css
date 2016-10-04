@@ -78,6 +78,7 @@ img {
     -webkit-user-drag: none;
     user-drag: none;
     -webkit-touch-callout: none;
+    pointer-events: none;
 }
 
 .sidebar {
@@ -265,6 +266,7 @@ img {
     border: #182A33 10px solid;
     display: none;
     padding: 20px;
+    overflow: hidden;
 }
 
 .blocking-overlay {

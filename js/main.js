@@ -35,9 +35,10 @@ var Tethys = (function () {
 
 
     document.querySelector('#roomlist').addEventListener('click', function (event) {
-        if (event.target.className.indexOf('user-img') !== -1) {
-            var userID = event.target.dataset.userid;
-            var name = event.target.dataset.name;
+        if (event.target.className.indexOf('square') !== -1) {
+            var imgEl = event.target.getElementsByTagName('img')[0];
+            var userID = imgEl.dataset.userid;
+            var name = imgEl.dataset.name;
             if (userID === "me" || !SocketAPI.isMyRoom) return;
             Modal.onsubmit["confirmKick"] = function () {
                 SocketAPI.kick(userID);
@@ -50,9 +51,10 @@ var Tethys = (function () {
     });
 
     document.querySelector('#onlinelist').addEventListener('click', function (event) {
-        if (event.target.className.indexOf('user-img') !== -1) {
-            var userID = event.target.dataset.userid;
-            var name = event.target.dataset.name;
+        if (event.target.className.indexOf('square') !== -1) {
+            var imgEl = event.target.getElementsByTagName('img')[0];
+            var userID = imgEl.dataset.userid;
+            var name = imgEl.dataset.name;
             if (userID === "me") return;
             Modal.onsubmit["requestInvite"] = function () {
                 SocketAPI.requestRoom(userID);
