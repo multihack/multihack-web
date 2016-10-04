@@ -17,14 +17,16 @@
     <nav class="nav">
         <div class="logo">TETHYS</div>
         <button id="mic" class="icon-button mic"><img src="img/muted.png"></button>
-        <button id="camera" class="icon-button camera"><img src="img/nocamera.png"></button>
+        <!--<button id="camera" class="icon-button camera"><img src="img/nocamera.png"></button>-->
     </nav>
     <div class="sidebar">
         <div class="panel-topbar">Your Files</div>
         <ol id="tree" class="tree panel"></ol>
     </div>
     <div class="workspace">
+        <div class="editor-wrapper">
         <textarea class="editor"id="editor"></textarea>
+        </div> 
         <div class="statusbar"><span id="workingFile">index.html</span><span id="saveStatus"> - Saved</span><span class="pull-right" id="connectionStatus">Connected</span></div>
         <button id="delete" class="icon-button delete"><img src="img/garbage.png"></button>
     </div>
@@ -52,6 +54,7 @@
 <script src="js/vendor/codemirror.js"></script>
 <script src="js/vendor/syntaxmodes/javascript.js"></script>
 <script src="js/vendor/socket.io.js"></script>
+<script src="js/vendor/peer.min.js"></script>
     
 <script src="js/microstache.js"></script>
 <script src="js/modal.js"></script>

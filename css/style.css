@@ -53,7 +53,13 @@ body {
     border-bottom: solid #5A6D76 1px;
 }
 
-.noselect, .userlist *, .tree *,.topbar ,.topbar *, .logo, .panel-topbar {
+.noselect,
+.userlist *,
+.tree *,
+.topbar,
+.topbar *,
+.logo,
+.panel-topbar {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -61,6 +67,17 @@ body {
     -ms-user-select: none;
     user-select: none;
     cursor: default;
+}
+
+.nodrag,
+img {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+    -webkit-touch-callout: none;
 }
 
 .sidebar {
@@ -104,21 +121,21 @@ body {
     bottom: 240px;
 }
 
-.nav .camera{
-    position: absolute;
-    top: 9px;
-    right: 10px;
-    background: #40525B;
-}
-
-.nav .mic{
+.nav .camera {
     position: absolute;
     top: 9px;
     right: 60px;
     background: #40525B;
 }
 
-.workspace .delete{
+.nav .mic {
+    position: absolute;
+    top: 9px;
+    right: 10px;
+    background: #40525B;
+}
+
+.workspace .delete {
     background: firebrick;
     position: absolute;
     right: 10px;
@@ -127,17 +144,26 @@ body {
     z-index: 10;
 }
 
-.icon-button{
+.icon-button {
     padding: 5px;
     transition: none;
 }
-.icon-button:hover{
+
+.icon-button:hover {
     outline: solid white 2px;
 }
 
 .icon-button img {
     width: 20px;
     height: 20px;
+}
+
+.workspace .editor-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 18px;
 }
 
 .workspace .editor {
@@ -259,7 +285,8 @@ button {
     font-size: 13px;
 }
 
-.go-button:hover, .no-button:hover {
+.go-button:hover,
+.no-button:hover {
     border: 5px solid #5A6D76;
     margin: 0;
 }

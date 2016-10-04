@@ -55,7 +55,7 @@ var FileSystem = (function (my, Modal, SocketAPI) {
             var li = document.createElement('li');
 
             if (file.nodes) {
-                li.innerHTML = '<label for="' + file.fileId + '">' + file.name + '</label><input type="checkbox" id="' + file.fileId + '" />'
+                li.innerHTML = '<label for="' + file.fileId + '">' + file.name + '</label><input checked type="checkbox" id="' + file.fileId + '" />'
 
                 var ol = document.createElement('ol');
                 file.el = ol;
@@ -106,11 +106,7 @@ var FileSystem = (function (my, Modal, SocketAPI) {
         }
         my.workingFile = getNode("*", fileTree);
         document.getElementById("workingFile").innerHTML = my.workingFile.name;
-        LOCK=true;
         my.editor.getDoc().setValue(my.workingFile.content || "");
-        setTimeout(function(){
-            LOCK=false;
-        },500);
         document.getElementById(my.workingFile.fileId).style.color = "";
     }
     
@@ -144,7 +140,7 @@ var FileSystem = (function (my, Modal, SocketAPI) {
         }
 
         var li = document.createElement('li');
-        li.innerHTML = '<label for="' + file.fileId + '">' + file.name + '</label><input type="checkbox" id="' + file.fileId + '" />';
+        li.innerHTML = '<label for="' + file.fileId + '">' + file.name + '</label><input checked type="checkbox" id="' + file.fileId + '" />';
         var ol = document.createElement('ol');
         li.appendChild(ol);
         var plusEl = document.createElement('li');
@@ -191,11 +187,7 @@ var FileSystem = (function (my, Modal, SocketAPI) {
     my.open = function (fileId) {
         my.workingFile = getNode(fileId, fileTree);
         document.getElementById("workingFile").innerHTML = my.workingFile.name;
-        LOCK=true;
         my.editor.getDoc().setValue(my.workingFile.content || "");
-        setTimeout(function(){
-            LOCK=false;
-        },500);
         document.getElementById(fileId).style.color = "";
     }
 
@@ -219,7 +211,6 @@ var FileSystem = (function (my, Modal, SocketAPI) {
         alert("not implemented softUpdateFile");
     }
 
-    var LOCK = false; //true when Javascript is changing file to prevent event feedback
     my.init = function () {
         var textArea = document.getElementById("editor");
         var options = {
@@ -232,11 +223,25 @@ var FileSystem = (function (my, Modal, SocketAPI) {
             styleActiveLine: true
         };
         my.editor = CodeMirror.fromTextArea(textArea, options);
+        
+        
+        var computerActions = ["setValue", "replaceRange", "+move"];
+        
+        var lastCursor;
+        my.editor.on('beforeChange', function(cm, change){ 
+            if (computerActions.indexOf(change.origin) !== -1){ //If user is not the one changing
+                lastCursor=my.editor.getCursor();
+            }else{
+                lastCursor=undefined;
+            }
+        });
 
         my.editor.on('change', function (cm, change) {
-            if (!LOCK){ //Change is not from user but from javascript
+            if (computerActions.indexOf(change.origin) === -1){ //Make sure change is from user input
                 my.workingFile.content = cm.getValue();
                 SocketAPI.changeFile(my.workingFile.fileId, my.workingFile.content); //TODO: Only send changes
+            }else if (lastCursor){
+                my.editor.setCursor(lastCursor);
             }
         });
 
@@ -246,7 +251,6 @@ var FileSystem = (function (my, Modal, SocketAPI) {
     }
     
     SocketAPI.onChangeFile = function(fileId, change){
-        LOCK=true;
         if (fileId == my.workingFile.fileId){
             my.workingFile.content = change;
             my.editor.getDoc().setValue(my.workingFile.content || ""); //TODO: Only send/receive changes
@@ -254,10 +258,6 @@ var FileSystem = (function (my, Modal, SocketAPI) {
             getNode(fileId, fileTree).content=change;//TODO: Only send/receive changes
             document.getElementById(fileId).style.color = "red";
         }
-        
-        setTimeout(function(){
-            LOCK=false;
-        },100); 
     }
     
     SocketAPI.onAddFile = function(parentId, name, fileId, type){
@@ -274,6 +274,7 @@ var FileSystem = (function (my, Modal, SocketAPI) {
             openAny();
         }
     }
+    
 
     return my;
 }({}, Modal, SocketAPI));

@@ -180,5 +180,8 @@ var Tethys = (function () {
     FileSystem.init();
     FileSystem.open("startScript");
     Modal.open('intro');
+    
+    
+    console.log("%c Rock that console! If you're after the source: https://github.com/RationalCoding/TETHYS", "color:#263238; font-size: 15px;");
 
 }())

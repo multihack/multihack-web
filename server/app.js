@@ -92,7 +92,8 @@ io.on('connection', function (socket) {
         rooms[id] = [id];
 
 
-        socket.emit('online/who', getOnline(id)); //Return list of others online        
+        socket.emit('online/who', getOnline(id)); //Return list of others online  
+        socket.emit('online/handshake', id); //Return their id
         socket.broadcast.emit('online/join', safeUser(users[id])); //Tell everyone they are online      
     });
 

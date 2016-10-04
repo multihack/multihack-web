@@ -202,3 +202,10 @@ Modal.templates['kick-alert'] = `
 <p>You will be returned to your original room.</p>
 <button data-value="close" class="go-button">Ok</button>
 `
+
+Modal.templates['general-alert'] = `
+<h1>{{title}}</h1>
+<p>{{msg}}}}</p>
+<button data-value="close" class="go-button">Ok</button>
+`
+Modal.onsubmit['general-alert']=function(){};
