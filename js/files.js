@@ -1,5 +1,5 @@
 /* Module to handle files */
-var FileSystem = (function (my, Modal, SocketAPI, HyperHost) {
+var FileSystem = (function (my, SocketAPI, HyperHost) {
     'use strict';
 
     function getUniqueId() {
@@ -9,24 +9,9 @@ var FileSystem = (function (my, Modal, SocketAPI, HyperHost) {
 
     var fileTree = [
         {
-            name: "Example Folder",
-            nodes: [ {
-                name: "script.js",
-                fileId: "defaultScript",
-                content: "var anAwesomeScript = \"here\";"
-            }, {
-                name: "style.css",
-                fileId: "defaultCSS",
-                content: "html {\n\n}"
-            }]
-        },{
             name: "index.html",
-            fileId: "defaultHtml",
-            content: "<html>\n\t<head>\n\n\t</head>\n\t<body>\n\t\tTry instantly deploying this by clicking the upload button at the top right!\n\t</body>\n</html>"
-        },{
-            name: "start.js",
-            fileId: "startScript",
-            content: "var greeting = 'Welcome to TETHYS!'\n\n//Please direct bug reports and feature requests to https://github.com/RationalCoding/TETHYS/issues"
+            fileId: "welcome",
+            content: "<html>\n\t<body>\n\t\t<h1>Welcome to TETHYS!</h1>\n\t\t<h2>TETHYS is a social collaboration tool.</h2>\n\t\t\n\t\tClick on another user in the bottom-left to join their project and\n\t\tlive-edit their code with them.\n\t\t\n\t\tOther users may request you room. If you accept, you can kick them by\n\t\tclicking on their avatar in the bottom-right panel.\n\t\t\n\t\tUse the menu on the left to create files/folders. Everything will be shared\n\t\twith anyone you accept into your room.\n\t\t\n\t\tPress the trash can at the bottom-right to delete the current file.\n\t\t\n\t\tPress the microphone at the top-right to join your room's P2P voice chat.\n\t\t\n\t\tIf you're building a website, press the upload button to instantly host your \n\t\twebsite via HyperHost's P2P technology. Anyone with a WebRTC-enabled browser will be able to see it!\n\t\t\n\t\tIf you leave your room, the person who has been there the longest will gain control.\n\t\t\n\t\tHappy Hacking!\n\t</body>\n</html>"
         }
     ];
     
@@ -101,11 +86,12 @@ var FileSystem = (function (my, Modal, SocketAPI, HyperHost) {
     function openAny() {
         my.workingFile = getNode("*", fileTree);
         if (!my.workingFile) {
-            my.mkfile('root', 'start.js');
+            my.mkfile('root', 'index.html');
         }
         my.workingFile = getNode("*", fileTree);
         document.getElementById("workingFile").innerHTML = my.workingFile.name;
         my.editor.getDoc().setValue(my.workingFile.content || "");
+        my.editor.setOption("mode", syntaxMapping(my.workingFile.name));
         document.getElementById(my.workingFile.fileId).style.color = "";
     }
     
@@ -187,6 +173,7 @@ var FileSystem = (function (my, Modal, SocketAPI, HyperHost) {
         my.workingFile = getNode(fileId, fileTree);
         document.getElementById("workingFile").innerHTML = my.workingFile.name;
         my.editor.getDoc().setValue(my.workingFile.content || "");
+        my.editor.setOption("mode", syntaxMapping(my.workingFile.name));
         document.getElementById(fileId).style.color = "";
     }
 
@@ -194,16 +181,22 @@ var FileSystem = (function (my, Modal, SocketAPI, HyperHost) {
         return fileTree;
     }
 
-    // Set the content of a file to some string
-    function hardUpdateFile (fileId, content) {
-        function a(file) { //Pass through function to maintain reference
-            file.content = content;
-
-            if (file.fileId == my.workingFile.fileId) {
-                my.editor.getDoc().setValue(my.workingFile.content || "");
-            }
-        }(getNode(fileId, fileTree));
+    function syntaxMapping(fileName){
+        var ext = fileName.split(".");
+        ext = ext[ext.length-1];
+        var mapping = {
+            "js" : "javascript",
+            "ts":"javascript",
+            "css" : "css",
+            "sass" : "css",
+            "less" : "css",
+            "html" : "htmlmixed",
+            "xml":"xml"
+        }
+        console.log(mapping[ext]);
+        return mapping[ext]||null;
     }
+    
 
     my.softUpdateFile = function (fileId, change) {
         //TODO: Only update difference
@@ -280,4 +273,4 @@ var FileSystem = (function (my, Modal, SocketAPI, HyperHost) {
     
 
     return my;
-}({}, Modal, SocketAPI, HyperHost));
+}({}, SocketAPI, HyperHost));

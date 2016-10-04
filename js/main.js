@@ -10,7 +10,7 @@ var Tethys = (function () {
                     if (newName.length <= 0) newName = "New " + button;
                     if (button === 'file') {
                         FileSystem.mkfile(parentId, newName);
-                    } else {
+                    } else if (button === 'folder'){
                         FileSystem.mkdir(parentId, newName);
                     }
                     Modal.close();
@@ -178,7 +178,7 @@ var Tethys = (function () {
     }
 
     FileSystem.init();
-    FileSystem.open("startScript");
+    FileSystem.open("welcome");
     Modal.open('intro');
     
     
