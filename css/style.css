@@ -121,11 +121,16 @@ img {
     bottom: 240px;
 }
 
-.nav .camera {
+.nav .deploy {
     position: absolute;
     top: 9px;
     right: 60px;
     background: #40525B;
+}
+
+.nav .deploy img {
+    position: relative;
+    top:2px;
 }
 
 .nav .mic {
@@ -133,6 +138,11 @@ img {
     top: 9px;
     right: 10px;
     background: #40525B;
+}
+
+.nav .mic img {
+    position: relative;
+    top:1px;
 }
 
 .workspace .delete {

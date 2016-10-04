@@ -205,7 +205,16 @@ Modal.templates['kick-alert'] = `
 
 Modal.templates['general-alert'] = `
 <h1>{{title}}</h1>
-<p>{{msg}}}}</p>
+<p>{{msg}}</p>
 <button data-value="close" class="go-button">Ok</button>
 `
 Modal.onsubmit['general-alert']=function(){};
+
+
+Modal.templates['url']=`
+<h1>Deployed!</h1>
+<p>Your site is ready at...</p>
+<p class="red"><a target="_blank" href="{{url}}">{{url}}</a></p>
+<button data-value="close" class="go-button">Ok</button>
+`;
+Modal.onsubmit['url']=function(){};

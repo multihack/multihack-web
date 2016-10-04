@@ -64,7 +64,6 @@ var SocketAPI = (function () {
 
     /* Incoming */
     socket.on('online/handshake', function (myId) {
-        console.log(myId);
         me.id = myId;
         peer = new Peer(me.id.substring(2), PEER_SERVER); //Connect to peerserver
     });
@@ -117,7 +116,6 @@ var SocketAPI = (function () {
             my.isMyRoom = false; //The server will already know this, it's for the UI to work.
             socket.emit('room/join', data.user.id);
             roomMembers = data.who;
-            console.log(roomMembers);
             my.onRoomRespond(data.user, data.who);
         }
     });
@@ -181,10 +179,8 @@ var SocketAPI = (function () {
                     id: roomMembers[i],
                     call: peer.call(roomMembers[i].id.substring(2), stream)
                 }); //Call everyone in the room
-                console.log('called' + roomMembers[i].id.substring(2));
 
                 calls[i].call.on('stream', function (stream) { //Listen for answers
-                    console.log('got stream');
                     var player = new Audio();
                     embedStream(player, stream);
                 });
@@ -192,7 +188,6 @@ var SocketAPI = (function () {
 
             peer.on('call', function (call) {
                 if (!joinedCall) return;
-                console.log(' got call');
                 call.answer(stream);
                 calls.push({
                     id: call.peer,
@@ -201,7 +196,6 @@ var SocketAPI = (function () {
                 
                 call.on('stream', function (stream) { //Listen for answers
                     if (!joinedCall) return;
-                    console.log('got stream');
                     var player = new Audio();
                     embedStream(player, stream);
                 });
@@ -217,7 +211,6 @@ var SocketAPI = (function () {
     function leaveCall() {
         if (!joinedCall) return;
         for (var i = 0; i < calls.length; i++) { //Close all the calls
-            console.log('closed call');
             calls[i].call.close();
         }
         calls =[];

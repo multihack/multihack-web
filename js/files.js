@@ -1,5 +1,5 @@
 /* Module to handle files */
-var FileSystem = (function (my, Modal, SocketAPI) {
+var FileSystem = (function (my, Modal, SocketAPI, HyperHost) {
     'use strict';
 
     function getUniqueId() {
@@ -9,12 +9,8 @@ var FileSystem = (function (my, Modal, SocketAPI) {
 
     var fileTree = [
         {
-            name: "Starter Folder",
-            nodes: [{
-                name: "index.html",
-                fileId: "defaultHtml",
-                content: "<html>\n\t<head>\n\n\t</head>\n\t<body>\n\n\t</body>\n</html>"
-            }, {
+            name: "Example Folder",
+            nodes: [ {
                 name: "script.js",
                 fileId: "defaultScript",
                 content: "var anAwesomeScript = \"here\";"
@@ -23,8 +19,11 @@ var FileSystem = (function (my, Modal, SocketAPI) {
                 fileId: "defaultCSS",
                 content: "html {\n\n}"
             }]
-        },
-        {
+        },{
+            name: "index.html",
+            fileId: "defaultHtml",
+            content: "<html>\n\t<head>\n\n\t</head>\n\t<body>\n\t\tTry instantly deploying this by clicking the upload button at the top right!\n\t</body>\n</html>"
+        },{
             name: "start.js",
             fileId: "startScript",
             content: "var greeting = 'Welcome to TETHYS!'\n\n//Please direct bug reports and feature requests to https://github.com/RationalCoding/TETHYS/issues"
@@ -275,6 +274,10 @@ var FileSystem = (function (my, Modal, SocketAPI) {
         }
     }
     
+    document.querySelector("#deploy > img").addEventListener('click', function (e) {
+        HyperHost.handleTethys(fileTree);
+    });
+    
 
     return my;
-}({}, Modal, SocketAPI));
+}({}, Modal, SocketAPI, HyperHost));
