@@ -274,6 +274,7 @@ var HyperHost = (function (Util, Modal) {
 
             //Update URL to reflect where clients can connect (without reloading)
             clientURL = "https://rationalcoding.github.io/HyperHost/?site=" + MY_ID;
+            window.open(clientURL);
             Modal.open('url',{url:clientURL});
 
             peer.on('error', function (err) {

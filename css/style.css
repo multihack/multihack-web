@@ -59,7 +59,7 @@ body {
 .topbar,
 .topbar *,
 .logo,
-.panel-topbar {
+.panel-topbar{
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -70,7 +70,8 @@ body {
 }
 
 .nodrag,
-img {
+img ,
+.statusbar{ 
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
@@ -299,8 +300,7 @@ button {
 
 .go-button:hover,
 .no-button:hover {
-    border: 5px solid #5A6D76;
-    margin: 0;
+    outline: 5px solid #5A6D76;
 }
 
 button:active {
