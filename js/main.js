@@ -16,7 +16,16 @@ var Tethys = (function () {
                     Modal.close();
                 }
                 Modal.open('createFile');
-            } else {
+            } else if (fileId === 'delete'){
+                var parentId = event.target.dataset.parent;
+                Modal.onsubmit["confirmFolderDelete"] = function (button, input) {
+                    if (button === 'yes') {
+                        FileSystem.del(parentId);
+                    }
+                    Modal.close();
+                }
+                Modal.open('confirmFolderDelete');
+            }else {
                 FileSystem.open(fileId);
             }
 

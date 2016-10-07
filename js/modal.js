@@ -177,6 +177,13 @@ Modal.templates["confirmDelete"] = `<h1>Are you sure you want to delete \"{{name
 <button data-value="no" class="no-button">Cancel</button>
 `;
 
+Modal.templates["confirmFolderDelete"] = `<h1>Are you sure you want to delete this folder?</h1>
+<p>All of it's contents will be deleted. You cannot undo this.</p>
+<p>It will be deleted for everyone in the room!</p>
+<button data-value="yes" class="go-button">Delete</button>
+<button data-value="no" class="no-button">Cancel</button>
+`;
+
 
 Modal.templates["confirmKick"] = `<h1>Are you sure you want to kick \"{{name}}\"?</h1>
 <p>They will not be allowed to rejoin!</p>

@@ -134,6 +134,9 @@ img ,
     position: relative;
     top:2px;
 }
+.minus {
+    margin-left: 10px;
+}
 
 .nav .icon-button span {
     position: relative;

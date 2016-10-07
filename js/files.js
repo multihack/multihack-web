@@ -43,17 +43,24 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
 
                 var ol = document.createElement('ol');
                 file.el = ol;
+                file.realEl=li;
                 renderFullTree(ol, file.nodes, file.fileId, file); //Recursive call
                 li.appendChild(ol);
             } else {
                 li.className = "file";
-                li.innerHTML = '<a data-fileid="' + file.fileId + '" href="#" class="filelink" id="'+file.fileId+'">' + file.name + '</a></li>';
+                li.innerHTML = '<a data-fileid="' + file.fileId + '" href="#" class="filelink" id="'+file.fileId+'">' + file.name + '</a>';
                 file.el = li;
+                file.realEl=li;
             }
             treeElement.appendChild(li);
         }
         var plusEl = document.createElement('li');
-        plusEl.innerHTML = '<a data-fileid="new" data-parent="' + parentId + '" href="#" class="filelink plus">+</a></li>';
+        
+        if (parentId !== 'root'){
+            plusEl.innerHTML = '<a data-fileid="new" data-parent="' + parentId + '" href="#" class="filelink plus">+</a><a data-fileid="delete" data-parent="' + parentId + '" href="#" class="filelink minus plus red">-</a>';  
+        }else{
+            plusEl.innerHTML = '<a data-fileid="new" data-parent="' + parentId + '" href="#" class="filelink plus">+</a>';  
+        }
         if (parent) {
             parent.plusElement = plusEl;
         } else {
@@ -79,7 +86,7 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
     }
 
     function deleteNode(child) {
-        child.parentElement.removeChild(child.el);
+        child.parentElement.removeChild(child.realEl);
         child.isRemoved = true;
     }
 
@@ -109,6 +116,12 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
         openAny();
     }
     
+    my.del = function(fileId){
+        deleteNode(getNode(fileId, fileTree));
+        SocketAPI.deleteFile(fileId);
+        openAny(); //TODO only open new if working file was inside
+    }
+    
     function addChild(parent, child, childElement) {
         (parent.nodes || parent).push(child);
         (parent.el || rootTreeElement).appendChild(childElement);
@@ -129,10 +142,15 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
         var ol = document.createElement('ol');
         li.appendChild(ol);
         var plusEl = document.createElement('li');
-        plusEl.innerHTML = '<a data-fileid="new" data-parent="' + file.fileId + '" href="#" class="filelink plus">+</a></li>';
+        if (file.fileId !== 'root'){
+            plusEl.innerHTML = '<a data-fileid="new" data-parent="' + file.fileId + '" href="#" class="filelink plus">+</a><a data-fileid="delete" data-parent="' + file.fileId + '" href="#" class="filelink minus plus red">-</a>';  
+        }else{
+            plusEl.innerHTML = '<a data-fileid="new" data-parent="' + file.fileId + '" href="#" class="filelink plus">+</a>';  
+        }
         ol.appendChild(plusEl);
         file.plusElement = plusEl;
         file.el = ol;
+        file.realEl = li;
 
 
         if (parentId === 'root') {
@@ -155,8 +173,9 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
 
         var li = document.createElement('li');
         li.className = "file";
-        li.innerHTML = '<a data-fileid="' + file.fileId + '" href="#" id="'+file.fileId+'" class="filelink">' + file.name + '</a></li>';
+        li.innerHTML = '<a data-fileid="' + file.fileId + '" href="#" id="'+file.fileId+'" class="filelink">' + file.name + '</a>';
         file.el = li;
+        file.realEl = li;
 
         if (parentId === 'root') {
             addChild(fileTree, file, li);
