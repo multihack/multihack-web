@@ -42,6 +42,26 @@ var Tethys = (function () {
         Modal.open('confirmDelete', FileSystem.workingFile);
     });
     
+    var toolbarCollapsed=false;
+    document.querySelector('#collapsetoolbar').addEventListener('click', function (event) {
+        toolbarCollapsed=!toolbarCollapsed;
+        if (toolbarCollapsed){
+            document.querySelector('.toolbar').style.height='30px';
+            document.querySelector('.workspace').style.bottom='30px';
+            document.querySelector('.sidebar').style.bottom='30px';
+            document.querySelector('.roomlist .panel-topbar').style.display = 'none';
+            document.querySelector('.onlinelist .panel-topbar').style.display = 'none';
+            document.querySelector('.onlinelist').style.border = '0';
+        }else{
+            document.querySelector('.toolbar').style.height='';
+            document.querySelector('.workspace').style.bottom='';
+            document.querySelector('.sidebar').style.bottom='';
+            document.querySelector('.roomlist .panel-topbar').style.display = '';
+            document.querySelector('.onlinelist .panel-topbar').style.display = '';
+            document.querySelector('.onlinelist').style.border = '';
+        }
+    });
+    
     document.querySelector('#savezip').addEventListener('click', function (event) {
         FileSystem.saveAsZip();
     });

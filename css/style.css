@@ -238,6 +238,17 @@ img ,
     border-right: solid #5A6D76 1px;
 }
 
+.toolbar #collapsetoolbar {
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: pointer;
+}
+
+.toolbar #collapsetoolbar:hover{
+    outline: 0;
+}
+
 .userlist .panel {
     padding: 8px;
     padding-top: 3px;
