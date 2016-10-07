@@ -66,7 +66,7 @@ var Modal = (function (my, MicroMustache) {
 
 /* Modal definitions */
 Modal.templates['intro'] = `<h1>WELCOME TO TETHYS</h1>
-    <h3>A Social Programming Tool</h3>
+    <h3>A Social IDE</h3>
     <p>First, choose a USERNAME.</p>
     <br>
     <input class="modal-input" type="text" placeholder="Guest">
