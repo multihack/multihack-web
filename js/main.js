@@ -41,6 +41,10 @@ var Tethys = (function () {
         }
         Modal.open('confirmDelete', FileSystem.workingFile);
     });
+    
+    document.querySelector('#savezip').addEventListener('click', function (event) {
+        FileSystem.saveAsZip();
+    });
 
 
     document.querySelector('#roomlist').addEventListener('click', function (event) {

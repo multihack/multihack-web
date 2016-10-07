@@ -123,10 +123,15 @@ img ,
     bottom: 240px;
 }
 
+.nav .icon-button{
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
 .nav .deploy {
     position: absolute;
     top: 9px;
-    right: 90px;
+    right: 95px;
     background: #40525B;
 }
 
@@ -134,6 +139,19 @@ img ,
     position: relative;
     top:2px;
 }
+
+.nav .save {
+    position: absolute;
+    top: 9px;
+    right: 196px;
+    background: #40525B;
+}
+
+.nav .save img{
+    position: relative;
+    top:2px;
+}
+
 .minus {
     margin-left: 10px;
 }
