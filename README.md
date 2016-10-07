@@ -7,5 +7,4 @@ LocalStorage saving.
     ---Versioning  
 Integrate Chrome's screen-sharing.  
 See other's cursors/selections.  
-Delete folders.  
 One of those fancy READMEs.  
