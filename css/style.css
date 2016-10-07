@@ -126,13 +126,18 @@ img ,
 .nav .deploy {
     position: absolute;
     top: 9px;
-    right: 60px;
+    right: 90px;
     background: #40525B;
 }
 
 .nav .deploy img {
     position: relative;
     top:2px;
+}
+
+.nav .icon-button span {
+    position: relative;
+    bottom: 3px;
 }
 
 .nav .mic {
