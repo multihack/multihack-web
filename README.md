@@ -1,5 +1,5 @@
 # TETHYS
-A real-time collaboration editor, version control, web host, voice chat and social network rolled into one.  
+A real-time collaboration editor, web host, voice chat and social network rolled into one.  
 
 ##TODO:
 File upload/download.  
