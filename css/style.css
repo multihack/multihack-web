@@ -10,6 +10,12 @@
     /* others */
 }
 
+@font-face {
+    font-family: Monaco;
+    src: url('Monaco.ttf') format('truetype');
+    /* others */
+}
+
 html,
 body {
     padding: 0;
@@ -21,7 +27,7 @@ body {
 }
 
 * {
-    font-family: 'Anonymous Pro', monospace;
+    font-family: Monaco;
 }
 
 .nav {
