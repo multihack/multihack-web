@@ -131,7 +131,7 @@ img ,
 .nav .deploy {
     position: absolute;
     top: 9px;
-    right: 95px;
+    right: 60px;
     background: #40525B;
 }
 
@@ -143,7 +143,7 @@ img ,
 .nav .save {
     position: absolute;
     top: 9px;
-    right: 196px;
+    right: 110px;
     background: #40525B;
 }
 
@@ -423,6 +423,14 @@ input[type="text"]:focus {
     background: #648a9b;
 }
 
+.icon-collapse > span{
+    display: none;
+}
+
+span.mobile-hide{
+    display: none;
+}
+
 
 /* Custom, iPhone Retina */
 
@@ -442,6 +450,23 @@ input[type="text"]:focus {
     }
     .sidebar {
         width: 340px;
+    }
+    .icon-collapse > span{
+        display: inline-block;
+        margin-left: 6px;
+    }
+    .nav .deploy {
+        position: absolute;
+        top: 9px;
+        right: 95px;
+    }
+    .nav .save {
+        position: absolute;
+        top: 9px;
+        right: 196px;
+    }
+    span.mobile-hide{
+        display: inline-block;
     }
 }
 
