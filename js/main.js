@@ -62,6 +62,22 @@ var Tethys = (function () {
         }
     });
     
+    var sidebarCollapsed=false;
+    document.querySelector('#collapsesidebar').addEventListener('click', function (event) {
+        sidebarCollapsed=!sidebarCollapsed;
+        if (sidebarCollapsed){
+            document.querySelector('.sidebar').style.width='30px';
+            document.querySelector('.workspace').style.left='30px';
+            document.querySelector('#tree').style.display='none';
+            document.querySelector('.sidebar .panel-topbar').style.display='none';
+        }else{
+            document.querySelector('.sidebar').style.width='';
+            document.querySelector('.workspace').style.left='';
+            document.querySelector('#tree').style.display='';
+            document.querySelector('.sidebar .panel-topbar').style.display='';
+        }
+    });
+    
     document.querySelector('#savezip').addEventListener('click', function (event) {
         FileSystem.saveAsZip();
     });

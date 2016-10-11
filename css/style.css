@@ -249,6 +249,17 @@ img ,
     outline: 0;
 }
 
+.sidebar #collapsesidebar{
+    position: absolute;
+    left: 0;
+    top: 0;
+    cursor: pointer;
+}
+
+.sidebar #collapsesidebar:hover{
+    outline: 0;
+}
+
 .userlist .panel {
     padding: 8px;
     padding-top: 3px;
