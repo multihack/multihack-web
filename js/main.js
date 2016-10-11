@@ -81,6 +81,24 @@ var Tethys = (function () {
     document.querySelector('#savezip').addEventListener('click', function (event) {
         FileSystem.saveAsZip();
     });
+    
+    
+    document.querySelector('#settings').addEventListener('click', function (event) {
+        Modal.onsubmit['themes'] = function(button, input){
+            switch(button){
+                case 'material':
+                    FileSystem.setTheme('material');
+                    break;
+                case 'atom':
+                    FileSystem.setTheme('atom');
+                    break;
+                default:
+                    FileSystem.setTheme('material');
+            }
+            Modal.close();
+        }
+        Modal.open("themes");
+    });
 
 
     document.querySelector('#roomlist').addEventListener('click', function (event) {

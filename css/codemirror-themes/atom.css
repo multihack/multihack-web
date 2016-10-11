@@ -1,0 +1,35 @@
+/*
+    Name:       Atom
+    Author:     Thomas Mullen
+
+    Based off the Railcasts CodeMirror template:
+        Railcasts original theme by Ryan Bates (http://railscasts.com)
+        CodeMirror template by Jan T. Sott (https://github.com/idleberg/base16-codemirror)
+        Original Base16 color scheme by Chris Kempson (https://github.com/chriskempson/base16)
+
+*/
+
+.cm-s-atom.CodeMirror {background: #1d1f21; color: #f4f1ed; border-top: black solid 1px;}
+.cm-s-atom div.CodeMirror-selected {background: #272935 !important;}
+.cm-s-atom .CodeMirror-gutters {background: #292c2f; border-right: solid black 1px;}
+.cm-s-atom .CodeMirror-linenumber {color: #5a647e;}
+.cm-s-atom .CodeMirror-cursor {border-left: 1px solid #d4cfc9 !important;}
+
+.cm-s-atom span.cm-comment {color: #bc9458;}
+.cm-s-atom span.cm-atom {color: #b6b3eb;} 
+.cm-s-atom span.cm-number {color: #b6b3eb;}
+
+.cm-s-atom span.cm-property, .cm-s-atom span.cm-attribute {color: #a5c261;}
+.cm-s-atom span.cm-keyword {color: #da4939;}
+.cm-s-atom span.cm-string {color: #89ff60;}
+
+.cm-s-atom span.cm-variable {color: #a5c261;}
+.cm-s-atom span.cm-variable-2 {color: #6d9cbe
+.cm-s-atom span.cm-def {color: #cc7833;}
+.cm-s-atom span.cm-error {background: #da4939; color: #d4cfc9;}
+.cm-s-atom span.cm-bracket {color: #f4f1ed;}
+.cm-s-atom span.cm-tag {color: #da4939;}
+.cm-s-atom span.cm-link {color: #b6b3eb;}
+
+.cm-s-atom .CodeMirror-matchingbracket { text-decoration: underline; color: white !important;}
+.cm-s-atom .CodeMirror-activeline-background { background: #303040; }
