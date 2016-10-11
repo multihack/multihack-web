@@ -14,7 +14,7 @@ var Modal = (function (my, MicroMustache) {
         if (!data) data = {};
         if (!my.templates[templateName]) console.error("No template with name " + templateName);
         modalElement.innerHTML = MicroMustache.template(my.templates[templateName], data);
-        modalElement.className = "modal text-center " + templateName;
+        modalElement.className = "modal text-center theme-dark-border " + templateName;
         modalElement.style.display = 'block';
         blockingElement.style.display = 'block';
         state = templateName;
@@ -226,3 +226,16 @@ Modal.templates['url'] = `
 <button data-value="close" class="go-button">Ok</button>
 `;
 Modal.onsubmit['url'] = function () {};
+
+
+
+Modal.templates['themes'] = `
+<h1>Choose a Theme</h1>
+<button style="width:95px" data-value="tethys" class="go-button">TETHYS</button>
+<button style="width:95px" data-value="atom" class="go-button">Atom</button>
+<br>
+<button style="width:95px;" data-value="brackets" class="go-button">Brackets</button>
+<button style="width:95px" data-value="vscode" class="go-button">VS Code</button>
+<br>
+<button data-value="close" class="no-button">Close</button>
+`;

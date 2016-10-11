@@ -81,6 +81,14 @@ var Tethys = (function () {
     document.querySelector('#savezip').addEventListener('click', function (event) {
         FileSystem.saveAsZip();
     });
+    
+    document.querySelector('#settings').addEventListener('click', function (event) {
+        Modal.onsubmit['themes'] = function(button, input){
+            //TODO: Set theme
+            Modal.close();
+        }
+        Modal.open("themes");
+    });
 
 
     document.querySelector('#roomlist').addEventListener('click', function (event) {

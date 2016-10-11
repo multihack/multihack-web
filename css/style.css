@@ -22,8 +22,6 @@ body {
     margin: 0;
     height: 100%;
     width: 100%;
-    color: #7ea1b1;
-    background: #182A33;
 }
 
 * {
@@ -32,7 +30,6 @@ body {
 
 .nav {
     height: 60px;
-    background: #182A33;
     position: fixed;
     left: 0;
     top: 0;
@@ -50,13 +47,12 @@ body {
 
 .toolbar {
     height: 240px;
-    background: #182A33;
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     width: 100%;
-    border-bottom: solid #5A6D76 1px;
+    border-bottom: solid transparent 1px;
 }
 
 .noselect,
@@ -90,7 +86,6 @@ img ,
 
 .sidebar {
     width: 150px;
-    background: #40525B;
     position: fixed;
     left: 0;
     top: 60px;
@@ -101,7 +96,7 @@ img ,
 
 .panel-topbar {
     height: 20px;
-    border-bottom: solid #5A6D76 1px;
+    border-bottom: solid transparent 1px;
     position: absolute;
     top: 0;
     right: 0;
@@ -122,7 +117,7 @@ img ,
 
 .workspace {
     position: fixed;
-    background: gray;
+    background: black;
     top: 60px;
     left: 150px;
     right: 0;
@@ -137,8 +132,8 @@ img ,
 .nav .deploy {
     position: absolute;
     top: 9px;
-    right: 60px;
-    background: #40525B;
+    right: 159px;
+    
 }
 
 .nav .deploy img {
@@ -149,13 +144,23 @@ img ,
 .nav .save {
     position: absolute;
     top: 9px;
-    right: 110px;
-    background: #40525B;
+    right: 60px;
 }
 
 .nav .save img{
     position: relative;
     top:2px;
+}
+
+.nav .settings {
+    position: absolute;
+    right: 10px;
+    top: 9px;
+}
+
+.nav .settings img {
+    position: relative;
+    top: 2px;
 }
 
 .minus {
@@ -170,8 +175,7 @@ img ,
 .nav .mic {
     position: absolute;
     top: 9px;
-    right: 10px;
-    background: #40525B;
+    right: 110px;
 }
 
 .nav .mic img {
@@ -221,11 +225,14 @@ img ,
     left: 0;
     right: 0;
     height: 18px;
-    background: #263238;
     z-index: 999999;
-    border-top: solid #5A6D76 1px;
+    border-top: solid transparent 1px;
     font-size: 12px;
     padding: 2px 5px 0 5px;
+}
+
+.workspace .statusbar #themebutton:hover{
+    outline: 0;
 }
 
 .toolbar .userlist {
@@ -312,13 +319,11 @@ img ,
     margin: auto;
     width: 500px;
     max-width: 80%;
-    background: blue;
     z-index: 99999;
     position: relative;
     top: 40%;
-    transform: translateY(-50%);
-    background: #0D2029;
-    border: #182A33 10px solid;
+    transform: translateY(-50%); 
+    border: transparent 10px solid;
     display: none;
     padding: 20px;
     overflow: hidden;
@@ -343,7 +348,6 @@ button {
     display: inline-block;
     position: relative;
     bottom: 2px;
-    background: #182A33;
     border: 0;
     cursor: pointer;
     outline: none;
@@ -352,22 +356,6 @@ button {
     font-size: 13px;
 }
 
-.go-button:hover,
-.no-button:hover {
-    outline: 5px solid #5A6D76;
-}
-
-button:active {
-    background-color: #5A6D76;
-}
-
-.go-button {
-    background: #40525B;
-}
-
-.no-button {
-    background: #182A33;
-}
 
 .text-center {
     text-align: center;
@@ -375,7 +363,6 @@ button:active {
 
 a {
     text-decoration: none;
-    color: #9a9a9a;
 }
 
 .red {
@@ -389,7 +376,7 @@ a {
 input[type="text"] {
     color: white;
     background: black;
-    border: 3px #182A33 solid;
+    border: 3px transparent solid;
     outline: none;
     font-size: 16px;
     padding: 5px;
@@ -397,7 +384,6 @@ input[type="text"] {
 }
 
 input[type="text"]:focus {
-    border-color: #40525B;
     padding: 11px;
     position: relative;
 }
@@ -414,19 +400,16 @@ input[type="text"]:focus {
 }
 
 ::-webkit-scrollbar-track {
-    border: solid 1px #5A6D76;
+    border: solid 1px gray;
     border-radius: 0;
-    background: #182A33;
 }
 
 ::-webkit-scrollbar-thumb {
     border-radius: 0;
-    background: #5A6D76;
 }
 
 ::-webkit-scrollbar-thumb:hover {
     border-radius: 0;
-    background: #648a9b;
 }
 
 .icon-collapse > span{
@@ -462,14 +445,13 @@ span.mobile-hide{
         margin-left: 6px;
     }
     .nav .deploy {
-        position: absolute;
-        top: 9px;
-        right: 95px;
+        right: 137px;
     }
     .nav .save {
-        position: absolute;
-        top: 9px;
-        right: 196px;
+        right: 235px;
+    }
+    .nav .mic {
+        right: 55px;
     }
     span.mobile-hide{
         display: inline-block;

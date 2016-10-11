@@ -1,0 +1,69 @@
+.theme-tethys .theme-dark{
+    background: #182A33;
+}
+
+.theme-tethys .theme-mid{
+    background: #263238;
+}
+
+.theme-tethys .theme-light{
+    background: #40525B;
+}
+
+.theme-tethys .theme-font-primary{
+    color : white;
+}
+
+.theme-tethys .theme-font-secondary{
+    color: #7ea1b1;
+}
+
+.theme-tethys .theme-border{
+    border-color: #5A6D76 !important;
+}
+
+.theme-tethys .theme-dark-border, input[type="text"] {
+    border-color: #182A33 !important;
+}
+
+.theme-tethys .go-button{
+    background: #40525B;
+}
+
+.theme-tethys .no-button {
+    background: #182A33;
+}
+
+.theme-tethys .go-button:hover,
+.theme-tethys .no-button:hover {
+    outline: 5px solid #5A6D76;
+}
+
+.theme-tethys button:active {
+    background-color: #5A6D76;
+}
+
+.theme-tethys a{
+    color: #9a9a9a;
+}
+
+.theme-tethys input[type="text"]:focus {
+    border-color: #40525B !important;
+}
+
+.theme-tethys *::-webkit-scrollbar-track {
+    border-color: #5A6D76;
+    background: #182A33;
+}
+
+.theme-tethys *::-webkit-scrollbar-thumb {
+    background: #5A6D76;
+}
+
+.theme-tethys *::-webkit-scrollbar-thumb:hover {
+    background: #648a9b;
+}
+
+.theme-tethys .modal {
+    background: #0D2029;
+}

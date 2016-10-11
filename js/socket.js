@@ -236,6 +236,11 @@ var SocketAPI = (function () {
     if (!navigator.getUserMedia) {
         document.querySelector("#mic").style.display = "none";
     }
+    if (!(window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection)){
+        document.querySelector("#mic").style.display = "none";
+        document.querySelector("#deploy").style.display = "none";
+    }
+        
 
     //TWO SHIM!
     var cameraStream;

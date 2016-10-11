@@ -1,27 +1,33 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="theme-tethys">
 
 <head>
     <meta charset="utf-8" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <title>TETHYS - Social IDE</title>
     
+    <!-- Themes -->
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/codemirror-themes/material.css"> <!-- TETHYS -->
+    <link rel="stylesheet" href="css/codemirror-themes/railscasts.css"> <!--atom-->
+    
+    
     <link href="https://fonts.googleapis.com/css?family=Anonymous+Pro" rel="stylesheet">
     <link rel="stylesheet" href="css/codemirror.css">
-    <link rel="stylesheet" href="css/codemirror-themes/material.css">
     <link rel="stylesheet" href="css/filetree/treestyles.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
-    <nav class="nav">
+<body class="theme-dark theme-font-secondary">
+    <nav class="nav theme-dark">
         <div class="logo">TETHYS</div>
-        <button id="mic" class="icon-button icon-collapse mic"><img src="img/muted.png"><span> Talk</span></button>
-        <button id="deploy" class="icon-button icon-collapse deploy"><img src="img/launch.png"><span> Deploy</span></button>
-        <button id="savezip" class="icon-button icon-collapse save"><img src="img/save.png"><span> Save</span></button>
+        <button id="mic" class="icon-button icon-collapse mic go-button"><img src="img/muted.png"><span> Talk</span></button>
+        <button id="deploy" class="icon-button icon-collapse deploy go-button"><img src="img/launch.png"><span> Deploy</span></button>
+        <button id="savezip" class="icon-button icon-collapse save go-button"><img src="img/save.png"><span> Save</span></button>
+        <button id="settings" class="icon-button icon-collapse settings go-button"><img src="img/gear.png"></button>
     </nav>
-    <div class="sidebar">
-        <div class="panel-topbar"><span class="mobile-hide">Your&nbsp;</span>Files</div>
+    <div class="sidebar theme-light">
+        <div class="panel-topbar theme-border"><span class="mobile-hide">Your&nbsp;</span>Files</div>
         <div class="icon-button" id="collapsesidebar"><img src="img/collapse.png"></div>
         <ol id="tree" class="tree panel"></ol>
     </div>
@@ -29,25 +35,31 @@
         <div class="editor-wrapper">
         <textarea class="editor"id="editor"></textarea>
         </div> 
-        <div class="statusbar"><span id="workingFile">index.html</span><span id="saveStatus"></span><span class="pull-right" id="connectionStatus"></span></div>
+        <div class="statusbar theme-mid theme-border">
+            <span id="workingFile">index.html</span>
+            <span id="saveStatus"></span>
+            <span class="pull-right" id="connectionStatus"></span>
+            <div class="icon-button" id="themebutton"><img src="img/collapse.png"></div>
+        </div>
         <button id="delete" class="icon-button delete"><img src="img/garbage.png"></button>
     </div>
-    <div class="toolbar">
+    <div class="toolbar theme-dark theme-border">
         <div id="onlinelist" class="userlist onlinelist">
-            <div class="panel-topbar">Online</div>
+            <div class="panel-topbar theme-border">Online</div>
             <div class="panel">
 
             </div>
         </div>
         <div id="roomlist" class="userlist roomlist">
-            <div class="panel-topbar" style="border-left:2px solid #182A33;"><span class="mobile-hide">Your&nbsp;</span>Room</div>
+            <div class="panel-topbar theme-border" style="border-left:0"><span class="mobile-hide">Your&nbsp;</span>Room</div>
+            
             <div class="icon-button" id="collapsetoolbar"><img src="img/collapse.png"></div>
             <div class="panel">
                 
             </div>
         </div>
     </div>
-    <div id="modal" class="modal text-center">
+    <div id="modal" class="modal text-center theme-dark-border">
 
     </div>
     <div id="blocking-overlay" class="blocking-overlay">
