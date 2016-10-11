@@ -209,6 +209,11 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
     my.getTree = function () {
         return fileTree;
     }
+    
+    my.setTheme = function(themeName){
+        document.querySelector('html').className = "theme-"+themeName;
+        my.editor.setOption("theme", themeName);
+    }
 
     function syntaxMapping(fileName) {
         var ext = fileName.split(".");
@@ -286,7 +291,6 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
         } catch (e) {
             Modal.open("general-alert",{msg:"Your browser does not support this!"});
         }
-
     }
 
     function zipTree(zip, path, nodeList) {

@@ -22,6 +22,7 @@ body {
     margin: 0;
     height: 100%;
     width: 100%;
+    overflow: hidden;
 }
 
 * {
@@ -89,7 +90,7 @@ img ,
     position: fixed;
     left: 0;
     top: 60px;
-    bottom: 240px;
+    bottom: 241px;
     z-index: 1;
     overflow: auto;
 }
@@ -248,7 +249,7 @@ img ,
 
 .toolbar .onlinelist {
     left: 0;
-    border-right: solid #5A6D76 1px;
+    border-right: solid transparent 1px;
 }
 
 .toolbar #collapsetoolbar {

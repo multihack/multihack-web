@@ -82,9 +82,19 @@ var Tethys = (function () {
         FileSystem.saveAsZip();
     });
     
+    
     document.querySelector('#settings').addEventListener('click', function (event) {
         Modal.onsubmit['themes'] = function(button, input){
-            //TODO: Set theme
+            switch(button){
+                case 'material':
+                    FileSystem.setTheme('material');
+                    break;
+                case 'atom':
+                    FileSystem.setTheme('atom');
+                    break;
+                default:
+                    FileSystem.setTheme('material');
+            }
             Modal.close();
         }
         Modal.open("themes");

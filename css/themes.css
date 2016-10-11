@@ -1,69 +1,158 @@
-.theme-tethys .theme-dark{
+/* Classic TETHYS theme */
+.theme-material .theme-dark{
     background: #182A33;
 }
 
-.theme-tethys .theme-mid{
+.theme-material .theme-mid{
     background: #263238;
 }
 
-.theme-tethys .theme-light{
+.theme-material .theme-light{
     background: #40525B;
 }
 
-.theme-tethys .theme-font-primary{
+.theme-material .theme-font-primary{
     color : white;
 }
 
-.theme-tethys .theme-font-secondary{
+.theme-material .theme-font-secondary{
     color: #7ea1b1;
 }
 
-.theme-tethys .theme-border{
+.theme-material .theme-border{
     border-color: #5A6D76 !important;
 }
 
-.theme-tethys .theme-dark-border, input[type="text"] {
+.theme-material .theme-dark-border, input[type="text"] {
     border-color: #182A33 !important;
 }
 
-.theme-tethys .go-button{
+.theme-material .go-button{
     background: #40525B;
 }
 
-.theme-tethys .no-button {
+.theme-material .no-button {
     background: #182A33;
 }
 
-.theme-tethys .go-button:hover,
-.theme-tethys .no-button:hover {
+.theme-material .go-button:hover,
+.theme-material .no-button:hover {
     outline: 5px solid #5A6D76;
 }
 
-.theme-tethys button:active {
+.theme-material button:active {
     background-color: #5A6D76;
 }
 
-.theme-tethys a{
+.theme-material a{
     color: #9a9a9a;
 }
 
-.theme-tethys input[type="text"]:focus {
+.theme-material input[type="text"]:focus {
     border-color: #40525B !important;
 }
 
-.theme-tethys *::-webkit-scrollbar-track {
+.theme-material *::-webkit-scrollbar-track {
     border-color: #5A6D76;
     background: #182A33;
 }
 
-.theme-tethys *::-webkit-scrollbar-thumb {
+.theme-material *::-webkit-scrollbar-thumb {
     background: #5A6D76;
 }
 
-.theme-tethys *::-webkit-scrollbar-thumb:hover {
+.theme-material *::-webkit-scrollbar-thumb:hover {
     background: #648a9b;
 }
 
-.theme-tethys .modal {
+.theme-material .modal {
     background: #0D2029;
 }
+/* ---------------- */
+
+
+/* Atom-inspired theme */
+.theme-atom .theme-dark{
+    background: #303030;
+    border: 1px black solid;
+}
+
+.theme-atom .theme-mid{
+    background: #292c2f;
+    border: 1px black solid;
+}
+
+.theme-atom .theme-light{
+    background: #303030;
+    border: 1px black solid;
+}
+
+.theme-atom .theme-font-primary{
+    color : white;
+}
+
+.theme-atom .theme-font-secondary{
+    color: rgb(239, 234, 225);
+}
+
+.theme-atom .theme-border{
+    border-color: black !important;
+}
+
+.theme-atom .theme-dark-border, input[type="text"] {
+    border-color: black !important;
+}
+
+.theme-atom .go-button{
+    background: #1d1f21;
+}
+
+.theme-atom .no-button {
+    background: #31343F;
+}
+
+.theme-atom .go-button:hover,
+.theme-atom .no-button:hover {
+    outline: 5px solid white;
+}
+.theme-atom button:active {
+    background-color: white;
+}
+
+.theme-atom a{
+    color: #9a9a9a;
+}
+
+.theme-atom input[type="text"]:focus {
+    border-color: rgb(239, 234, 225) !important;
+}
+
+.theme-atom *::-webkit-scrollbar-track {
+    border-color: #5A6D76;
+    background: #182A33;
+}
+
+.theme-atom *::-webkit-scrollbar-thumb {
+    background: #5A6D76;
+}
+
+.theme-atom *::-webkit-scrollbar-thumb:hover {
+    background: #648a9b;
+}
+
+.theme-atom .modal {
+    background: #303030;
+}
+.theme-atom li input + ol {
+    background: url(../img/folder.png) 40px 0 no-repeat;
+}
+.theme-atom li input:checked + ol {
+    background: url(../img/folder.png) 40px 5px no-repeat;
+}
+.theme-atom .plus {
+    color: #81c08b;
+}
+.theme-atom li.file a:hover {
+    color: #81c08b;
+}
+/* ---------------- */
