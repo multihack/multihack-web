@@ -3,6 +3,8 @@ A real-time collaboration editor, web host, voice chat and social network rolled
 
 ![screenshot](http://i.imgur.com/VduvE87.png)
 
+Tired of struggling to set up remote collaboration with your team?
+
 -Collaborate with up to 10 other programmers in real time.  
 -Integrated voice chat.  
 -Deploy a website instantly, without any need to find a host.  
@@ -11,3 +13,6 @@ A real-time collaboration editor, web host, voice chat and social network rolled
 -Save your project when you're done editing.  
 -Upload an existing project (coming soon).  
 -Close your browser and continue working later. (coming soon).
+
+
+Native IDE extensions coming soon!
