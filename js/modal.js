@@ -8,6 +8,14 @@ var Modal = (function (my, MicroMustache) {
     my.onsubmit = {
         'closed': function () {}
     };
+    
+    function inIframe () {
+        try {
+            return window.self !== window.top;
+        } catch (e) {
+            return true;
+        }
+    }
 
     //Opens a specific dialog
     my.open = function (templateName, data) {
@@ -20,7 +28,7 @@ var Modal = (function (my, MicroMustache) {
         state = templateName;
 
         var primaryInput = document.querySelector('.modal-input');
-        if (primaryInput) {
+        if (primaryInput && !inIframe()) {
             primaryInput.focus();
         }
     }
