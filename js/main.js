@@ -250,6 +250,10 @@ var Tethys = (function () {
     FileSystem.open("welcome");
     Modal.open('intro');
     
+    var code = Util.getParameterByName("code");
+    var ext= Util.getParameterByName("ext");
+    FileSystem.openString(code,ext);
+    
     
     console.log("%c Rock that console! If you're after the source: https://github.com/RationalCoding/TETHYS", "color:#263238; font-size: 15px;");
 

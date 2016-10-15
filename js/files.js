@@ -11,7 +11,7 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
         {
             name: "index.html",
             fileId: "welcome",
-            content: "Welcome to TETHYS!\n\n-Collaborate in real-time.\n-Syntax highlighting for every web language.\n-Voice chat with up to 10 people! (WebRTc only)\n-Instantly deploy your website via HyperHost (WebRTC only)\n-Save your file for working offline.\n-TETHYS is the ONLY multi-file, multi-user code editor on the web."
+            content: "Welcome to TETHYS!\n\n-Collaborate in real-time.\n-Syntax highlighting for every web language.\n-Voice chat with up to 10 people! (WebRTC only)\n-Instantly deploy your website via HyperHost (WebRTC only)\n-Save your project for working offline.\n-TETHYS is the ONLY multi-file, multi-user code editor on the web."
         }
     ];
 
@@ -131,9 +131,10 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
     }
 
     my.mkdir = function (parentId, name, fileId) {
+        fileId = fileId || getUniqueId();
         var file = {
             name: name,
-            fileId: fileId || getUniqueId(),
+            fileId: fileId,
             nodes: []
         }
 
@@ -167,12 +168,15 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
                 type: 'folder'
             });
         }
+        
+        return fileId;
     }
 
     my.mkfile = function (parentId, name, fileId) {
+        fileId = fileId || getUniqueId();
         var file = {
             name: name,
-            fileId: fileId || getUniqueId(),
+            fileId: fileId,
             content: ""
         }
 
@@ -196,6 +200,8 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
                 type: 'file'
             });
         }
+        
+        return fileId;
     }
 
     my.open = function (fileId) {
@@ -334,6 +340,17 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
     document.querySelector("#deploy").addEventListener('click', function (e) {
         HyperHost.handleTethys(fileTree);
     });
+
+    
+    my.openString= function(code, type){
+        if (code){
+            if (!type) type = "js"
+            var fileId = my.mkfile("root", "code."+type);
+            my.open(fileId);
+            workingFile.content = code;
+            my.editor.getDoc().setValue(code);
+        }
+    }
 
 
     return my;
