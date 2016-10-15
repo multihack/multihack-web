@@ -231,7 +231,8 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
             "sass": "css",
             "less": "css",
             "html": "htmlmixed",
-            "xml": "xml"
+            "xml": "xml",
+            "php" : "application/x-httpd-php"
         }
         return mapping[ext] || null;
     }
