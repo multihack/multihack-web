@@ -47,8 +47,8 @@ var HyperHost = (function (Util, Modal) {
         };
 
         // Traverse a  TETHYS tree
-        function traverseFileTree(item, path, depth, ancestors) {
-            if (item.name[0] === ".") {
+        function traverseFileTree(item, path, depth, ancestors) {    
+            if (item.name[0] === "." || item.isRemoved) {
                 return; //Ignore hidden files
             }
             if (!item.nodes) { //Is file
