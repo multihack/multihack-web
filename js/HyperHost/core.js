@@ -252,7 +252,7 @@ var HyperHost = (function (Util, Modal) {
 
         //Serve incoming WebRTC connections
         function HYPERHOST_SERVE() {
-            if (!MY_ID) MY_ID = parseInt(Math.random() * 1e15, 10).toString(16);
+            MY_ID = MY_ID || parseInt(Math.random() * 1e15, 10).toString(16);
             var PEER_SERVER = {
                 host: "peerjs-server-tmullen.mybluemix.net", //Swap out this if you want to use your own PeerJS server
                 port: 443,

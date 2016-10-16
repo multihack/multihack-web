@@ -11,8 +11,38 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
         {
             name: "index.html",
             fileId: "welcome",
-            content: "Welcome to TETHYS!\n\n-Collaborate in real-time.\n-Syntax highlighting for every web language.\n-Voice chat with up to 10 people! (WebRTC only)\n-Instantly deploy your website via HyperHost (WebRTC only)\n-Save your project for working offline.\n-TETHYS is the ONLY multi-file, multi-user code editor on the web."
-        }
+            content: `<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Welcome to TETHYS!</h1>
+
+    <ul>
+        <li>Collaborate in real-time.</li>
+    	<li>Syntax highlighting for every web language.</li>
+    	<li>Voice chat with up to 10 people! (WebRTC only)</li>
+    	<li>Instantly deploy your website via HyperHost (WebRTC only)</li>
+    	<li>Save your project for working offline.</li>
+    	<li>TETHYS is the ONLY multi-file, multi-user code editor on the web.</li>
+        
+        <!-- Try deploying this file! -->
+    </ul>
+</body> 
+    
+</html>`
+        },
+        {
+            name: "style.css",
+            fileId: "welcome2",
+            content : `body {
+    background: lightgray;
+    font-family: Arial;
+}
+
+h1 {
+    color: darkgreen;
+}`}
     ];
 
     SocketAPI.onAllCode = function (newFileTree) {
