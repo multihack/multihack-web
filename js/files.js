@@ -17,7 +17,6 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
     function getLocalStorage() {
         if (localStorage) {
             var store = localStorage.getItem('tethysTree');
-            console.log(store);
             if (!!store){
                 fileTree = JSON.parse(store);
                 my.init();
@@ -435,7 +434,6 @@ h1 {
 
     /* Fires when a file is added by a peer */
     SocketAPI.onAddFile = function (parentId, name, fileId, type) {
-        console.log('boop');
         if (type === 'file') {
             my.mkfile(parentId, name, fileId);
         } else if (type === 'folder') {
