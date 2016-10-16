@@ -101,9 +101,22 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
         }
         my.workingFile = getNode("*", fileTree);
         document.getElementById("workingFile").innerHTML = my.workingFile.name;
-        my.editor.getDoc().setValue(my.workingFile.content || "");
-        my.editor.setOption("mode", syntaxMapping(my.workingFile.name));
+        setWorkspaceContent(my.workingFile);
         document.getElementById(my.workingFile.fileId).style.color = "";
+    }
+    
+    function setWorkspaceContent(fileNode){
+        var ext = fileNode.name.split(".");
+        ext = ext[ext.length-1];
+        
+        if (["png", "jpg", "jpeg", ,"jpeg2000", "tif", "tiff", "gif", "bmp"].indexOf(ext) !== -1){
+            document.querySelector(".image-wrapper").style.display = "";
+            document.querySelector(".image-wrapper img").src = fileNode.content;
+        }else{
+            document.querySelector(".image-wrapper").style.display = "none";
+            my.editor.getDoc().setValue(fileNode.content || "");
+            my.editor.setOption("mode", syntaxMapping(fileNode.name));
+        }
     }
 
     /* Gets a file with the specified id */
@@ -217,8 +230,7 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
     my.open = function (fileId) {
         my.workingFile = getNode(fileId, fileTree);
         document.getElementById("workingFile").innerHTML = my.workingFile.name;
-        my.editor.getDoc().setValue(my.workingFile.content || "");
-        my.editor.setOption("mode", syntaxMapping(my.workingFile.name));
+        setWorkspaceContent(my.workingFile);
         document.getElementById(fileId).style.color = "";
     }
     
@@ -312,6 +324,10 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
     
     /* Creates a file from an HTML5 File object */
     my.loadFile = function(fileObject, parentId){
+        var ext = fileObject.name.split(".");
+        ext = ext[ext.length-1];
+        var isImage = ["png", "jpg", "jpeg", ,"jpeg2000", "tif", "tiff", "gif", "bmp"].indexOf(ext) !== -1;
+        
         var reader = new FileReader();
         reader.addEventListener('loadend', function(){
             var fileId = my.mkfile(parentId, fileObject.name);
@@ -319,7 +335,13 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
             my.open(fileId);
             SocketAPI.changeFile(fileId, reader.result); //Signal new content
         });
-        reader.readAsText(fileObject);
+        
+        if (isImage){
+            reader.readAsDataURL(fileObject);
+        }else{
+            reader.readAsText(fileObject);
+        }
+        
     }
 
     /* Create a .zip file from the tree */
@@ -339,7 +361,7 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
     SocketAPI.onChangeFile = function (fileId, change) {
         if (fileId == my.workingFile.fileId) {
             my.workingFile.content = change;
-            my.editor.getDoc().setValue(my.workingFile.content || ""); //TODO: Only send/receive changes
+            setWorkspaceContent(my.workingFile); //TODO: Only send/receive changes
         } else {
             getNode(fileId, fileTree).content = change; //TODO: Only send/receive changes
             document.getElementById(fileId).style.color = "red";

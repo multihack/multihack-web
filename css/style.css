@@ -207,6 +207,24 @@ img ,
     height: 20px;
 }
 
+.workspace .image-wrapper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: black;
+    z-index: 5;
+    text-align: center;
+    overflow: auto;
+}
+
+.workspace .image-wrapper img{
+    margin-top: 40px;
+    width: 70%;
+    margin-bottom: 60px;
+}
+
 .workspace .editor-wrapper {
     position: absolute;
     top: 0;

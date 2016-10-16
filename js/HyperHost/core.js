@@ -101,12 +101,27 @@ var HyperHost = (function (Util, Modal) {
                         });
                     }
 
-                } else {
+                } else if (["png", "jpg", "jpeg", ,"jpeg2000", "tif", "tiff", "gif", "bmp"].indexOf(ext) !== -1 ) {
+                    //Images are already base64 due to TETHYS wanting to display them in-editor
+                    Util.deepSetTree(workingTree, {
+                        type: ext,
+                        name: item.name,
+                        content: "Cannot display file type \"" + ext + "\""
+                    }, ancestors);
+                    
+                    assets.push({
+                        "old": path + item.name,
+                        "new": item.content,
+                        "extension": ext,
+                        "itemName": item.name,
+                        "isFont": false
+                    });  
+                }else {
                     var base64 = "data:text/javascript;base64," + btoa(item.content);
                     Util.deepSetTree(workingTree, {
                         type: ext,
                         name: item.name,
-                        content: "Cannot display image type \"" + ext + "\""
+                        content: "Cannot display file type \"" + ext + "\""
                     }, ancestors);
 
                     var isFont = ["eot", "woff", "woff2", "ttf", "svg", "sfnt", "otf"].indexOf(ext) !== -1;
