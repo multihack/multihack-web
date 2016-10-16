@@ -1,5 +1,5 @@
 /* Custom modal plugin */
-var Modal = (function (my, MicroMustache) {
+var Modal = (function (my, Microstache) {
     var modalElement = document.getElementById("modal");
     var blockingElement = document.getElementById("blocking-overlay");
     var state = 'closed';
@@ -21,7 +21,7 @@ var Modal = (function (my, MicroMustache) {
     my.open = function (templateName, data) {
         if (!data) data = {};
         if (!my.templates[templateName]) console.error("No template with name " + templateName);
-        modalElement.innerHTML = MicroMustache.template(my.templates[templateName], data);
+        modalElement.innerHTML = Microstache.template(my.templates[templateName], data);
         modalElement.className = "modal text-center theme-dark-border " + templateName;
         modalElement.style.display = 'block';
         blockingElement.style.display = 'block';
@@ -70,7 +70,7 @@ var Modal = (function (my, MicroMustache) {
         }
     });
     return my;
-}({}, MicroMustache));
+}({}, Microstache));
 
 /* Modal definitions */
 Modal.templates['intro'] = `<h1>WELCOME TO MULTIHACK</h1>

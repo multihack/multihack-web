@@ -150,7 +150,7 @@ var Tethys = (function () {
             input[0]="Guest";
         }
         username = input[0];
-        var pic = Math.floor(Math.random() * 15);
+        var pic = Math.floor(Math.random() * 95);
         hash = Math.random();
         SocketAPI.joinOnline(username, pic, hash);
 
@@ -171,13 +171,13 @@ var Tethys = (function () {
 
     var roomElements = {};
     var onlineElements = {};
-    var userTemplate = `<img class="user-img" data-name="{{name}}" data-userid="{{id}}" src="img/avatars/avatar-{{pic}}.png"><label>{{name}}</label>`;
+    var userTemplate = `<img class="user-img" data-name="{{name}}" data-userid="{{id}}" src="img/miniman/avatar-{{pic}}.png"><label>{{name}}</label>`;
     
     function makeUser(user, group, isMe){
         if (user.hash == hash && !isMe) return; //Don't make self
         var div = document.createElement('div');
         div.className = "square";
-        div.innerHTML = MicroMustache.template(userTemplate, user);
+        div.innerHTML = Microstache.template(userTemplate, user);
         
         if (group === "online"){
             onlinelistElement.appendChild(div);
