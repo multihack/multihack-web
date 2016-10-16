@@ -232,6 +232,7 @@ var HyperHost = (function (Util, Modal) {
 
         //Handles a TETHYS tree
         module.handleTethys = function (tree) {
+            initializeHost(true); //Force a reload
             console.log("******* HyperHost v" + module.VERSION + " *******");
             console.log("> Loading your files...");
 
