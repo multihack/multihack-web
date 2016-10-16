@@ -262,8 +262,19 @@ var Tethys = (function () {
     
     var code = Util.getParameterByName("code");
     var ext= Util.getParameterByName("ext");
+    var theme = Util.getParameterByName("theme");
     FileSystem.openString(code,ext);
-    
+    switch(theme){
+        case 'material':
+            FileSystem.setTheme('material');
+            break;
+        case 'atom':
+            FileSystem.setTheme('atom');
+            break;
+        case 'codepen':
+            FileSystem.setTheme('codepen');
+            break;
+    }
     
     console.log("%c Rock that console! If you're after the source: https://github.com/RationalCoding/TETHYS", "color:#263238; font-size: 15px;");
 
