@@ -12,8 +12,8 @@ Tired of struggling to set up remote collaboration with your team?
 -Network with other users and instantly start prototyping.  
 -Save your project when you're done editing.  
 -Upload an existing project.  
--Close your browser and continue working later.
--Disconnect from the internet and continue working alone.
+-Close your browser and continue working later.  
+-Disconnect from the internet and continue working alone.  
 
 
 Native IDE extensions coming soon!
