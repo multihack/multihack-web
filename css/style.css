@@ -413,6 +413,55 @@ input[type="text"]:focus {
     border-radius: 0;
 }
 
+/* File upload */
+input[type='file'] {
+    width: 63px;
+    padding: 3px 6px 6px 6px;
+    height: 26px;
+    position: relative;
+    top: 28px;
+    outline: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+input[type='file']::-webkit-file-upload-button {
+    visibility: hidden; 
+}
+
+input[type='file']::before {
+    content: 'Upload';
+    display: inline-block;
+    outline: none;
+    white-space: nowrap;
+    cursor: pointer;
+    padding: 10px 5px;
+    font-size: 13px;
+    color: white;
+    position: relative;
+    bottom: 4px;
+    left: 3px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+input[type='file']:hover::before {
+    border-color: black;
+}
+
+input[type='file']:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
 .icon-collapse > span{
     display: none;
 }

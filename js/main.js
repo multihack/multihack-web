@@ -16,6 +16,13 @@ var Tethys = (function () {
                     Modal.close();
                 }
                 Modal.open('createFile');
+                document.querySelector("#fileUpload").addEventListener('change', function(event){
+                    var files = event.target.files;
+                    for (var i=0; i<files.length; i++){
+                        FileSystem.loadFile(files[i], parentId);
+                    }
+                    Modal.close();
+                });
             } else if (fileId === 'delete'){
                 var parentId = event.target.dataset.parent;
                 Modal.onsubmit["confirmFolderDelete"] = function (button, input) {

@@ -172,9 +172,11 @@ Modal.templates["requestInvite"] = `<h1>Request to Join {{name}}'s Room?</h1>
 
 Modal.templates["createFile"] = `<h1>Create New...</h1>
     <input class="modal-input" placeholder="Name" type="text">
-    <br><br>
+    <br>
     <button data-value="file" class="go-button">File</button>
     <button data-value="folder" class="go-button">Folder</button>
+    <input id="fileUpload" class="go-button" type="file" multiple />
+    <br>
 <button data-value="close" class="no-button">Cancel</button>
 <p>{{flash}}</p>`;
 
