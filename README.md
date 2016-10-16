@@ -6,8 +6,8 @@ A real-time collaboration editor, web host, voice chat and social network rolled
 
 Tired of struggling to set up remote collaboration with your team?
 
--Collaborate with up to 10 other programmers in real time.  
--Integrated voice chat.  
+-Collaborate with others in real time.  
+-Integrated voice chat with up to 10 people.  
 -Deploy a website instantly, without any need to find a host.  
 -Syntax highlighting for all web languages (more support on request)  
 -Network with other users and instantly start prototyping.  
