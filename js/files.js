@@ -6,6 +6,29 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
         return Math.random().toString();
     }
 
+    function setLocalStorage() {
+        if (localStorage) {
+            localStorage.setItem('tethysTree', JSON.stringify(fileTree.map(function(e){
+                return {content: e.content, name:e.name, isRemoved:e.isRemoved, fileId:e.fileId};
+            })));
+        }
+    }
+
+    function getLocalStorage() {
+        if (localStorage) {
+            var store = localStorage.getItem('tethysTree');
+            console.log(store);
+            if (!!store){
+                fileTree = JSON.parse(store);
+                my.init();
+            }       
+        }
+    }
+
+    
+    my.saveLocal = function(){
+        setLocalStorage();
+    }
 
     var fileTree = [
         {
@@ -35,18 +58,20 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
         {
             name: "style.css",
             fileId: "welcome2",
-            content : `body {
+            content: `body {
     background: lightgray;
     font-family: Arial;
 }
 
 h1 {
     color: darkgreen;
-}`}
+}`
+        }
     ];
 
     SocketAPI.onAllCode = function (newFileTree) {
         fileTree = newFileTree;
+        setLocalStorage(); //Save to localstorage on joining a new room
         my.init();
     }
 
@@ -121,6 +146,7 @@ h1 {
     function deleteNode(child) {
         child.parentElement.removeChild(child.realEl);
         child.isRemoved = true;
+        setLocalStorage();
     }
 
     /* Opens any file (first in tree traversal) */
@@ -134,15 +160,15 @@ h1 {
         setWorkspaceContent(my.workingFile);
         document.getElementById(my.workingFile.fileId).style.color = "";
     }
-    
-    function setWorkspaceContent(fileNode){
+
+    function setWorkspaceContent(fileNode) {
         var ext = fileNode.name.split(".");
-        ext = ext[ext.length-1];
-        
-        if (["png", "jpg", "jpeg", ,"jpeg2000", "tif", "tiff", "gif", "bmp"].indexOf(ext) !== -1){
+        ext = ext[ext.length - 1];
+
+        if (["png", "jpg", "jpeg", , "jpeg2000", "tif", "tiff", "gif", "bmp"].indexOf(ext) !== -1) {
             document.querySelector(".image-wrapper").style.display = "";
             document.querySelector(".image-wrapper img").src = fileNode.content;
-        }else{
+        } else {
             document.querySelector(".image-wrapper").style.display = "none";
             my.editor.getDoc().setValue(fileNode.content || "");
             my.editor.setOption("mode", syntaxMapping(fileNode.name));
@@ -219,7 +245,8 @@ h1 {
                 type: 'folder'
             });
         }
-        
+        setLocalStorage();
+
         return fileId;
     }
 
@@ -252,7 +279,8 @@ h1 {
                 type: 'file'
             });
         }
-        
+        setLocalStorage();
+
         return fileId;
     }
 
@@ -263,13 +291,13 @@ h1 {
         setWorkspaceContent(my.workingFile);
         document.getElementById(fileId).style.color = "";
     }
-    
+
     /* Sets the theme ('material', 'atom') */
     var currentTheme;
-    my.setTheme = function(themeName){
-        document.querySelector('html').className = "theme-"+themeName;
+    my.setTheme = function (themeName) {
+        document.querySelector('html').className = "theme-" + themeName;
         my.editor.setOption("theme", themeName);
-        currentTheme=themeName;
+        currentTheme = themeName;
     }
 
     /* Maps extensions to CodeMirror modes */
@@ -284,7 +312,7 @@ h1 {
             "less": "css",
             "html": "htmlmixed",
             "xml": "xml",
-            "php" : "application/x-httpd-php"
+            "php": "application/x-httpd-php"
         }
         return mapping[ext] || null;
     }
@@ -297,7 +325,8 @@ h1 {
     }
 
     /* Initialize the editor and tree */
-    my.init = function () {
+    my.init = function (firstTime) {
+        if (firstTime) getLocalStorage();
         var textArea = document.getElementById("editor");
         var options = {
             mode: "javascript",
@@ -329,6 +358,7 @@ h1 {
             } else if (lastCursor) {
                 my.editor.setCursor(lastCursor);
             }
+            setLocalStorage();
         });
 
         renderFullTree(rootTreeElement, fileTree, 'root', null);
@@ -350,30 +380,32 @@ h1 {
                 saveAs(content, "tethysProject.zip");
             });
         } catch (e) {
-            Modal.open("general-alert",{msg:"Your browser does not support this!"});
+            Modal.open("general-alert", {
+                msg: "Your browser does not support this!"
+            });
         }
     }
-    
+
     /* Creates a file from an HTML5 File object */
-    my.loadFile = function(fileObject, parentId){
+    my.loadFile = function (fileObject, parentId) {
         var ext = fileObject.name.split(".");
-        ext = ext[ext.length-1];
-        var isImage = ["png", "jpg", "jpeg", ,"jpeg2000", "tif", "tiff", "gif", "bmp"].indexOf(ext) !== -1;
-        
+        ext = ext[ext.length - 1];
+        var isImage = ["png", "jpg", "jpeg", , "jpeg2000", "tif", "tiff", "gif", "bmp"].indexOf(ext) !== -1;
+
         var reader = new FileReader();
-        reader.addEventListener('loadend', function(){
+        reader.addEventListener('loadend', function () {
             var fileId = my.mkfile(parentId, fileObject.name);
             getNode(fileId, fileTree).content = reader.result;
             my.open(fileId);
             SocketAPI.changeFile(fileId, reader.result); //Signal new content
+            setLocalStorage();
         });
-        
-        if (isImage){
+
+        if (isImage) {
             reader.readAsDataURL(fileObject);
-        }else{
+        } else {
             reader.readAsText(fileObject);
         }
-        
     }
 
     /* Create a .zip file from the tree */
@@ -398,6 +430,7 @@ h1 {
             getNode(fileId, fileTree).content = change; //TODO: Only send/receive changes
             document.getElementById(fileId).style.color = "red";
         }
+        setLocalStorage();
     }
 
     /* Fires when a file is added by a peer */
@@ -424,10 +457,10 @@ h1 {
     });
 
     /* Creates a file from a string */
-    my.openString= function(code, type){
-        if (code){
+    my.openString = function (code, type) {
+        if (code) {
             if (!type) type = "js"
-            var fileId = my.mkfile("root", "code."+type);
+            var fileId = my.mkfile("root", "code." + type);
             getNode(fileId, fileTree).content = code;
             my.open(fileId);
         }

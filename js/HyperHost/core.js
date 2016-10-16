@@ -405,6 +405,7 @@ var HyperHost = (function (Util, Modal) {
             }
 
             window.onbeforeunload = function () {
+                FileSystem.saveLocal();
                 return "Your site will no longer be hosted if you leave!"; //Alert before leaving!
             }
         };

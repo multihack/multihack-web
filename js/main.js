@@ -255,7 +255,7 @@ var Tethys = (function () {
         Modal.open('kick-alert');
     }
 
-    FileSystem.init();
+    FileSystem.init(true);
     FileSystem.open("welcome");
     Modal.open('intro');
     
