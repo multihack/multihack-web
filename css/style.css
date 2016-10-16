@@ -53,7 +53,6 @@ body {
     left: 0;
     right: 0;
     width: 100%;
-    border-bottom: solid transparent 1px;
 }
 
 .noselect,
