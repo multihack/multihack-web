@@ -14,7 +14,11 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
                 })));
             }
         }catch(err){
-            localStorage.setItem('tethysTree', "");
+            try { 
+                localStorage.setItem('tethysTree', "");
+            }catch(err){
+                //Catch private mode
+            }
         }
     }
 
