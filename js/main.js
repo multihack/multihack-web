@@ -275,6 +275,6 @@ var Tethys = (function () {
             break;
     }
     
-    console.log("%c Rock that console! If you're after the source: https://github.com/RationalCoding/TETHYS", "color:#263238; font-size: 15px;");
+    console.log("%c Rock that console! If you're after the source: https://github.com/RationalCoding/MULTIHACK", "color:#263238; font-size: 15px;");
 
 }())
