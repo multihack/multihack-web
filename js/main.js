@@ -105,7 +105,6 @@ var Tethys = (function () {
                 default:
                     FileSystem.setTheme('material');
             }
-            Modal.close();
         }
         Modal.open("themes");
     });

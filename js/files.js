@@ -265,9 +265,11 @@ h1 {
     }
     
     /* Sets the theme ('material', 'atom') */
+    var currentTheme;
     my.setTheme = function(themeName){
         document.querySelector('html').className = "theme-"+themeName;
         my.editor.setOption("theme", themeName);
+        currentTheme=themeName;
     }
 
     /* Maps extensions to CodeMirror modes */
@@ -300,7 +302,7 @@ h1 {
         var options = {
             mode: "javascript",
             lineNumbers: true,
-            theme: "material",
+            theme: currentTheme || "material",
             tabSize: 4,
             indentUnit: 4,
             lineWrapping: true,
