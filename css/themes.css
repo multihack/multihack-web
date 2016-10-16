@@ -160,18 +160,20 @@
 
 /* Codepen inspired theme */
 .theme-codepen .theme-dark{
-    background: #303030;
-    border: 1px black solid;
+    background: black;
+    border: none;
 }
 
 .theme-codepen .theme-mid{
-    background: #292c2f;
-    border: 1px black solid;
+    background: #1A1C1D;
+    border: none;
 }
 
 .theme-codepen .theme-light{
-    background: #303030;
-    border: 1px black solid;
+    background: #1A1C1D;
+    border: none;
+    border-right: 1px #343436 solid;
+
 }
 
 .theme-codepen .theme-font-primary{
@@ -183,24 +185,29 @@
 }
 
 .theme-codepen .theme-border{
-    border-color: black !important;
+    border-color: #343436 !important;
 }
 
 .theme-codepen .theme-dark-border, input[type="text"] {
-    border-color: black !important;
+    border-color: #343436 !important;
 }
 
 .theme-codepen .go-button{
-    background: #1d1f21;
+    background: #343436;
 }
 
 .theme-codepen .no-button {
-    background: #31343F;
+    background: #47CF73;
 }
 
-.theme-codepen .go-button:hover,
+.theme-codepen .go-button:hover{
+    background: #4d4d50;
+    outline: none;
+
+}
 .theme-codepen .no-button:hover {
-    outline: 5px solid white;
+    background: #2fb45a;
+    outline: none;
 }
 .theme-codepen button:active {
     background-color: white;
@@ -228,7 +235,9 @@
 }
 
 .theme-codepen .modal {
-    background: #303030;
+    background: white;
+    border: none;
+    color: black;
 }
 .theme-codepen li input + ol {
     background: url(../img/folder.png) 40px 0 no-repeat;

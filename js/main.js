@@ -99,6 +99,9 @@ var Tethys = (function () {
                 case 'atom':
                     FileSystem.setTheme('atom');
                     break;
+                case 'codepen':
+                    FileSystem.setTheme('codepen');
+                    break;
                 default:
                     FileSystem.setTheme('material');
             }
