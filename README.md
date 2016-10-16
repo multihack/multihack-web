@@ -11,7 +11,7 @@ Tired of struggling to set up remote collaboration with your team?
 -Syntax highlighting for all web languages (more support on request)  
 -Network with other users and instantly start prototyping.  
 -Save your project when you're done editing.  
--Upload an existing project (coming soon).  
+-Upload an existing project.  
 -Close your browser and continue working later. (coming soon).
 
 
