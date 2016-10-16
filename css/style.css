@@ -344,7 +344,8 @@ img ,
     border: transparent 10px solid;
     display: none;
     padding: 20px;
-    overflow: hidden;
+    max-height: 100%;
+    overflow-y: auto;
 }
 
 .blocking-overlay {
