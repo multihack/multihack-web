@@ -7,10 +7,14 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
     }
 
     function setLocalStorage() {
-        if (localStorage) {
-            localStorage.setItem('tethysTree', JSON.stringify(fileTree.map(function(e){
-                return {content: e.content, name:e.name, isRemoved:e.isRemoved, fileId:e.fileId};
-            })));
+        try {
+            if (localStorage) {
+                localStorage.setItem('tethysTree', JSON.stringify(fileTree.map(function(e){
+                    return {content: e.content, name:e.name, isRemoved:e.isRemoved, fileId:e.fileId};
+                })));
+            }
+        }catch(err){
+            localStorage.setItem('tethysTree', "");
         }
     }
 
