@@ -1,7 +1,7 @@
 # MULTIHACK
 A real-time collaboration editor, web host, voice chat and social network rolled into one.  
 
-![screenshot](http://i.imgur.com/VduvE87.png)
+![screenshot](https://github.com/RationalCoding/multihack/blob/gh-pages/img/mockup.jpg?raw=true)
 
 Tired of struggling to set up remote collaboration with your team?
 
