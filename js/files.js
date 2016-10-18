@@ -365,12 +365,15 @@ h1 {
             } else if (lastCursor) {
                 my.editor.setCursor(lastCursor);
             }
-            setLocalStorage();
         });
 
         renderFullTree(rootTreeElement, fileTree, 'root', null);
 
         openAny();
+        
+        setInterval(function(){
+            setLocalStorage();
+        }, 5000);
     }
 
     /* Creates a zip from the tree and attempts to download it */
@@ -437,7 +440,6 @@ h1 {
             getNode(fileId, fileTree).content = change; //TODO: Only send/receive changes
             document.getElementById(fileId).style.color = "red";
         }
-        setLocalStorage();
     }
 
     /* Fires when a file is added by a peer */
