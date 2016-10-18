@@ -28,7 +28,7 @@
 .cm-s-atom span.cm-def {color: #cc7833;}
 .cm-s-atom span.cm-error {background: #da4939; color: #d4cfc9;}
 .cm-s-atom span.cm-bracket {color: #f4f1ed;}
-.cm-s-atom span.cm-tag {color: #da4939;}
+.cm-s-atom span.cm-tag {color: #82bbeb;}
 .cm-s-atom span.cm-link {color: #b6b3eb;}
 
 .cm-s-atom .CodeMirror-matchingbracket { text-decoration: underline; color: white !important;}
