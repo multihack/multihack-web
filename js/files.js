@@ -87,6 +87,7 @@ h1 {
 
     my.editor = null;
     my.workingFile = null;
+    var editorMutexLock = false;
 
     /* Renders the tree's DOM entirely (expensive) */
     function renderFullTree(treeElement, nodeList, parentId, parent) {
@@ -177,9 +178,18 @@ h1 {
             document.querySelector(".image-wrapper img").src = fileNode.content;
         } else {
             document.querySelector(".image-wrapper").style.display = "none";
+            editorMutexLock=true;
             my.editor.getDoc().setValue(fileNode.content || "");
             my.editor.setOption("mode", syntaxMapping(fileNode.name));
+            editorMutexLock=false;
         }
+    }
+    
+    function applyWorkspaceChange(change, full){
+        editorMutexLock=true;
+        my.editor.replaceRange(change.text, change.from, change.to);
+        my.workingFile.content = full;
+        editorMutexLock=false;
     }
 
     /* Gets a file with the specified id */
@@ -325,12 +335,6 @@ h1 {
     }
 
 
-    /* Update part of a file */
-    my.softUpdateFile = function (fileId, change) {
-        //TODO: Only update difference
-        alert("not implemented softUpdateFile");
-    }
-
     /* Initialize the editor and tree */
     my.init = function (firstTime) {
         if (firstTime) getLocalStorage();
@@ -347,24 +351,10 @@ h1 {
         my.editor = CodeMirror.fromTextArea(textArea, options);
 
 
-        var computerActions = ["setValue", "replaceRange", "+move"];
-
-        var lastCursor;
-        my.editor.on('beforeChange', function (cm, change) {
-            if (computerActions.indexOf(change.origin) !== -1) { //If user is not the one changing
-                lastCursor = my.editor.getCursor();
-            } else {
-                lastCursor = undefined;
-            }
-        });
-
         my.editor.on('change', function (cm, change) {
-            if (computerActions.indexOf(change.origin) === -1) { //Make sure change is from user input
-                my.workingFile.content = cm.getValue();
-                SocketAPI.changeFile(my.workingFile.fileId, my.workingFile.content); //TODO: Only send changes
-            } else if (lastCursor) {
-                my.editor.setCursor(lastCursor);
-            }
+            if (editorMutexLock) return;
+            my.workingFile.content = cm.getValue();
+            SocketAPI.changeFile(my.workingFile.fileId, change, my.workingFile.content);
         });
 
         renderFullTree(rootTreeElement, fileTree, 'root', null);
@@ -407,7 +397,7 @@ h1 {
             var fileId = my.mkfile(parentId, fileObject.name);
             getNode(fileId, fileTree).content = reader.result;
             my.open(fileId);
-            SocketAPI.changeFile(fileId, reader.result); //Signal new content
+            SocketAPI.changeFile(fileId, null, reader.result); //Signal new content
             setLocalStorage();
         });
 
@@ -432,12 +422,11 @@ h1 {
     }
 
     /* Fires when a file is changed by a peer */
-    SocketAPI.onChangeFile = function (fileId, change) {
+    SocketAPI.onChangeFile = function (fileId, change, full) {
         if (fileId == my.workingFile.fileId) {
-            my.workingFile.content = change;
-            setWorkspaceContent(my.workingFile); //TODO: Only send/receive changes
+            applyWorkspaceChange(change, full);
         } else {
-            getNode(fileId, fileTree).content = change; //TODO: Only send/receive changes
+            getNode(fileId, fileTree).content = full;
             document.getElementById(fileId).style.color = "red";
         }
     }

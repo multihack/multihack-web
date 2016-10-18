@@ -55,9 +55,10 @@ var SocketAPI = (function () {
     my.addFile = function (data) {
         socket.emit('code/add', data);
     }
-    my.changeFile = function (fileId, change) {
+    my.changeFile = function (fileId, change, full) {
         socket.emit('code/change', {
             fileId: fileId,
+            full: full,
             change: change
         });
     }
@@ -142,7 +143,7 @@ var SocketAPI = (function () {
         my.onAddFile(data.parentId, data.name, data.fileId, data.type);
     });
     socket.on('code/change', function (data) {
-        my.onChangeFile(data.fileId, data.change);
+        my.onChangeFile(data.fileId, data.change, data.full);
     });
 
 
