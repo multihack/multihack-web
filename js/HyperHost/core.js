@@ -22,6 +22,8 @@ var HyperHost = (function (Util, Modal) {
 
     // Initialize the host
     var initialized = false;
+    var peer;
+    var MY_ID; //Our PeerJS id
 
     function initializeHost(forceReload) {
         if (initialized && !forceReload) {
@@ -38,8 +40,8 @@ var HyperHost = (function (Util, Modal) {
         var fileNetSize = 0; //Net size of files
         var foundIndex = false;
         var serverCode;
-        var MY_ID; //Our PeerJS id
-        var peer;
+        
+        
 
         //Aethetically keeps track of file structure 
         var workingTree = {
