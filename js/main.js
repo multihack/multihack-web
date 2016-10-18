@@ -103,7 +103,7 @@ var Tethys = (function () {
                     FileSystem.setTheme('codepen');
                     break;
                 default:
-                    FileSystem.setTheme('material');
+                    FileSystem.setTheme('atom');
             }
         }
         Modal.open("themes");

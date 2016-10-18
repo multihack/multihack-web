@@ -342,7 +342,7 @@ h1 {
         var options = {
             mode: "javascript",
             lineNumbers: true,
-            theme: currentTheme || "material",
+            theme: currentTheme || "atom",
             tabSize: 4,
             indentUnit: 4,
             lineWrapping: true,

@@ -241,7 +241,7 @@ Modal.onsubmit['url'] = function () {};
 
 Modal.templates['themes'] = `
 <h1>Choose a Theme</h1>
-<button style="width:95px" data-value="material" class="go-button">MULTIHACK</button>
+<button style="width:95px" data-value="material" class="go-button">Ocean</button>
 <button style="width:95px" data-value="atom" class="go-button">Atom</button>
 <br>
 <button style="width:95px" data-value="codepen" class="go-button">CodePen</button>
