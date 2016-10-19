@@ -46,7 +46,7 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Welcome to MULTIHACK!</h1>
+    <h1>Welcome to MultiHack!</h1>
 
     <ul>
         <li>Collaborate in real-time.</li>
@@ -54,7 +54,7 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
     	<li>Voice chat with up to 10 people! (WebRTC only)</li>
     	<li>Instantly deploy your website via HyperHost (WebRTC only)</li>
     	<li>Save your project for working offline.</li>
-    	<li>MULTIHACK is the ONLY multi-file, multi-user code editor on the web.</li>
+    	<li>MultiHack is the ONLY multi-file, multi-user code editor on the web.</li>
         
         <!-- Try deploying this file! -->
 

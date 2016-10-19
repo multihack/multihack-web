@@ -333,7 +333,7 @@ var Tethys = (function (my) {
         FileSystem.setTheme(theme);
     }
     
-    console.log("%c Rock that console! If you're after the source: https://github.com/RationalCoding/MULTIHACK", "color:#263238; font-size: 15px;");
+    console.log("%c Rock that console! If you're after the source: https://github.com/RationalCoding/MultiHack", "color:#263238; font-size: 15px;");
 
     
     return my;

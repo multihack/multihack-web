@@ -1,4 +1,4 @@
-# MULTIHACK
+# MultiHack
 A real-time collaboration editor, web host, voice chat and social network rolled into one.  
 [multihack.co](https://rationalcoding.github.io/multihack)
 

@@ -2,7 +2,7 @@
 hyperhost.js Thomas Mullen 2016
 Uses WebRTC to host static websites from the browser.
 
-Modified to work with MULTIHACK!
+Modified to work with MultiHack!
 For the original, general purpose version: 
 https://github.com/RationalCoding/HyperHost
 */
@@ -11,7 +11,7 @@ var HyperHost = (function (Util, Modal) {
     'use strict';
     var module = {};
     var clientURL;
-    module.VERSION = "MULTIHACK-Special";
+    module.VERSION = "MultiHack-Special";
 
     /*------- Redirect clients to the client.html -----*/
 
@@ -48,7 +48,7 @@ var HyperHost = (function (Util, Modal) {
             nodes: []
         };
 
-        // Traverse a  MULTIHACK tree
+        // Traverse a  MultiHack tree
         function traverseFileTree(item, path, depth, ancestors) {    
             if (item.name[0] === "." || item.isRemoved) {
                 return; //Ignore hidden files
@@ -104,7 +104,7 @@ var HyperHost = (function (Util, Modal) {
                     }
 
                 } else if (["png", "jpg", "jpeg", ,"jpeg2000", "tif", "tiff", "gif", "bmp"].indexOf(ext) !== -1 ) {
-                    //Images are already base64 due to MULTIHACK wanting to display them in-editor
+                    //Images are already base64 due to MultiHack wanting to display them in-editor
                     Util.deepSetTree(workingTree, {
                         type: ext,
                         name: item.name,
@@ -232,7 +232,7 @@ var HyperHost = (function (Util, Modal) {
             HYPERHOST_SERVE(); //We can now serve the processed files to anyone who requests them
         }
 
-        //Handles a MULTIHACK tree
+        //Handles a MultiHack tree
         module.handleTethys = function (tree) {
             initializeHost(true); //Force a reload
             console.log("******* HyperHost v" + module.VERSION + " *******");
