@@ -411,6 +411,13 @@ input[type="text"]:focus {
     height: 100%;
 }
 
+.cursor {
+    position: fixed;
+    height: 12px;
+    width: 12px;
+    z-index: 9999999;
+}
+
 
 /* Custom scrollbars */
 

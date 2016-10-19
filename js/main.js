@@ -1,4 +1,4 @@
-var Tethys = (function () {
+var Tethys = (function (my) {
     
     document.querySelector('#tree').addEventListener('click', function (event) {
         if (event.target.className.indexOf('file') !== -1) {
@@ -174,6 +174,70 @@ var Tethys = (function () {
     var onlineElements = {};
     var userTemplate = `<img class="user-img" data-name="{{name}}" data-userid="{{id}}" src="img/miniman/avatar-{{pic}}.png"><label>{{name}}</label>`;
     
+    
+    my.roomEmpty = function(){
+        return roomElements <= 1;
+    }
+    
+    var cursors = {};
+    
+    function makeCursor(user){
+        var img = document.createElement('img');
+        img.src="img/pointer.png";
+        img.className = "cursor";
+        img.displayed=false;
+        img.style.display='none';
+        cursors[user.id]=document.body.appendChild(img);
+    }
+    
+    function moveCursor(userId, coords){
+        cursors[userId].style.left = coords.x+"px";
+        cursors[userId].style.top = coords.y+"px";
+    }
+    
+    var cursorMoveMutex = false;
+    var lastCursor = {x: 0, y:0};
+    window.addEventListener('mousemove', function(e){
+        if (my.roomEmpty()) return;
+        lastCursor={x: e.clientX, y: e.clientY};
+        
+        if (cursorMoveMutex) return;  //Ratelimit
+        cursorMoveMutex = true;
+        setTimeout(function(){
+            SocketAPI.moveCursor(lastCursor);
+            cursorMoveMutex = false;
+        },100);
+        
+    });
+    
+    
+    window.addEventListener('mouseout', function(e){
+        e = e ? e : window.event;
+        var from = e.relatedTarget || e.toElement;
+        if (!from || from.nodeName == "HTML") {
+            setTimeout(function(){
+                SocketAPI.moveCursor({x:-50, y:-50});
+            },500);
+        }
+    },false);
+    
+    
+    SocketAPI.onMoveCursor = function(userId, fileId, coords) {
+        if (fileId === FileSystem.workingFile.fileId){
+            if (!cursors[userId].displayed){
+                cursors[userId].displayed=true;
+                cursors[userId].style.display = '';
+            }
+            moveCursor(userId, coords);
+        }else{
+            if (cursors[userId].displayed){
+                cursors[userId].displayed=false;
+                cursors[userId].style.display = 'none';
+            }
+        }
+    }
+    
+    
     function makeUser(user, group, isMe){
         if (user.hash == hash && !isMe) return; //Don't make self
         var div = document.createElement('div');
@@ -206,6 +270,7 @@ var Tethys = (function () {
         makeUser(me, 'room', true);
     }
     
+
     SocketAPI.onOtherJoinOnline = function (user) {
         removeUser(user);
         makeUser(user,'online');
@@ -216,9 +281,11 @@ var Tethys = (function () {
     SocketAPI.onOtherJoinRoom = function (user) {
         removeUser(user);
         makeUser(user, 'room');
+        makeCursor(user); //Make a cursor
     }
     SocketAPI.onOtherLeftRoom = function (user) {
         removeUser(user, 'room');
+        cursors[user.id].parentNode.removeChild(cursors[user.id]); // Remove their cursor
     }
     SocketAPI.onWho = function(onlineList){
         for (var i=0; i<onlineList.length; i++){
@@ -242,6 +309,7 @@ var Tethys = (function () {
         for (var i=0; i<who.length; i++){
             removeUser(who[i]);
             makeUser(who[i], 'room');
+            makeCursor(who[i]);
         }
         document.querySelector("#roomlist > .panel-topbar").innerHTML = roomOwner.name+"'s Room";
     }
@@ -278,4 +346,6 @@ var Tethys = (function () {
     
     console.log("%c Rock that console! If you're after the source: https://github.com/RationalCoding/MULTIHACK", "color:#263238; font-size: 15px;");
 
-}())
+    
+    return my;
+}({}))

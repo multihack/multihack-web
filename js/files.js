@@ -157,6 +157,7 @@ h1 {
     function deleteNode(child) {
         child.parentElement.removeChild(child.realEl);
         child.isRemoved = true;
+        //TODO: Garbage collection
     }
 
     /* Opens any file (first in tree traversal) */
@@ -350,7 +351,7 @@ h1 {
 
 
         my.editor.on('change', function (cm, change) {
-            if (editorMutexLock) return;
+            if (editorMutexLock || Tethys.roomEmpty()) return;
             my.workingFile.content = cm.getValue();
             SocketAPI.changeFile(my.workingFile.fileId, change, my.workingFile.content);
         });

@@ -62,6 +62,12 @@ var SocketAPI = (function () {
             change: change
         });
     }
+    my.moveCursor = function(coords) {
+        socket.emit('code/cursor', {
+            coords : coords,
+            fileId : FileSystem.workingFile.fileId
+        });
+    }
 
     /* Incoming */
     socket.on('online/handshake', function (myId) {
@@ -144,6 +150,9 @@ var SocketAPI = (function () {
     });
     socket.on('code/change', function (data) {
         my.onChangeFile(data.fileId, data.change, data.full);
+    });
+    socket.on('code/cursor', function(data){
+        my.onMoveCursor(data.userId, data.fileId, data.coords);
     });
 
 

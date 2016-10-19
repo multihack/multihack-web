@@ -185,6 +185,11 @@ io.on('connection', function (socket) {
              requester.socket.emit('code/all/serve', data.fileTree);
         }
     });
+    socket.on('code/cursor', function(data){
+        if (!users[id]) return;
+        data.userId = id;
+        socket.to(users[id].room).emit('code/cursor', data); //{userId, fileId, {x,y}}
+    });
 
 });
 
