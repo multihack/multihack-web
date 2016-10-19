@@ -9,9 +9,7 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
     function setLocalStorage() {
         try {
             if (localStorage) {
-                localStorage.setItem('tethysTree', JSON.stringify(fileTree.map(function(e){
-                    return {content: e.content, name:e.name, isRemoved:e.isRemoved, fileId:e.fileId};
-                })));
+                //TODO: Save to local storage
             }
         }catch(err){
             try { 
