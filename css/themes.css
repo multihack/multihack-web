@@ -128,16 +128,16 @@
 }
 
 .theme-atom *::-webkit-scrollbar-track {
-    border-color: #5A6D76;
-    background: #182A33;
+    border-color: #1D1F21;
+    background: #1D1F21;
 }
 
 .theme-atom *::-webkit-scrollbar-thumb {
-    background: #5A6D76;
+    background: #303030;
 }
 
 .theme-atom *::-webkit-scrollbar-thumb:hover {
-    background: #648a9b;
+    background: #303030;
 }
 
 .theme-atom .modal {
@@ -222,16 +222,16 @@
 }
 
 .theme-codepen *::-webkit-scrollbar-track {
-    border-color: #5A6D76;
+    border-color: #1D1F20;
     background: #182A33;
 }
 
 .theme-codepen *::-webkit-scrollbar-thumb {
-    background: #5A6D76;
+    background: #666666;
 }
 
 .theme-codepen *::-webkit-scrollbar-thumb:hover {
-    background: #648a9b;
+    background: #666666;
 }
 
 .theme-codepen .modal {
