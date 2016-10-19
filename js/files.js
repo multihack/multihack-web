@@ -459,6 +459,7 @@ h1 {
                     }
                                        
                     zipEntry.async(type).then(function success(content){
+                        if (type==="base64") content = 'data:text/javascript;base64,'+content;
                         getNode(pathToId[relativePath], fileTree).content = content;
                         SocketAPI.changeFile(pathToId[relativePath], null, content); //Signal new content
                     });
