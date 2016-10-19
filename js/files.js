@@ -436,7 +436,7 @@ h1 {
                 parentPath = relativePath.split("/");
                 var name = parentPath[parentPath.length-1];
                 
-                if (name === "__MACOSX" || name === ".DS_Store") return; //Ignore mac stuff
+                if (relativePath.indexOf("__MACOSX") !== -1 || name === ".DS_Store") return; //Ignore mac stuff
                 
                 
                 parentPath.splice(-1,1);
