@@ -10,10 +10,19 @@ var Tethys = (function (my) {
                     if (newName.length <= 0) newName = "New " + button;
                     if (button === 'file') {
                         FileSystem.mkfile(parentId, newName);
+                        Modal.close();
                     } else if (button === 'folder'){
                         FileSystem.mkdir(parentId, newName);
-                    }
-                    Modal.close();
+                        Modal.close();
+                    } else if (button === "github"){
+                        Modal.onsubmit["github"] = function(button, input){
+                            FileSystem.fetchRepo(parentId, input[0], input[1]);
+                            Modal.close();
+                        }
+                        Modal.open("github");
+                    }else{
+                        Modal.close();
+                    }     
                 }
                 Modal.open('createFile');
                 document.querySelector("#fileUpload").addEventListener('change', function(event){

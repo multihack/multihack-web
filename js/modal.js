@@ -144,7 +144,7 @@ Modal.onsubmit['welcome-5'] = function (button, input) {
 
 Modal.templates['welcome-6'] = `<h1>WELCOME TO MULTIHACK</h1>
     <h3>How To Contribute</h3>
-    <p>MULTIHACK is 100% open source! It gets better every day thanks to the help of developers like you. Check out the source on <a href="https://github.com/RationalCoding/MULTIHACK">Github</a>.</p>
+    <p>MULTIHACK is 100% open source! It gets better every day thanks to the help of developers like you. Check out the source on <a href="https://github.com/RationalCoding/MULTIHACK">GitHub</a>.</p>
     <p>PRs and Issues are always welcome, and an Atom extension is on it's way!</p>
     <br>
     <button data-value="submit" class="go-button">Tell Me More</button>
@@ -176,6 +176,7 @@ Modal.templates["createFile"] = `<h1>Create New...</h1>
     <button data-value="file" class="go-button">File</button>
     <button data-value="folder" class="go-button">Folder</button>
     <input id="fileUpload" class="go-button" type="file" multiple />
+    <button data-value="github" class="go-button">GitHub</button>
     <br>
 <button data-value="close" class="no-button">Cancel</button>
 <p>{{flash}}</p>`;
@@ -234,6 +235,18 @@ Modal.templates['url'] = `
 <p>Your site is ready at...</p>
 <p class="red"><a target="_blank" href="{{url}}">{{url}}</a></p>
 <button data-value="close" class="go-button">Ok</button>
+`;
+Modal.onsubmit['url'] = function () {};
+
+
+Modal.templates['github'] = `
+<h1>GitHub Repo</h1>
+<input style="width:414px" class="modal-input" type="text" placeholder="https://github.com/username/repo">
+<br><br>
+<input class="modal-input" type="text" placeholder="branch">
+<br><br>
+<button data-value="load" class="go-button">Load</button>
+<button data-value="close" class="no-button">Cancel</button>
 `;
 Modal.onsubmit['url'] = function () {};
 

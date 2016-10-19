@@ -115,7 +115,7 @@ for (var i=0; i < 10; i++){
             var li = document.createElement('li');
 
             if (file.nodes) {
-                li.innerHTML = '<label for="' + file.fileId + '">' + file.name + '</label><input checked type="checkbox" id="' + file.fileId + '" />'
+                li.innerHTML = '<label for="' + file.fileId + '">' + file.name + '</label><input type="checkbox" id="' + file.fileId + '" />'
 
                 var ol = document.createElement('ol');
                 file.el = ol;
@@ -244,7 +244,7 @@ for (var i=0; i < 10; i++){
         }
 
         var li = document.createElement('li');
-        li.innerHTML = '<label for="' + file.fileId + '">' + file.name + '</label><input checked type="checkbox" id="' + file.fileId + '" />';
+        li.innerHTML = '<label for="' + file.fileId + '">' + file.name + '</label><input type="checkbox" id="' + file.fileId + '" />';
         var ol = document.createElement('ol');
         li.appendChild(ol);
         var plusEl = document.createElement('li');
@@ -398,7 +398,7 @@ for (var i=0; i < 10; i++){
         var isImage = IMAGE_EXTENSIONS.indexOf(ext) !== -1;
         
         if (ext === "zip") {
-            unzipTree(fileObject, parentId);
+            unzipTree(fileObject, parentId, fileObject.name.slice(0,-4));
             return;
         }
 
@@ -431,11 +431,11 @@ for (var i=0; i < 10; i++){
     }
     
     /* Create a subTree from zip file data */
-    function unzipTree(fileObject, parentId){
+    function unzipTree(fileObject, parentId, name){
         JSZip.loadAsync(fileObject).then(function(zip){
             //Make the root directory
             
-            var rootId = my.mkdir(parentId, fileObject.name.slice(0,-4)); //Make root folder (removes zip extension)
+            var rootId = my.mkdir(parentId, name); //Make root folder (removes zip extension)
             var pathToId = {}; //Maps paths in the zip archive to their fileIds
             
             
@@ -460,7 +460,7 @@ for (var i=0; i < 10; i++){
                     pathToId[relativePath] = my.mkfile(parentId, name);
                     var ext = zipEntry.name.split(".");
                     ext = ext[ext.length - 1];
-                    var isImage = ["png", "jpg", "jpeg", , "jpeg2000", "tif", "tiff", "gif", "bmp", "ico"].indexOf(ext) !== -1;
+                    var isImage = IMAGE_EXTENSIONS.indexOf(ext) !== -1;
                     
                     var type;
                     if (isImage){
@@ -477,6 +477,19 @@ for (var i=0; i < 10; i++){
                 }
             });
 
+        });
+    }
+    
+    /* Fetches a Github Repo */
+    my.fetchRepo = function(parentId, baseUrl, branch){
+        var zipUrl = "https://cors-anywhere.herokuapp.com/"+baseUrl+"/zipball/"+branch;
+        JSZipUtils.getBinaryContent(zipUrl, function(err, data) {
+            if(err) {
+                Modal.open("general-alert", {msg:"Failed to get repo: <br>"+err.message});
+                return;
+            }
+
+            unzipTree(data, parentId, branch);
         });
     }
 
