@@ -370,7 +370,6 @@ button {
     border: 0;
     cursor: pointer;
     outline: none;
-    transition: all .3s;
     color: white;
     font-size: 13px;
 }
