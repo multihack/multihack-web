@@ -78,7 +78,6 @@ h1 {
 
     SocketAPI.onAllCode = function (newFileTree) {
         fileTree = newFileTree;
-        setLocalStorage(); //Save to localstorage on joining a new room
         my.init();
     }
 
@@ -88,6 +87,9 @@ h1 {
     my.editor = null;
     my.workingFile = null;
     var editorMutexLock = false;
+    
+    
+    var IMAGE_EXTENSIONS = ["png", "jpg", "jpeg", , "jpeg2000", "tif", "tiff", "gif", "bmp", "ico"];
 
     /* Renders the tree's DOM entirely (expensive) */
     function renderFullTree(treeElement, nodeList, parentId, parent) {
@@ -149,12 +151,12 @@ h1 {
         }
         return undefined;
     }
+    
 
     /* Deletes a node from the tree */
     function deleteNode(child) {
         child.parentElement.removeChild(child.realEl);
         child.isRemoved = true;
-        setLocalStorage();
     }
 
     /* Opens any file (first in tree traversal) */
@@ -173,7 +175,7 @@ h1 {
         var ext = fileNode.name.split(".");
         ext = ext[ext.length - 1];
 
-        if (["png", "jpg", "jpeg", , "jpeg2000", "tif", "tiff", "gif", "bmp"].indexOf(ext) !== -1) {
+        if (IMAGE_EXTENSIONS.indexOf(ext) !== -1) {
             document.querySelector(".image-wrapper").style.display = "";
             document.querySelector(".image-wrapper img").src = fileNode.content;
         } else {
@@ -262,7 +264,6 @@ h1 {
                 type: 'folder'
             });
         }
-        setLocalStorage();
 
         return fileId;
     }
@@ -296,7 +297,6 @@ h1 {
                 type: 'file'
             });
         }
-        setLocalStorage();
 
         return fileId;
     }
@@ -360,10 +360,6 @@ h1 {
         renderFullTree(rootTreeElement, fileTree, 'root', null);
 
         openAny();
-        
-        setInterval(function(){
-            setLocalStorage();
-        }, 5000);
     }
 
     /* Creates a zip from the tree and attempts to download it */
@@ -390,7 +386,12 @@ h1 {
     my.loadFile = function (fileObject, parentId) {
         var ext = fileObject.name.split(".");
         ext = ext[ext.length - 1];
-        var isImage = ["png", "jpg", "jpeg", , "jpeg2000", "tif", "tiff", "gif", "bmp"].indexOf(ext) !== -1;
+        var isImage = IMAGE_EXTENSIONS.indexOf(ext) !== -1;
+        
+        if (ext === "zip") {
+            unzipTree(fileObject, parentId);
+            return;
+        }
 
         var reader = new FileReader();
         reader.addEventListener('loadend', function () {
@@ -398,7 +399,6 @@ h1 {
             getNode(fileId, fileTree).content = reader.result;
             my.open(fileId);
             SocketAPI.changeFile(fileId, null, reader.result); //Signal new content
-            setLocalStorage();
         });
 
         if (isImage) {
@@ -419,6 +419,51 @@ h1 {
                 zip.file(path + "/" + nodeList[i].name, nodeList[i].content);
             }
         }
+    }
+    
+    /* Create a subTree from zip file data */
+    function unzipTree(fileObject, parentId){
+        JSZip.loadAsync(fileObject).then(function(zip){
+            //Make the root directory
+            
+            var rootId = my.mkdir(parentId, fileObject.name.slice(0,-4)); //Make root folder (removes zip extension)
+            var pathToId = {}; //Maps paths in the zip archive to their fileIds
+            
+            
+            zip.forEach(function(relativePath, zipEntry){  
+                if (zipEntry.dir){
+                    relativePath = relativePath.slice(0,-1);
+                }
+                var parentPath;
+                parentPath = relativePath.split("/");
+                var name = parentPath[parentPath.length-1];
+                parentPath.splice(-1,1);
+                parentPath = parentPath.join("/");
+                var parentId = pathToId[parentPath] || rootId;
+                
+                if (zipEntry.dir){
+                    pathToId[relativePath] = my.mkdir(parentId, name);
+                }else{
+                    pathToId[relativePath] = my.mkfile(parentId, name);
+                    var ext = zipEntry.name.split(".");
+                    ext = ext[ext.length - 1];
+                    var isImage = ["png", "jpg", "jpeg", , "jpeg2000", "tif", "tiff", "gif", "bmp", "ico"].indexOf(ext) !== -1;
+                    
+                    var type;
+                    if (isImage){
+                        type="base64";
+                    }else{
+                        type="string";
+                    }
+                                       
+                    zipEntry.async(type).then(function success(content){
+                        getNode(pathToId[relativePath], fileTree).content = content;
+                        SocketAPI.changeFile(pathToId[relativePath], null, content); //Signal new content
+                    });
+                }
+            });
+
+        });
     }
 
     /* Fires when a file is changed by a peer */
@@ -454,11 +499,12 @@ h1 {
     });
 
     /* Creates a file from a string */
-    my.openString = function (code, type) {
-        if (code) {
+    my.openString = function (content, type) {
+        if (content) {
             if (!type) type = "js"
             var fileId = my.mkfile("root", "code." + type);
-            getNode(fileId, fileTree).content = code;
+            getNode(fileId, fileTree).content = content;
+            SocketAPI.changeFile(fileId, null, content);
             my.open(fileId);
         }
     }

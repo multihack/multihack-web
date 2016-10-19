@@ -385,7 +385,7 @@ a {
 }
 
 .red {
-    color: firebrick;
+    color: firebrick !important;
 }
 
 .pull-right {
