@@ -93,19 +93,7 @@ var Tethys = (function (my) {
     
     document.querySelector('#settings').addEventListener('click', function (event) {
         Modal.onsubmit['themes'] = function(button, input){
-            switch(button){
-                case 'material':
-                    FileSystem.setTheme('material');
-                    break;
-                case 'atom':
-                    FileSystem.setTheme('atom');
-                    break;
-                case 'codepen':
-                    FileSystem.setTheme('codepen');
-                    break;
-                default:
-                    FileSystem.setTheme('atom');
-            }
+            FileSystem.setTheme(button);
         }
         Modal.open("themes");
     });
@@ -332,16 +320,8 @@ var Tethys = (function (my) {
     var ext= Util.getParameterByName("ext");
     var theme = Util.getParameterByName("theme");
     FileSystem.openString(code,ext);
-    switch(theme){
-        case 'material':
-            FileSystem.setTheme('material');
-            break;
-        case 'atom':
-            FileSystem.setTheme('atom');
-            break;
-        case 'codepen':
-            FileSystem.setTheme('codepen');
-            break;
+    if (theme){
+        FileSystem.setTheme(theme);
     }
     
     console.log("%c Rock that console! If you're after the source: https://github.com/RationalCoding/MULTIHACK", "color:#263238; font-size: 15px;");

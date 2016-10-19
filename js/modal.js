@@ -245,6 +245,7 @@ Modal.templates['themes'] = `
 <button style="width:95px" data-value="atom" class="go-button">Atom</button>
 <br>
 <button style="width:95px" data-value="codepen" class="go-button">CodePen</button>
+<button style="width:95px" data-value="brackets" class="go-button">Brackets</button>
 <br>
 <button data-value="close" class="no-button">Close</button>
 `;
