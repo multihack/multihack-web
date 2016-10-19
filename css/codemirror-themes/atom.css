@@ -10,7 +10,7 @@
 */
 
 .cm-s-atom.CodeMirror {background: #1d1f21; color: #f4f1ed; border-top: black solid 1px;}
-.cm-s-atom div.CodeMirror-selected {background: #272935 !important;}
+.cm-s-atom div.CodeMirror-selected {background: #666d95 !important;}
 .cm-s-atom .CodeMirror-gutters {background: #292c2f; border-right: solid black 1px;}
 .cm-s-atom .CodeMirror-linenumber {color: #5a647e;}
 .cm-s-atom .CodeMirror-cursor {border-left: 1px solid #d4cfc9 !important;}
