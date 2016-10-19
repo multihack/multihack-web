@@ -25,13 +25,14 @@ var Tethys = (function () {
                 });
             } else if (fileId === 'delete'){
                 var parentId = event.target.dataset.parent;
+                var fileName = event.target.dataset.name;
                 Modal.onsubmit["confirmFolderDelete"] = function (button, input) {
                     if (button === 'yes') {
                         FileSystem.del(parentId);
                     }
                     Modal.close();
                 }
-                Modal.open('confirmFolderDelete');
+                Modal.open('confirmFolderDelete',{name:fileName});
             }else {
                 FileSystem.open(fileId);
             }

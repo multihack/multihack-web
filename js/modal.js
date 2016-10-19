@@ -187,7 +187,7 @@ Modal.templates["confirmDelete"] = `<h1>Are you sure you want to delete \"{{name
 <button data-value="no" class="no-button">Cancel</button>
 `;
 
-Modal.templates["confirmFolderDelete"] = `<h1>Are you sure you want to delete this folder?</h1>
+Modal.templates["confirmFolderDelete"] = `<h1>Are you sure you want to delete the folder<br>"{{name}}"</h1>
 <p>All of it's contents will be deleted. You cannot undo this.</p>
 <p>It will be deleted for everyone in the room!</p>
 <button data-value="yes" class="go-button">Delete</button>

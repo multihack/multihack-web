@@ -123,7 +123,7 @@ h1 {
         var plusEl = document.createElement('li');
 
         if (parentId !== 'root') {
-            plusEl.innerHTML = '<a data-fileid="new" data-parent="' + parentId + '" href="#" class="filelink plus">+</a><a data-fileid="delete" data-parent="' + parentId + '" href="#" class="filelink minus plus red">-</a>';
+            plusEl.innerHTML = '<a data-fileid="new" data-parent="' + parentId + '" href="#" class="filelink plus">+</a><a data-fileid="delete" data-parent="' + parentId + '" href="#" data-name="'+file.name+'" class="filelink minus plus red">-</a>';
         } else {
             plusEl.innerHTML = '<a data-fileid="new" data-parent="' + parentId + '" href="#" class="filelink plus">+</a>';
         }
@@ -132,7 +132,7 @@ h1 {
         } else {
             rootPlusElement = plusEl;
         }
-        treeElement.appendChild(plusEl);
+        treeElement.insertBefore(plusEl, treeElement.firstChild);
     }
 
     /* Gets a node from the tree */
@@ -220,8 +220,6 @@ h1 {
     function addChild(parent, child, childElement) {
         (parent.nodes || parent).push(child);
         (parent.el || rootTreeElement).appendChild(childElement);
-        var plusEl = (parent.el || rootTreeElement).removeChild((parent.plusElement || rootPlusElement));
-        (parent.el || rootTreeElement).appendChild(plusEl);
         child.parentElement = (parent.el || rootTreeElement);
     }
 
@@ -240,11 +238,11 @@ h1 {
         li.appendChild(ol);
         var plusEl = document.createElement('li');
         if (file.fileId !== 'root') {
-            plusEl.innerHTML = '<a data-fileid="new" data-parent="' + file.fileId + '" href="#" class="filelink plus">+</a><a data-fileid="delete" data-parent="' + file.fileId + '" href="#" class="filelink minus plus red">-</a>';
+            plusEl.innerHTML = '<a data-fileid="new" data-parent="' + file.fileId + '" href="#" class="filelink plus">+</a><a data-fileid="delete" data-name="'+name+'" data-parent="' + file.fileId + '" href="#" class="filelink minus plus red">-</a>';
         } else {
             plusEl.innerHTML = '<a data-fileid="new" data-parent="' + file.fileId + '" href="#" class="filelink plus">+</a>';
         }
-        ol.appendChild(plusEl);
+        ol.insertBefore(plusEl, ol.firstChild);
         file.plusElement = plusEl;
         file.el = ol;
         file.realEl = li;
@@ -368,12 +366,12 @@ h1 {
             var isFileSaverSupported = !!new Blob;
 
             var zip = new JSZip();
-            zipTree(zip, "tethysProject", fileTree);
+            zipTree(zip, "myProject", fileTree);
 
             zip.generateAsync({
                 type: "blob"
             }).then(function (content) {
-                saveAs(content, "tethysProject.zip");
+                saveAs(content, "myProject.zip");
             });
         } catch (e) {
             Modal.open("general-alert", {

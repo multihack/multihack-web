@@ -204,7 +204,7 @@ var SocketAPI = (function () {
         }, function () {
             Modal.open("general-alert", {
                 title: "Microphone Error",
-                msg: "Microphone access is required to join the room's call."
+                msg: "Microphone access is required<br>to join the room's call."
             })
         });
     }
