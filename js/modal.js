@@ -241,7 +241,7 @@ Modal.onsubmit['url'] = function () {};
 
 Modal.templates['github'] = `
 <h1>GitHub Repo</h1>
-<input style="width:414px" class="modal-input" type="text" placeholder="https://github.com/username/repo">
+<input class="modal-input long" type="text" placeholder="https://github.com/username/repo">
 <br><br>
 <input class="modal-input" type="text" placeholder="branch">
 <br><br>

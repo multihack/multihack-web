@@ -399,11 +399,16 @@ input[type="text"] {
     font-size: 16px;
     padding: 5px;
     transition: all .3s;
+    max-width: 100% !important;
 }
 
 input[type="text"]:focus {
     padding: 11px;
     position: relative;
+}
+
+input[type="text"].long {
+    width: 90%;
 }
 
 .CodeMirror {
