@@ -274,6 +274,9 @@ var Tethys = (function (my) {
     }
     SocketAPI.onOtherLeftOnline = function (user) {
         removeUser(user);
+        if (cursors[user.id]){
+            cursors[user.id].parentNode.removeChild(cursors[user.id]); // Remove their cursor
+        }  
     }
     SocketAPI.onOtherJoinRoom = function (user) {
         removeUser(user);
@@ -282,7 +285,9 @@ var Tethys = (function (my) {
     }
     SocketAPI.onOtherLeftRoom = function (user) {
         removeUser(user, 'room');
-        cursors[user.id].parentNode.removeChild(cursors[user.id]); // Remove their cursor
+        if (cursors[user.id]){
+            cursors[user.id].parentNode.removeChild(cursors[user.id]); // Remove their cursor
+        }
     }
     SocketAPI.onWho = function(onlineList){
         for (var i=0; i<onlineList.length; i++){
