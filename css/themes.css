@@ -37,7 +37,7 @@
 
 .theme-material .go-button:hover,
 .theme-material .no-button:hover {
-    outline: 5px solid #5A6D76;
+    outline: 2px solid #5A6D76;
 }
 
 .theme-material button:active {
@@ -113,7 +113,7 @@
 
 .theme-atom .go-button:hover,
 .theme-atom .no-button:hover {
-    outline: 5px solid white;
+    outline: 2px solid white;
 }
 .theme-atom button:active {
     background-color: white;
