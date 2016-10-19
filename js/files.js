@@ -51,6 +51,7 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
     	<li>Syntax highlighting for every web language.</li>
     	<li>Voice chat with up to 10 people! (WebRTC only)</li>
     	<li>Instantly deploy your website via HyperHost (WebRTC only)</li>
+        <li>Import files, ZIP archives and GitHub repos.</li>
     	<li>Save your project for working offline.</li>
     	<li>MultiHack is the ONLY multi-file, multi-user code editor on the web.</li>
         
