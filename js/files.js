@@ -57,6 +57,8 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
     	<li>MULTIHACK is the ONLY multi-file, multi-user code editor on the web.</li>
         
         <!-- Try deploying this file! -->
+
+        <a href="http://github.com/RationalCoding/multihack" target="_blank">Source Code</a>
     </ul>
 </body> 
     
@@ -72,6 +74,14 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
 
 h1 {
     color: darkgreen;
+}`
+        },
+        {
+            name: "script.js",
+            fileId: "welcome3",
+            content: `var a = 1;
+for (var i=0; i < 10; i++){
+    //A meaningless loop!
 }`
         }
     ];
