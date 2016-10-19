@@ -172,3 +172,6 @@
 .cm-s-brackets .view-pane .image-view {
     color: #dddddd;
 }
+
+
+.cm-s-brackets .CodeMirror-selected {background: #0050A0 !important;}
