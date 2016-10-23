@@ -188,8 +188,18 @@ var Tethys = (function (my) {
     }
     
     function moveCursor(userId, coords){
-        cursors[userId].style.left = (coords.x+getSidebarWidth())+"px";
+        var x = coords.x+getSidebarWidth();
+        while (x > window.innerWidth){ //Deal with line wrapping (only large to small for now)
+            x = x - getEditorWidth();
+            coords.y = coords.y+19; //19 is height of line
+        }
+        
+        cursors[userId].style.left = x+"px";
         cursors[userId].style.top = coords.y+"px";
+    }
+        
+    function getEditorWidth(){
+        return window.innerWidth - getSidebarWidth() - 29; //29 is width of number column
     }
     
     function getSidebarWidth(){
@@ -204,6 +214,7 @@ var Tethys = (function (my) {
     var lastCursor = {x: 0, y:0};
     var sidebarWidth;
     window.addEventListener('mousemove', function(e){
+        return; //TODO: Calculate cursor positions on editor
         if (my.roomEmpty()) return;
         //Subtract sidebar width
         lastCursor={x: e.clientX-getSidebarWidth(), y: e.clientY};
@@ -230,6 +241,7 @@ var Tethys = (function (my) {
     
     
     SocketAPI.onMoveCursor = function(userId, fileId, coords) {
+        return; //TODO: Calculate cursor positions on editor
         if (fileId === FileSystem.workingFile.fileId){
             if (!cursors[userId].displayed){
                 cursors[userId].displayed=true;
