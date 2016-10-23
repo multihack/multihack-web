@@ -512,6 +512,7 @@ span.mobile-hide{
         bottom: 0px;
         margin: 0;
         padding: 0;
+        padding-top: 40px;
         border: 0;
         transform: none;
         max-width: 100%;
