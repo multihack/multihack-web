@@ -508,10 +508,14 @@ span.mobile-hide{
         position: fixed;
         top: 0px;
         left: 0px;
-        right: 0px;
+        right: 0px;        
         bottom: 0px;
         margin: 0;
+        padding: 0;
+        border: 0;
         transform: none;
+        max-width: 100%;
+        width: 100%;
     }
 }
 

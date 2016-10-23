@@ -194,8 +194,10 @@ var Tethys = (function (my) {
     
     var cursorMoveMutex = false;
     var lastCursor = {x: 0, y:0};
+    var sidebarWidth;
     window.addEventListener('mousemove', function(e){
         if (my.roomEmpty()) return;
+        //Subtract sidebar width
         lastCursor={x: e.clientX, y: e.clientY};
         
         if (cursorMoveMutex) return;  //Ratelimit
