@@ -188,8 +188,16 @@ var Tethys = (function (my) {
     }
     
     function moveCursor(userId, coords){
-        cursors[userId].style.left = coords.x+"px";
+        cursors[userId].style.left = (coords.x+getSidebarWidth())+"px";
         cursors[userId].style.top = coords.y+"px";
+    }
+    
+    function getSidebarWidth(){
+        if (window.innerWidth >= 768){
+            return 340;
+        }else{
+            return 150;
+        }
     }
     
     var cursorMoveMutex = false;
@@ -198,7 +206,7 @@ var Tethys = (function (my) {
     window.addEventListener('mousemove', function(e){
         if (my.roomEmpty()) return;
         //Subtract sidebar width
-        lastCursor={x: e.clientX, y: e.clientY};
+        lastCursor={x: e.clientX-getSidebarWidth(), y: e.clientY};
         
         if (cursorMoveMutex) return;  //Ratelimit
         cursorMoveMutex = true;
