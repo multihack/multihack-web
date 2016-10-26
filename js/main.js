@@ -96,7 +96,15 @@ var Tethys = (function (my) {
     });
     
     document.querySelector('#savezip').addEventListener('click', function (event) {
-        FileSystem.saveAsZip();
+        Modal.onsubmit["save"] = function (button, input) {
+            if (button === "zip"){
+                FileSystem.saveAsZip();
+            }else if (button === "local"){
+                FileSystem.saveLocal();
+            }
+            Modal.close();
+        }
+        Modal.open('save');
     });
     
     

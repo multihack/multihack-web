@@ -8,25 +8,29 @@ var FileSystem = (function (my, SocketAPI, HyperHost) {
 
     function setLocalStorage() {
         try {
-            if (localStorage) {
-                //TODO: Save to local storage
-            }
+            localStorage.setItem('tethysTree', JSON.stringify(fileTree));
+            Modal.open("save-confirm");
         }catch(err){
-            try { 
-                localStorage.setItem('tethysTree', "");
-            }catch(err){
-                //Catch private mode
-            }
+            Modal.open("save-fail");
         }
     }
 
     function getLocalStorage() {
-        if (localStorage) {
-            var store = localStorage.getItem('tethysTree');
-            if (!!store){
-                fileTree = JSON.parse(store);
-                my.init();
-            }       
+        try {
+            if (localStorage) {
+                var store = localStorage.getItem('tethysTree');
+                if (!!store){
+                    fileTree = JSON.parse(store);
+                    my.init();
+                }       
+            }
+        }catch(err){
+            //Localstorage error
+            try {
+                localStorage.setItem('tethysTree', ""); //Purge bad data
+            }catch(err){
+                
+            }
         }
     }
 

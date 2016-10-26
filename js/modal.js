@@ -262,3 +262,36 @@ Modal.templates['themes'] = `
 <br>
 <button data-value="close" class="no-button">Close</button>
 `;
+Modal.onsubmit['themes'] = function () {};
+
+
+Modal.templates['save'] = `
+<h1>Save Your Project</h1>
+<p>Download project as ZIP archive. (recommended)</p>
+<button  data-value="zip" class="go-button">Save As ZIP</button>
+<br>
+<p>Save project to browser storage. (short-term)</p>
+<button data-value="local" class="go-button">Save Locally</button>
+<br><br>
+<button data-value="close" class="no-button">Cancel</button>
+`;
+Modal.onsubmit['save'] = function () {};
+
+Modal.templates['save-confirm'] = `
+<h1>Saved Locally</h1>
+<p>You project has been saved locally.</p>
+<p>Your browser may clear this data at ANY TIME.</p>
+<br>
+<button data-value="close" class="no-button">Close</button>
+`
+Modal.onsubmit['save-confirm'] = function () {};
+
+
+Modal.templates['save-fail'] = `
+<h1>Save Failed</h1>
+<p>Failed to save project locally.</p>
+<p>Your browser may not support this feature, or your project is too large.</p>
+<br>
+<button data-value="close" class="no-button">Close</button>
+`
+Modal.onsubmit['save-fail'] = function () {};
