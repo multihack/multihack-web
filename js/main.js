@@ -214,7 +214,8 @@ var Tethys = (function (my) {
     var lastCursor = {x: 0, y:0};
     var sidebarWidth;
     window.addEventListener('mousemove', function(e){
-        return; //TODO: Calculate cursor positions on editor
+        //TODO: Calculate cursor positions on editor
+        if (window.innerWidth < 480) return; //Mismatches on mobile get too extreme
         if (my.roomEmpty()) return;
         //Subtract sidebar width
         lastCursor={x: e.clientX-getSidebarWidth(), y: e.clientY};
@@ -241,7 +242,8 @@ var Tethys = (function (my) {
     
     
     SocketAPI.onMoveCursor = function(userId, fileId, coords) {
-        return; //TODO: Calculate cursor positions on editor
+        //TODO: Calculate cursor positions on editor
+        if (window.innerWidth < 480) return; //Mismatches on mobile get too extreme
         if (fileId === FileSystem.workingFile.fileId){
             if (!cursors[userId].displayed){
                 cursors[userId].displayed=true;
