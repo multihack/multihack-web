@@ -188,7 +188,7 @@ var Tethys = (function (my) {
     }
     
     function moveCursor(userId, coords){
-        var x = coords.x+getSidebarWidth();
+        var x = coords.x+getSidebarWidth()-4;
         while (x > window.innerWidth){ //Deal with line wrapping (only large to small for now)
             x = x - getEditorWidth();
             coords.y = coords.y+19; //19 is height of line

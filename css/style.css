@@ -422,6 +422,7 @@ input[type="text"].long {
     height: 12px;
     width: 12px;
     z-index: 9999999;
+    transition: top .3s ease-out, left .3s ease-out;
 }
 
 
