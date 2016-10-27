@@ -260,6 +260,11 @@ var UI = (function (FileSystem, Sockets, HyperHost, Modal, $, Microstache, Util,
 
         cursors[userId].style.left = x + "px";
         cursors[userId].style.top = y + "px";
+        if (coords.down){
+            cursors[userId].style.border = "2px solid red";
+        }else{
+            cursors[userId].style.border = "";
+        }
     }
 
     var cursorMoveMutex = false,
@@ -279,7 +284,8 @@ var UI = (function (FileSystem, Sockets, HyperHost, Modal, $, Microstache, Util,
 
         lastCursor = {
             x: e.clientX - sidebarWidth, //Subtract sidebar width
-            y: e.clientY + getEditorOffset()
+            y: e.clientY + getEditorOffset(),
+            down: mouseDown
         };
 
         if (cursorMoveMutex) {
@@ -292,6 +298,18 @@ var UI = (function (FileSystem, Sockets, HyperHost, Modal, $, Microstache, Util,
         }, 100);
 
     });
+    
+    var mouseDown = false;
+    window.addEventListener('mousedown', function (e) {
+        mouseDown = true;
+        lastCursor.down=true;
+        Sockets.moveCursor(lastCursor, FileSystem.workingFile.fileId); //This doesn't need a throttle
+    });
+    window.addEventListener('mouseup', function (e) {
+        mouseDown=false; 
+        lastCursor.down=false;
+        Sockets.moveCursor(lastCursor, FileSystem.workingFile.fileId);
+    });
 
 
     window.addEventListener('mouseout', function (e) {
@@ -301,7 +319,8 @@ var UI = (function (FileSystem, Sockets, HyperHost, Modal, $, Microstache, Util,
             setTimeout(function () {
                 Sockets.moveCursor({
                     x: -50,
-                    y: -50
+                    y: -50,
+                    down: false
                 }, FileSystem.workingFile.fileId);
             }, 500);
         }
