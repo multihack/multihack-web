@@ -235,6 +235,9 @@ var UI = (function (FileSystem, Sockets, HyperHost, Modal, $, Microstache, Util,
     }
 
     function getSidebarWidth() {
+        if (sidebarCollapsed){
+            return 30;
+        }
         if (window.innerWidth >= 768) {
             return 340;
         } else {
