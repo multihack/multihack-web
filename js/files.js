@@ -417,6 +417,7 @@ var FileSystem = (function (Sockets, Microstache, JSZip, JSZipUtils, Config) {
             my.editor.setOption("mode", syntaxMapping(fileNode.name));
             editorMutexLock = false;
         }
+        my.editor.clearHistory()
     }
 
     /* Applys a remote change to the CodeMirror instanse and working file */
