@@ -256,7 +256,7 @@ var UI = (function (FileSystem, Sockets, HyperHost, Modal, $, Microstache, Util,
     function moveCursor(userId, coords) {
         
         var x = coords.x + getSidebarWidth() - 4,
-            y = coords.y + getEditorOffset();
+            y = coords.y - getEditorOffset();
 
         cursors[userId].style.left = x + "px";
         cursors[userId].style.top = y + "px";
