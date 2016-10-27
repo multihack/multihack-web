@@ -40,7 +40,7 @@ var HyperHost = (function (Util, Modal) {
         var fileNetSize = 0; //Net size of files
         var foundIndex = false;
         var serverCode;
-        
+        if (peer) peer.destroy();
         
 
         //Aethetically keeps track of file structure 
@@ -261,7 +261,7 @@ var HyperHost = (function (Util, Modal) {
                 path: "/server",
                 secure: true
             };
-            if (!peer) peer = new Peer(MY_ID, PEER_SERVER); //Create the peer
+            peer = new Peer(MY_ID, PEER_SERVER); //Create the peer
 
             //Heartbeat to stop PeerJS from disconnecting us from the signalling server
             function makePeerHeartbeater(peer) {
