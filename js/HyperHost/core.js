@@ -233,7 +233,7 @@ var HyperHost = (function (Util, Modal) {
         }
 
         //Handles a MultiHack tree
-        module.handleTethys = function (tree) {
+        module.handleTree = function (tree) {
             initializeHost(true); //Force a reload
             console.log("******* HyperHost v" + module.VERSION + " *******");
             console.log("> Loading your files...");

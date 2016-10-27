@@ -1,15 +1,65 @@
-/* Custom modal plugin */
-var Modal = (function (my, Microstache) {
-    var modalElement = document.getElementById("modal");
-    var blockingElement = document.getElementById("blocking-overlay");
-    var state = 'closed';
+/* 
 
-    my.templates = {};
-    my.onsubmit = {
-        'closed': function () {}
-    };
+modal.js
+
+A custom modal/dialog module
+
+Thomas Mullen 2016
+
+*/
+var Modal = (function (Microstache) {
+    'use strict';
+
+    var my = {
+
+            /* Dictionary mapping names to mustache templates */
+            templates: {},
+
+            /* 
+            Specifies a callback for the modal
+            Callback will receive text of button clicked, and an array of any form inputs
+            */
+            next: function (modalName, callback) {
+                nextFunction[modalName] = callback;
+            },
+
+            /* Opens a modal */
+            open: function (templateName, data) {
+                if (!data) {
+                    data = {};
+                }
+                if (!my.templates[templateName]) {
+                    window.console.error("No template with name " + templateName);
+                }
+                modalElement.innerHTML = Microstache.template(my.templates[templateName], data);
+                modalElement.className = "modal text-center theme-dark-border " + templateName;
+                modalElement.style.display = 'block';
+                blockingElement.style.display = 'block';
+                state = templateName;
+
+                var primaryInput = document.querySelector('.modal-input');
+                if (primaryInput && !inIframe()) {
+                    primaryInput.focus();
+                }
+            },
+
+            /* Closes any modal */
+            close: function () {
+                modalElement.style.display = 'none';
+                blockingElement.style.display = 'none';
+                state = 'closed';
+
+            }
+
+
+        };
     
-    function inIframe () {
+    var modalElement = document.getElementById("modal"),
+        blockingElement = document.getElementById("blocking-overlay"),
+        state = 'closed',
+        nextFunction = {};
+
+    function inIframe() {
         try {
             return window.self !== window.top;
         } catch (e) {
@@ -17,41 +67,20 @@ var Modal = (function (my, Microstache) {
         }
     }
 
-    //Opens a specific dialog
-    my.open = function (templateName, data) {
-        if (!data) data = {};
-        if (!my.templates[templateName]) console.error("No template with name " + templateName);
-        modalElement.innerHTML = Microstache.template(my.templates[templateName], data);
-        modalElement.className = "modal text-center theme-dark-border " + templateName;
-        modalElement.style.display = 'block';
-        blockingElement.style.display = 'block';
-        state = templateName;
-
-        var primaryInput = document.querySelector('.modal-input');
-        if (primaryInput && !inIframe()) {
-            primaryInput.focus();
-        }
-    }
-        // Closes the dialog
-    my.close = function () {
-        modalElement.style.display = 'none';
-        blockingElement.style.display = 'none';
-        state = 'closed';
-        
-    }
     document.querySelector('#modal').addEventListener('click', function (event) {
         if (event.target.tagName.toLowerCase() === 'button') {
-            var clicked = event.target.dataset.value;
-            var input = Array.prototype.slice.call(document.querySelectorAll('.modal-input')).map(function (e) {
-                return e.value
-            });
+            var clicked = event.target.dataset.value,
+                input = Array.prototype.slice.call(document.querySelectorAll('.modal-input')).map(
+                    function (e) {
+                        return e.value;
+                    });
             if (clicked === 'close') {
                 Modal.close();
             } else {
-                if (my.onsubmit[state]) {
-                    my.onsubmit[state](clicked, input);
+                if (nextFunction[state]) {
+                    nextFunction[state](clicked, input);
                 } else {
-                    console.error("Modal '" + state + "' has no submit function!");
+                    window.console.error("Modal '" + state + "' has no next function!");
                 }
 
             }
@@ -60,17 +89,19 @@ var Modal = (function (my, Microstache) {
     document.querySelector('body').addEventListener('keyup', function (event) {
         if (event.keyCode === 13 && state !== 'closed') {
             var input = Array.prototype.slice.call(document.querySelectorAll('.modal-input')).map(function (e) {
-                return e.value
+                return e.value;
             });
-            if (typeof my.onsubmit[state] === 'function') {
-                my.onsubmit[state]('submit', input);
+            if (typeof nextFunction[state] === 'function') {
+                nextFunction[state]('submit', input);
             } else {
                 my.close();
             }
         }
     });
+    
+    
     return my;
-}({}, Microstache));
+}(Microstache));
 
 /* Modal definitions */
 Modal.templates['intro'] = `<h1>WELCOME TO MultiHack</h1>
@@ -90,9 +121,9 @@ Modal.templates['welcome'] = `<h1>Welcome to MultiHack</h1>
     <button data-value="close" class="no-button">I'll Figure It Out</button>
     <button data-value="submit" class="go-button">Tell Me More</button>`;
 
-Modal.onsubmit['welcome'] = function (button, input) {
+Modal.next('welcome', function (button, input) {
     Modal.open('welcome-2');
-}
+});
 
 Modal.templates['welcome-2'] = `<h1>Welcome To MultiHack</h1>
     <h3>How To Collaborate</h3>
@@ -102,9 +133,9 @@ Modal.templates['welcome-2'] = `<h1>Welcome To MultiHack</h1>
     <button data-value="close" class="no-button">I'll Figure It Out</button>
     <button data-value="submit" class="go-button">Tell Me More</button>`;
 
-Modal.onsubmit['welcome-2'] = function (button, input) {
+Modal.next('welcome-2', function (button, input) {
     Modal.open('welcome-3');
-}
+});
 
 Modal.templates['welcome-3'] = `<h1>Welcome To MultiHack</h1>
     <h3>How To Build</h3>
@@ -114,9 +145,9 @@ Modal.templates['welcome-3'] = `<h1>Welcome To MultiHack</h1>
     <button data-value="close" class="no-button">I'll Figure It Out</button>
     <button data-value="submit" class="go-button">Tell Me More</button>`;
 
-Modal.onsubmit['welcome-3'] = function (button, input) {
+Modal.next('welcome-3', function (button, input) {
     Modal.open('welcome-4');
-}
+});
 
 Modal.templates['welcome-4'] = `<h1>Welcome To MultiHack</h1>
     <h3>How To Deploy</h3>
@@ -126,9 +157,9 @@ Modal.templates['welcome-4'] = `<h1>Welcome To MultiHack</h1>
     <button data-value="close" class="no-button">I'll Figure It Out</button>
     <button data-value="submit" class="go-button">Tell Me More</button>`;
 
-Modal.onsubmit['welcome-4'] = function (button, input) {
+Modal.next('welcome-4', function (button, input) {
     Modal.open('welcome-5');
-}
+});
 
 Modal.templates['welcome-5'] = `<h1>Welcome To MultiHack</h1>
     <h3>How To Connect</h3>
@@ -138,9 +169,9 @@ Modal.templates['welcome-5'] = `<h1>Welcome To MultiHack</h1>
     <button data-value="close" class="no-button">I'll Figure It Out</button>
     <button data-value="submit" class="go-button">Tell Me More</button>`;
 
-Modal.onsubmit['welcome-5'] = function (button, input) {
+Modal.next('welcome-5', function (button, input) {
     Modal.open('welcome-6');
-}
+});
 
 Modal.templates['welcome-6'] = `<h1>Welcome To MultiHack</h1>
     <h3>How To Contribute</h3>
@@ -150,9 +181,9 @@ Modal.templates['welcome-6'] = `<h1>Welcome To MultiHack</h1>
     <button data-value="close" class="no-button">I'll Figure It Out</button>
     <button data-value="submit" class="go-button">Tell Me More</button>`;
 
-Modal.onsubmit['welcome-6'] = function (button, input) {
+Modal.next('welcome-6', function (button, input) {
     Modal.open('welcome-7');
-}
+});
 
 Modal.templates['welcome-7'] = `<h1>Welcome To MultiHack</h1>
     <h3>Build Something Awesome</h3>
@@ -160,9 +191,9 @@ Modal.templates['welcome-7'] = `<h1>Welcome To MultiHack</h1>
     <br><br>
     <button data-value="submit" class="go-button">Start My Journey</button>`;
 
-Modal.onsubmit['welcome-7'] = function (button, input) {
+Modal.next('welcome-7', function (button, input) {
     Modal.close();
-}
+});
 
 
 Modal.templates["requestInvite"] = `<h1>Request to Join {{name}}'s Room?</h1>
@@ -227,7 +258,7 @@ Modal.templates['general-alert'] = `
 <p>{{msg}}</p>
 <button data-value="close" class="go-button">Ok</button>
 `
-Modal.onsubmit['general-alert'] = function () {};
+Modal.next('general-alert', function () {});
 
 
 Modal.templates['url'] = `
@@ -236,7 +267,7 @@ Modal.templates['url'] = `
 <p class="red"><a target="_blank" href="{{url}}">{{url}}</a></p>
 <button data-value="close" class="go-button">Ok</button>
 `;
-Modal.onsubmit['url'] = function () {};
+Modal.next('url', function () {});
 
 
 Modal.templates['github'] = `
@@ -248,7 +279,7 @@ Modal.templates['github'] = `
 <button data-value="load" class="go-button">Load</button>
 <button data-value="close" class="no-button">Cancel</button>
 `;
-Modal.onsubmit['url'] = function () {};
+Modal.next('url', function () {});
 
 
 
@@ -262,7 +293,7 @@ Modal.templates['themes'] = `
 <br>
 <button data-value="close" class="no-button">Close</button>
 `;
-Modal.onsubmit['themes'] = function () {};
+Modal.next('themes', function () {});
 
 
 Modal.templates['save'] = `
@@ -275,7 +306,7 @@ Modal.templates['save'] = `
 <br><br>
 <button data-value="close" class="no-button">Cancel</button>
 `;
-Modal.onsubmit['save'] = function () {};
+Modal.next('save', function () {});
 
 Modal.templates['save-confirm'] = `
 <h1>Saved Locally</h1>
@@ -284,7 +315,7 @@ Modal.templates['save-confirm'] = `
 <br>
 <button data-value="close" class="no-button">Close</button>
 `
-Modal.onsubmit['save-confirm'] = function () {};
+Modal.next('save-confirm', function () {});
 
 
 Modal.templates['save-fail'] = `
@@ -294,4 +325,4 @@ Modal.templates['save-fail'] = `
 <br>
 <button data-value="close" class="no-button">Close</button>
 `
-Modal.onsubmit['save-fail'] = function () {};
+Modal.next('save-fail', function () {});

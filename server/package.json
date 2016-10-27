@@ -1,7 +1,7 @@
 {
-  "name": "tethys",
+  "name": "multihack",
   "version": "1.0.0",
-  "description": "Server for Tethys live collab tool.",
+  "description": "Server for Multihack live collab tool.",
   "private": true,
   "scripts": {
     "start": "node app.js"

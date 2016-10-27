@@ -1,3 +1,12 @@
+/*
+
+A bunch of useful utilities.
+
+Thomas Mullen 2016
+
+*/
+
+
 var Util = (function () { 
     var module = {};
     
@@ -9,7 +18,7 @@ var Util = (function () {
     }
 
 
-    //Basic ajax call with IE 8 support
+    //Basic ajax GET call with IE 8 support
     module.ajax = function (url, successCallback, errorCallback) {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
