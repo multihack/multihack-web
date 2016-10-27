@@ -255,8 +255,6 @@ var UI = (function (FileSystem, Sockets, HyperHost, Modal, $, Microstache, Util,
         var x = coords.x + getSidebarWidth() - 4,
             y = coords.y + getEditorOffset();
 
-        
-        console.log(coords);
         cursors[userId].style.left = x + "px";
         cursors[userId].style.top = y + "px";
     }
@@ -280,10 +278,6 @@ var UI = (function (FileSystem, Sockets, HyperHost, Modal, $, Microstache, Util,
             x: e.clientX - sidebarWidth, //Subtract sidebar width
             y: e.clientY + getEditorOffset()
         };
-        console.log({
-            x: e.clientX,
-            y: e.clientY
-        });
 
         if (cursorMoveMutex) {
             return;

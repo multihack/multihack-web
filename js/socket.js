@@ -296,9 +296,9 @@ var Sockets = (function (Config) {
 
             toggleCall: function () {
                 if (joinedCall) {
-                    leaveCall();
+                    my.leaveCall();
                 } else {
-                    joinCall();
+                    my.joinCall();
                 }
             }
         }
@@ -306,10 +306,12 @@ var Sockets = (function (Config) {
         //TODO: Move this DOM manipulation to UI.js
 
         document.querySelector("#mic").addEventListener('click', function (e) {
-            toggleCall();
+            my.toggleCall();
         });
 
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        
+        window.URL = window.URL || window.webkitURL;
 
         if (!navigator.getUserMedia) {
             document.querySelector("#mic").style.display = "none";
@@ -320,11 +322,11 @@ var Sockets = (function (Config) {
         }
 
 
-        var cameraStream;
+        var cameraStream, savedStream;
 
         function embedStream(domElement, stream) {
-            if (window.webkitURL) {
-                domElement.src = window.webkitURL.createObjectURL(stream);
+            if (window.URL) {
+                domElement.src = window.URL.createObjectURL(stream);
             } else {
                 domElement.src = stream;
             }
