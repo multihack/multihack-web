@@ -359,6 +359,30 @@ img ,
     bottom: 0;
     right: 0;
     z-index: 1;
+    text-align: center;
+    padding-top: 100px;
+    font-size: 30px;
+}
+
+.blocking-overlay > span {
+    position: relative;
+    animation: swirl 2s infinite alternate;
+    animation-timing-function: ease-out;
+}
+
+
+@keyframes swirl {
+    0% {
+        top: 10px;
+    }
+    
+    50% {
+        top: -10px;
+    }
+    
+    100% {
+        top: 10px;
+    }
 }
 
 button {

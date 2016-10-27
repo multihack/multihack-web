@@ -459,6 +459,8 @@ var UI = (function (FileSystem, Sockets, HyperHost, Modal, $, Microstache, Util,
 
     FileSystem.init(true); //Initialize
     FileSystem.open("welcome"); //Open welcome file
+    $("#blocking-overlay").style.background = "";
+    $("#blocking-overlay").innerHTML = "";
     Modal.open('intro'); //Open introduction modal
 
 
