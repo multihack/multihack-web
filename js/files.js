@@ -506,15 +506,19 @@ var FileSystem = (function (Sockets, Microstache, JSZip, JSZipUtils, Config) {
     }
 
     /* Create a subTree from zip file data */
-    function unzipTree(fileObject, parentId, name) {
+    function unzipTree(fileObject, rootId, name) {
         JSZip.loadAsync(fileObject).then(function (zip) {
             //Make the root directory
 
-            var rootId = my.mkdir(parentId, name); //Make root folder (removes zip extension)
+            // Ignore the root folder
             var pathToId = {}; //Maps paths in the zip archive to their fileIds
-
+            var firstFile = true;
 
             zip.forEach(function (relativePath, zipEntry) {
+                if (firstFile){ //Ignore the base folder as well as the root
+                    firstFile=false;
+                    return;
+                }
                 if (zipEntry.dir) {
                     relativePath = relativePath.slice(0, -1);
                 }
