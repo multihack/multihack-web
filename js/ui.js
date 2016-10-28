@@ -430,6 +430,7 @@ var UI = (function (FileSystem, Sockets, HyperHost, Modal, $, Microstache, Util,
     });
 
     Sockets.on('roomresponse', function (roomOwner) {
+        console.log("response");
         Modal.next('join-response', function () {});
         Modal.open('join-response', {
             name: roomOwner.name
@@ -439,6 +440,7 @@ var UI = (function (FileSystem, Sockets, HyperHost, Modal, $, Microstache, Util,
 
     Sockets.on('roomwho', function (who) {
         clearRoom();
+        console.log(who);
         for (var i = 0; i < who.length; i++) {
             removeUser(who[i]);
             makeUser(who[i], 'room');

@@ -146,12 +146,7 @@ var Sockets = (function (Config) {
                 break;
             }
         }
-        for (var i = 0; i < calls.length; i++) {
-            if (user.id === calls[i].id) {
-                calls[i].call.close(); //Hang up any audio calls
-                calls = calls.splice(i, 1); //Remove from list
-            }
-        }
+        WebRTC.otherLeave(user.id);
         eventRouting['roomleave'](user);
     });
     socket.on('room/join', function (user) {
@@ -299,6 +294,18 @@ var Sockets = (function (Config) {
                     my.leaveCall();
                 } else {
                     my.joinCall();
+                }
+            },
+            otherLeave : function(userId){ 
+                for (var i = 0; i < calls.length; i++) {
+                    if (userId === calls[i].id) {
+                        try{
+                            calls[i].call.close(); //Hang up any audio calls
+                            calls = calls.splice(i, 1); //Remove from list
+                        }catch (err){
+                            console.error(err);
+                        }
+                    }
                 }
             }
         }
