@@ -12,7 +12,7 @@ module.exports={
         view : ["html", "css", "json"]
     },
     peerJS : {
-        host: "peerjs-server-tmullen.mybluemix.net",
+        host: "/",
         port: 443,
         path: "/server",
         secure: true
