@@ -1,0 +1,50 @@
+html {
+    position: relative;
+    background: white;
+    height: 100%;
+}
+
+#HYPERHOST-dropzone {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    bottom: 30px;
+    right: 30px;
+    text-align: center;
+    max-width: none;
+    min-height: 80%;
+}
+
+#HYPERHOST-dropzone > div {
+    pointer-events: none;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: Arial;
+}
+
+#HYPERHOST-dropzone a {
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+    pointer-events: all;
+}
+
+#HYPERHOST-dropzone h1 {
+    font-size: 50px;
+}
+
+#HYPERHOST-dropzone p {
+    font-size: 14px;
+}
+
+#HYPERHOST-viewframe {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    border: transparent 20px;
+    background: white;
+}
