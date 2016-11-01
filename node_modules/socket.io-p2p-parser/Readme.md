@@ -1,0 +1,72 @@
+
+# socket.io-p2p-parser
+
+This parser mainly concists of a fork of [socket.io-parser](https://github.com/Automattic/socket.io-parser) with some added logic for chunking binary data. This may or may not be appropriate to merge back but in the meantime it lives here for inclusion in [socket.io-p2p](https://github.com/tomcartwrightuk/socket.io-p2p).
+
+A socket.io encoder and decoder written in JavaScript complying with version `3`
+of [socket.io-protocol](https://github.com/learnboost/socket.io-protocol).
+Used by [socket.io](https://github.com/learnboost/socket.io) and
+[socket.io-client](https://github.com/learnboost/socket.io-client).
+
+## Parser API
+
+  socket.io-parser is the reference implementation of socket.io-protocol. Read
+  the full API here:
+  [socket.io-protocol](https://github.com/learnboost/socket.io-protocol).
+
+## Example Usage
+
+### Encoding and decoding a packet
+
+```js
+var parser = require('socket.io-parser');
+var encoder = new parser.Encoder();
+var packet = {
+  type: parser.EVENT,
+  data: 'test-packet',
+  id: 13
+};
+encoder.encode(packet, function(encodedPackets) {
+  var decoder = new parser.Decoder();
+  decoder.on('decoded', function(decodedPacket) {
+    // decodedPacket.type == parser.EVENT
+    // decodedPacket.data == 'test-packet'
+    // decodedPacket.id == 13
+  });
+
+  for (var i = 0; i < encodedPackets.length; i++) {
+    decoder.add(encodedPackets[i]);
+  }
+});
+```
+
+### Encoding and decoding a packet with binary data
+
+```js
+var parser = require('socket.io-parser');
+var encoder = new parser.Encoder();
+var packet = {
+  type: parser.BINARY_EVENT,
+  data: {i: new Buffer(1234), j: new Blob([new ArrayBuffer(2)])}
+  id: 15
+};
+encoder.encode(packet, function(encodedPackets) {
+  var decoder = new parser.Decoder();
+  decoder.on('decoded', function(decodedPacket) {
+    // decodedPacket.type == parser.BINARY_EVENTEVENT
+    // Buffer.isBuffer(decodedPacket.data.i) == true
+    // Buffer.isBuffer(decodedPacket.data.j) == true
+    // decodedPacket.id == 15
+  });
+
+  for (var i = 0; i < encodedPackets.length; i++) {
+    decoder.add(encodedPackets[i]);
+  }
+});
+```
+See the test suite for more examples of how socket.io-parser is used.
+
+
+## License
+
+MIT

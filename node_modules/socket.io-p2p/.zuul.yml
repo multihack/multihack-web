@@ -1,0 +1,7 @@
+ui: tape
+server: ./test/support/server.js
+browsers:
+  - name: chrome
+    version: 35..latest
+  - name: firefox
+    version: 30..latest

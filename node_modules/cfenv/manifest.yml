@@ -1,0 +1,6 @@
+applications:
+- name:      cf-env-test
+  mem:       128M
+  host:      cf-env-test-${random-word}
+  services:
+  - cf-env-test

@@ -1,0 +1,14 @@
+{
+  "name": "peerjs-server-memcached",
+  "version": "0.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "peer": "~0.2.6"
+  }
+}
