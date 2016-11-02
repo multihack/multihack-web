@@ -1,3 +1,3 @@
-server/.project
-server/.cfignore
-server/node_modules
+project
+.cfignore
+node_modules
