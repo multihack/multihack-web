@@ -8,7 +8,7 @@
 
 <img align-"center" src="https://github.com/RationalCoding/multihack/blob/gh-pages/img/mockup.jpg?raw=true">
 
-Tired of struggling to set up remote collaboration with your team? <a href="http://multihack.co">MultiHack</a>
+Tired of struggling to set up remote collaboration with your team? <a href="http://multihack.co">multihack.co</a>
 
 ###Collaborate in Real Time  
 Code is synchronized in real time between everyone on your team.  
