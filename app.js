@@ -15,9 +15,6 @@ app.use(express.static(__dirname + '/public'));
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/public/index.html');
 });
-app.get('/client', function (req, res) {
-    res.sendFile(__dirname + '/public/hh-client/client.html');
-});
 
 
 var users = {};
