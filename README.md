@@ -20,7 +20,7 @@ Join a secure group call in one click with WebRTC.
 
 ###Deploy your Website Instantly  
 MultiHack uses <a href="https://github.com/RationalCoding/HyperHost">HyperHost</a> to deploy your web project to the web instantly.  
-Tests designs with clients without needing to setup a server!
+Test designs with clients without ever needing to setup a server!
 
 ###Syntax Highlighting
 Syntax highlighting for all web languages is supported.  
