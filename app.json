@@ -1,0 +1,6 @@
+{
+  "name": "MultiHack",
+  "description": "Real-Time Editor, Web Host, Voice Chat, and Social Network.",
+  "repository": "https://github.com/RationalCoding/multihack",
+  "keywords": ["node", "webrtc", "sockets", "collab", "editor"]
+}
