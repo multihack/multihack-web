@@ -4,10 +4,6 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var cfenv = require('cfenv');
 
-
-var ExpressPeerServer = require('peer').ExpressPeerServer;
-var peerServer = ExpressPeerServer(app, {debug: true});
-
 var sanitizeHtml = require('sanitize-html');
 
 // serve the files out of ./public
@@ -197,35 +193,6 @@ io.on('connection', function (socket) {
         socket.to(users[id].room).emit('code/cursor', data); //{userId, fileId, {x,y}}
     });
 
-});
-
-
-/* PeerJS server */
-
-// Connected id tracking
-var connected = [];
-
-app.use('/server', peerServer);
-
-// On connection to peer server
-peerServer.on('connection', function (id) {
-
-    // Add new ID
-    var idx = connected.indexOf(id);
-    if (idx === -1) connected.push(id);
-});
-
-// On disconnect to server
-peerServer.on('disconnect', function (id) {
-
-    // Remove ID
-    var idx = connected.indexOf(id);
-    if (idx !== -1) connected.splice(idx, 1);
-});
-
-// GET connected peer IDs
-app.get('/api/peers', function (req, res) {
-    return res.json(connected);
 });
 
 
