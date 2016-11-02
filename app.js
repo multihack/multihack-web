@@ -6,7 +6,7 @@ var cfenv = require('cfenv');
 
 
 var ExpressPeerServer = require('peer').ExpressPeerServer;
-var peerServer = ExpressPeerServer(server, {debug: true});
+var peerServer = ExpressPeerServer(app, {debug: true});
 
 var sanitizeHtml = require('sanitize-html');
 
