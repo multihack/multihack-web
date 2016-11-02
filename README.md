@@ -44,8 +44,8 @@ You can keep working on your own version without interruptions.
 ###Works On Mobile
 MultiHack works your phone! Even iOS Safari!
 
-###Deploy To Heroku
-Although Multihack is meant to bring developer together, you can run your own instance.  
+##Deploy To Heroku
+Although Multihack is meant to bring developers together, you can run your own instance.  
 <br>
 <a href="https://heroku.com/deploy">
   <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
