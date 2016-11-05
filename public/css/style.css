@@ -185,15 +185,6 @@ img ,
     top:1px;
 }
 
-.workspace .delete {
-    background: firebrick;
-    position: absolute;
-    right: 10px;
-    bottom: 30px;
-    border-color: red;
-    z-index: 10;
-}
-
 .icon-button {
     padding: 5px;
     transition: none;
@@ -206,6 +197,25 @@ img ,
 .icon-button img {
     width: 20px;
     height: 20px;
+}
+.workspace .delete {
+    background: firebrick;
+    position: absolute;
+    right: 10px;
+    bottom: 30px;
+    border-color: red;
+    z-index: 10;
+}
+
+.workspace .image-contrast {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    z-index: 10;
+    background: none !important;
+}
+.workspace .image-contrast:hover{
+    outline: none;
 }
 
 .workspace .image-wrapper {
@@ -220,7 +230,7 @@ img ,
     overflow: auto;
 }
 
-.workspace .image-wrapper img{
+.workspace .image-wrapper > img{
     margin-top: 40px;
     width: 70%;
     margin-bottom: 60px;

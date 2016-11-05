@@ -83,6 +83,13 @@ var UI = (function (FileSystem, Sockets, HyperHost, Modal, $, Microstache, Util,
         });
         Modal.open('confirmDelete', FileSystem.workingFile);
     });
+    
+    var contrastToggle = false;
+    $.event('#image-contrast', 'click', function(event){
+        contrastToggle=!contrastToggle;
+        $('.image-wrapper').style.backgroundColor = contrastToggle ? 'white' : 'black';
+        $('.image-wrapper > .image-contrast > img').src = contrastToggle ? 'img/contrast-black.png' : 'img/contrast-white.png'
+    });
 
     var toolbarCollapsed = false;
     $.event('#collapsetoolbar', 'click', function (event) {

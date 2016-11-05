@@ -409,7 +409,7 @@ var FileSystem = (function (Sockets, Microstache, JSZip, JSZipUtils, Config) {
 
         if (IMAGE_EXTENSIONS.indexOf(ext) !== -1) {
             document.querySelector(".image-wrapper").style.display = "";
-            document.querySelector(".image-wrapper img").src = fileNode.content;
+            document.querySelector(".image-wrapper > img").src = fileNode.content;
         } else {
             document.querySelector(".image-wrapper").style.display = "none";
             editorMutexLock = true;
