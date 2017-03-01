@@ -42,7 +42,7 @@ When your internet connection drops, MultiHack moves your code into your own pri
 You can keep working on your own version without interruptions.
 
 ###Works On Mobile
-MultiHack works your phone! Even iOS Safari!
+MultiHack works on your phone! Even iOS Safari!
 
 ##Deploy To Heroku
 Although MultiHack is meant to bring developers together, you can run your own instance if you need to.  
