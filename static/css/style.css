@@ -193,9 +193,9 @@ img ,
     left: 0;
     top: 0;
     right: 0;
-    bottom: 0;
+    bottom: -16px;
     background: black;
-    z-index: 5;
+    z-index: 7;
     text-align: center;
     overflow: auto;
 }
@@ -471,8 +471,11 @@ span.mobile-hide{
     .workspace {
         left: 340px;
     }
-    .sidebar, .sidebar .panel-topbar {
-        width: 340px;
+    .sidebar {
+      width: 340px;
+    }
+    .sidebar .panel-topbar {
+        width: 330px;
     }
     .icon-collapse > span{
         display: inline-block;

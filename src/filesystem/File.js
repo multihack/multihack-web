@@ -7,8 +7,9 @@ function File (path) {
 
   self.name = util.getFilename(path)
   self.path = path
-  self.doc = null
+  self.content = null
   self.isDir = false
+  self.viewMapping = util.getViewMapping(path)
 }
 
 

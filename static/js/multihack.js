@@ -656,6 +656,10 @@ if (typeof Object.create === 'function') {
 }));
 
 },{}],3:[function(require,module,exports){
+module.exports={
+  "hostname": "quiet-shelf-57463.herokuapp.com"
+}
+},{}],4:[function(require,module,exports){
 /* globals CodeMirror */
 
 var EventEmitter = require('events').EventEmitter
@@ -684,7 +688,7 @@ function Editor () {
   
   self._workingFile = null
   self._mutex = false
-  self._cm.on('change', self._onchange)
+  self._cm.on('change', self._onchange.bind(self))
   
   self._theme = null
 }
@@ -693,27 +697,43 @@ Editor.prototype._onchange = function (cm, change) {
   var self = this
   
   if (self._mutex || !self._workingFile) return
-  self._workingFile.content.replaceRange(change.text, change.to, change.from)
   self.emit('change', {
-    path: self._workingFile.path,
+    filePath: self._workingFile.path,
     change: change
   })
 }
 
+// Handle an external change
 Editor.prototype.change = function (filePath, change) {
   var self = this
-  if (!self._workingFile || !filePath === self._workingFile.path) return
-  self._cm.replaceRange(change.text, change.to, change.from)
+  self._mutex = true
+  if (!self._workingFile || filePath !== self._workingFile.path) {
+    FileSystem.getFile(filePath).content.replaceRange(change.text, change.to, change.from)
+  } else {
+    self._cm.replaceRange(change.text, change.to, change.from)
+  }
+  self._mutex = false
 }
 
 Editor.prototype.open = function (filePath) {
   var self = this
   if (self._workingFile && filePath === self._workingFile.path) return
-  self._cm.swapDoc(FileSystem.get(filePath).doc)
+  self._workingFile = FileSystem.get(filePath)
+  document.getElementById('working-file').innerHTML = self._workingFile.name
+  switch (self._workingFile.viewMapping) {
+    case 'image':
+      document.querySelector('.image-wrapper').style.display = ''
+      document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,'+self._workingFile.content
+    break
+    default:
+      document.querySelector('.image-wrapper').style.display = 'none'
+      self._cm.swapDoc(self._workingFile.content)
+    break
+  }
 }
   
 module.exports = new Editor()
-},{"./../filesystem/filesystem":6,"events":14,"inherits":1}],4:[function(require,module,exports){
+},{"./../filesystem/filesystem":7,"events":15,"inherits":1}],5:[function(require,module,exports){
 var util = require('./util')
 var mustache = require('mustache')
 
@@ -728,7 +748,7 @@ function Directory (path) {
 }
   
 module.exports = Directory
-},{"./util":7,"mustache":2}],5:[function(require,module,exports){
+},{"./util":8,"mustache":2}],6:[function(require,module,exports){
 var util = require('./util')
 var mustache = require('mustache')
 
@@ -738,17 +758,21 @@ function File (path) {
 
   self.name = util.getFilename(path)
   self.path = path
-  self.content = []
+  self.content = null
   self.isDir = false
+  self.viewMapping = util.getViewMapping(path)
 }
+
+
   
 module.exports = File
-},{"./util":7,"mustache":2}],6:[function(require,module,exports){
+},{"./util":8,"mustache":2}],7:[function(require,module,exports){
 /* globals JSZip, JSZipUtils, CodeMirror */
 
 var File = require('./file')
 var Directory = require('./directory')
 var util = require('./util')
+var Interface = require('./../interface/interface')
 
 var ignoredFilenames = ['__MACOSX', '.DS_Store']
 
@@ -774,35 +798,92 @@ FileSystem.prototype.loadProject = function (file, cb) {
   // TODO: More input options
 }
 
-FileSystem.prototype.mkdir = function (parentPath, path) {
+FileSystem.prototype.mkdir = function (path) {
   var self = this
+  var self = this
+  var parentPath = path.split('/')
+  parentPath.splice(-1,1)
+  parentPath = parentPath.join('/')
+  
+  self._buildPath(parentPath)
   self._getNode(parentPath).children.push(new Directory(path))
 }
 
-FileSystem.prototype.mkfile = function (parentPath, path) {
+FileSystem.prototype.mkfile = function (path) {
   var self = this
+  var parentPath = path.split('/')
+  parentPath.splice(-1,1)
+  parentPath = parentPath.join('/')
+
+  self._buildPath(parentPath)
   self._getNode(parentPath).children.push(new File(path))
 }
 
+// Ensures all directories have been build along path
+FileSystem.prototype._buildPath = function (path) {
+  var split = path.split('/')
+  for (var i=0; i<split; i++) {
+    var check = split.slice(0,i).join('/')
+    if (!self._getNode(check)) {
+      self.mkdir(check)
+    }
+  }
+}
 
 // Recursive search
 FileSystem.prototype._getNode = function (path, nodeList) {
   var self = this
   nodeList = nodeList || self._tree
-    for (var i = 0; i < nodeList.length; i++) { 
-        if (nodeList[i].path === path) {
-            return nodeList[i]
-        } else if (nodeList[i].children) {
-            var recur = self._getNode(path, nodeList[i].children) 
-            if (recur) return recur
-        }
-    }
-    return undefined
+  for (var i = 0; i < nodeList.length; i++) { 
+      if (nodeList[i].path === path) {
+          return nodeList[i]
+      } else if (nodeList[i].children) {
+          var recur = self._getNode(path, nodeList[i].children) 
+          if (recur) return recur
+      }
+  }
+  return undefined
 }
 
 FileSystem.prototype.get = function (path) {
   var self = this
+  
+  var parentPath = path.split('/')
+  parentPath.splice(-1,1)
+  parentPath = parentPath.join('/')
+  
+  self._buildPath(parentPath)
   return self._getNode(path)
+}
+
+FileSystem.prototype.getFile = function (path) {
+  var self = this
+  
+  var parentPath = path.split('/')
+  parentPath.splice(-1,1)
+  parentPath = parentPath.join('/')
+  
+  self._buildPath(parentPath)
+  return self._getNode(path) || (function () {
+    self.mkfile(path)
+    self._getNode(path).content = new CodeMirror.Doc('', util.pathToMode(path))
+    Interface.treeview.render(self._tree[0].children)
+    console.log(self._tree)
+    return self._getNode(path)
+  }())
+}
+
+FileSystem.prototype.delete = function (path) {
+  var self = this
+  var parentPath = relativePath.split('/')
+  parentPath.splice(-1,1)
+  parentPath = parentPath.join('/')
+  self._getNode(parentPath).children = self._getNode(parentPath).children.filter(function (e) {
+    if (e.path === path) {
+      return false
+    }
+    return true
+  })
 }
 
 // Takes a zip file and writes to the directory
@@ -843,16 +924,22 @@ FileSystem.prototype.unzip = function (file, cb) {
       parentPath = parentPath.join('/')
       
       if (zipEntry.dir) {
-        self.mkdir(parentPath, relativePath)
+        self.mkdir(relativePath)
         if (--awaiting <= 0) cb() 
       } else {
-        self.mkfile(parentPath, relativePath)
+        self.mkfile(relativePath)
         var viewMapping = util.getViewMapping(relativePath)
         switch (viewMapping) {
+          case 'image':
+            zipEntry.async('base64').then(function (content) {  
+              self.get(relativePath).content = content
+              if (--awaiting <= 0) cb() 
+            })
+            break
           default:
             // Load as text
             zipEntry.async('string').then(function (content) {  
-              self.get(relativePath).doc = new CodeMirror.Doc(content, util.pathToMode(relativePath))
+              self.get(relativePath).content = new CodeMirror.Doc(content, util.pathToMode(relativePath))
               if (--awaiting <= 0) cb() 
             })
             break
@@ -863,7 +950,7 @@ FileSystem.prototype.unzip = function (file, cb) {
 }
     
 module.exports = new FileSystem()
-},{"./directory":4,"./file":5,"./util":7}],7:[function(require,module,exports){
+},{"./../interface/interface":10,"./directory":5,"./file":6,"./util":8}],8:[function(require,module,exports){
 var util = {}
 
 
@@ -909,11 +996,13 @@ util.getViewMapping = function (path){
 }
   
 module.exports = util
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var FileSystem = require('./filesystem/filesystem')
 var Interface = require('./interface/interface')
 var Editor = require('./editor/editor')
 var Remote = require('./network/remote')
+
+var config = require('./config.json')
 
 function Multihack () {
   var self = this
@@ -929,24 +1018,39 @@ function Multihack () {
   Interface.removeOverlay()
   Interface.getProject(function (project) {
     if (!project){
-      Interface.getRoom(self.roomID, function (roomID) {
-        self.roomID = roomID
-        // self._remote = new Remote('quiet-shelf-57463.herokuapp.com', roomID)
-      })
+      self._initRemote()
     } else {
       Interface.showOverlay()
       FileSystem.loadProject(project, function (tree) {
-        Interface.getRoom(self.roomID, function (roomID) {
-          self.roomID = roomID
-        })
         Interface.treeview.render(tree)
+        self._initRemote()
       })
     }
   })
 }
+
+Multihack.prototype._initRemote = function () {
+  Interface.getRoom(self.roomID, function (roomID) {
+    self.roomID = roomID
+    self._remote = new Remote(config.hostname, roomID)
+    
+    self._remote.on('change', function (data) {
+      if (Editor.change(data.filePath, data.change)) {
+        Interface.treeview.render(tree)
+      }
+    })
+    self._remote.on('deleteFile', function (data) {
+      FileSystem.delete(data.filePath)
+      Interface.treeview.render(tree)
+    })
+    Editor.on('change', function (data) {
+      self._remote.change(data.filePath, data.change)
+    })
+  })
+}
     
 module.exports = Multihack
-},{"./editor/editor":3,"./filesystem/filesystem":6,"./interface/interface":9,"./network/remote":13}],9:[function(require,module,exports){
+},{"./config.json":3,"./editor/editor":4,"./filesystem/filesystem":7,"./interface/interface":10,"./network/remote":14}],10:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 var Modal = require('./modal')
@@ -974,6 +1078,13 @@ function Interface () {
     } else {
       sidebar.className = sidebar.className.replace('collapsed', '')
     }
+  })
+  
+  var contrast = false
+  document.getElementById('image-contrast').addEventListener('click', function () {
+    contrast = !contrast
+    document.querySelector('.image-wrapper').style.backgroundColor = contrast ? 'white' : 'black'
+    document.querySelector('#image-contrast > img').src = contrast ? 'static/img/contrast-black.png' : 'static/img/contrast-white.png'
   })
 }
 
@@ -1011,7 +1122,7 @@ Interface.prototype.getRoom = function (roomID, cb) {
   })
   roomModal.on('cancel', function () {
     roomModal.close()
-    self.alert('Offline Mode', 'You are now in offline mode.<br>Save and refresh to join a room.')
+    self.alert('Offline Mode', 'You are now in offline mode.<br>Refresh to join a room.')
   })
   roomModal.open()
 }
@@ -1037,7 +1148,7 @@ Interface.prototype.showOverlay = function (msg, cb) {
 }
   
 module.exports = new Interface()
-},{"./modal":10,"./treeview":12,"events":14,"inherits":1}],10:[function(require,module,exports){
+},{"./modal":11,"./treeview":13,"events":15,"inherits":1}],11:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 var mustache = require('mustache')
@@ -1098,7 +1209,7 @@ Modal.prototype.close = function () {
 
     
 module.exports = Modal
-},{"./templates":11,"events":14,"inherits":1,"mustache":2}],11:[function(require,module,exports){
+},{"./templates":12,"events":15,"inherits":1,"mustache":2}],12:[function(require,module,exports){
 var dict = {}
 
 dict['file'] = 
@@ -1121,7 +1232,7 @@ dict['alert'] =
 
 
 module.exports = dict
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 var mustache = require('mustache')
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
@@ -1199,7 +1310,7 @@ TreeView.prototype.add = function (parent, file) {
 }
     
 module.exports = TreeView
-},{"events":14,"inherits":1,"mustache":2}],13:[function(require,module,exports){
+},{"events":15,"inherits":1,"mustache":2}],14:[function(require,module,exports){
 /* globals io */
 
 // TODO: Replace socket forwarding with WebRTC
@@ -1215,6 +1326,7 @@ function RemoteManager (hostname, room) {
   self._socket.emit('join', {room: room})
 
   self._socket.on('forward', function (data) {
+    console.log(data)
     self._emit(data.event, data)
   })  
 }
@@ -1231,6 +1343,7 @@ RemoteManager.prototype.deleteFile = function (filePath) {
 RemoteManager.prototype.change = function (filePath, change) {
   var self = this
 
+  console.log(filePath)
   self._socket.emit('forward', {
     event: 'change',
     filePath: filePath,
@@ -1274,7 +1387,7 @@ RemoteManager.prototype.on = function (event, handler) {
 
 module.exports = RemoteManager
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -1578,5 +1691,5 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}]},{},[8])(8)
+},{}]},{},[9])(9)
 });

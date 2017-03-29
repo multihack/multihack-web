@@ -3,6 +3,8 @@ var Interface = require('./interface/interface')
 var Editor = require('./editor/editor')
 var Remote = require('./network/remote')
 
+var config = require('./config.json')
+
 function Multihack () {
   var self = this
   if (!(self instanceof Multihack)) return new Multihack()
@@ -17,19 +19,34 @@ function Multihack () {
   Interface.removeOverlay()
   Interface.getProject(function (project) {
     if (!project){
-      Interface.getRoom(self.roomID, function (roomID) {
-        self.roomID = roomID
-        // self._remote = new Remote('quiet-shelf-57463.herokuapp.com', roomID)
-      })
+      self._initRemote()
     } else {
       Interface.showOverlay()
       FileSystem.loadProject(project, function (tree) {
-        Interface.getRoom(self.roomID, function (roomID) {
-          self.roomID = roomID
-        })
         Interface.treeview.render(tree)
+        self._initRemote()
       })
     }
+  })
+}
+
+Multihack.prototype._initRemote = function () {
+  Interface.getRoom(self.roomID, function (roomID) {
+    self.roomID = roomID
+    self._remote = new Remote(config.hostname, roomID)
+    
+    self._remote.on('change', function (data) {
+      if (Editor.change(data.filePath, data.change)) {
+        Interface.treeview.render(tree)
+      }
+    })
+    self._remote.on('deleteFile', function (data) {
+      FileSystem.delete(data.filePath)
+      Interface.treeview.render(tree)
+    })
+    Editor.on('change', function (data) {
+      self._remote.change(data.filePath, data.change)
+    })
   })
 }
     

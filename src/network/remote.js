@@ -13,6 +13,7 @@ function RemoteManager (hostname, room) {
   self._socket.emit('join', {room: room})
 
   self._socket.on('forward', function (data) {
+    console.log(data)
     self._emit(data.event, data)
   })  
 }
@@ -29,6 +30,7 @@ RemoteManager.prototype.deleteFile = function (filePath) {
 RemoteManager.prototype.change = function (filePath, change) {
   var self = this
 
+  console.log(filePath)
   self._socket.emit('forward', {
     event: 'change',
     filePath: filePath,

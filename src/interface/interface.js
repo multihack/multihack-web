@@ -26,6 +26,13 @@ function Interface () {
       sidebar.className = sidebar.className.replace('collapsed', '')
     }
   })
+  
+  var contrast = false
+  document.getElementById('image-contrast').addEventListener('click', function () {
+    contrast = !contrast
+    document.querySelector('.image-wrapper').style.backgroundColor = contrast ? 'white' : 'black'
+    document.querySelector('#image-contrast > img').src = contrast ? 'static/img/contrast-black.png' : 'static/img/contrast-white.png'
+  })
 }
 
 Interface.prototype.getProject = function (cb) {
@@ -62,7 +69,7 @@ Interface.prototype.getRoom = function (roomID, cb) {
   })
   roomModal.on('cancel', function () {
     roomModal.close()
-    self.alert('Offline Mode', 'You are now in offline mode.<br>Save and refresh to join a room.')
+    self.alert('Offline Mode', 'You are now in offline mode.<br>Refresh to join a room.')
   })
   roomModal.open()
 }
