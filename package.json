@@ -1,0 +1,24 @@
+{
+  "name": "node-boilerplate",
+  "version": "1.0.0",
+  "description": "A boilerplate to kickstart Node projects.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "standard --fix && tape test/*.js",
+    "build": "browserify src/index.js -s Multihack -o static/js/multihack.js"
+  },
+  "author": "Thomas Mullen",
+  "license": "MIT",
+  "devDependencies": {
+    "standard": "^8.6.0",
+    "tape": "^4.6.3"
+  },
+  "dependencies": {
+    "events": "^1.1.1",
+    "inherits": "^2.0.3",
+    "mustache": "^2.3.0"
+  }
+}

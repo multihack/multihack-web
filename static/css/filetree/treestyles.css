@@ -1,0 +1,100 @@
+/* CSS Tree menu styles */
+
+ol.tree {
+    padding: 0 0 0 30px;
+    width: 300px;
+}
+
+li {
+    position: relative;
+    margin-left: -15px;
+    list-style: none;
+    cursor: pointer;
+}
+
+li.file {
+    margin-left: -6px !important;
+}
+
+li.file a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
+
+li.file a:hover {
+    color: #688491;
+}
+
+.plus {
+    color: #7ea1b1;
+    position: relative;
+    left: 9px;
+    cursor: pointer !important;
+}
+
+li input {
+    position: absolute;
+    left: 0;
+    margin-left: 0;
+    opacity: 0;
+    z-index: 2;
+    cursor: pointer;
+    height: 1em;
+    width: 1em;
+    top: 0;
+    cursor: pointer !important;
+}
+
+li input:after{
+    content:"";
+    padding: 20px;  
+    position: absolute;
+    left: -10px;
+    top: -10px;
+} 
+
+li input + ol {
+    background: url(toggle-small-expand.png) 40px 0 no-repeat;
+    margin: -0.938em 0 0 -44px;
+    /* 15px */
+    height: 1.12em;
+    cursor: pointer;
+}
+
+li input + ol > li {
+    display: none;
+    margin-left: -14px !important;
+    padding-left: 1px;
+    cursor: pointer;
+}
+
+li label {
+    cursor: pointer !important;
+    display: block;
+    padding-left: 8px;
+}
+
+li label:hover{
+    color: #637e8b;
+}
+
+li input:checked + ol {
+    background: url(toggle-small.png) 40px 5px no-repeat;
+    margin: -1.25em 0 0 -44px;
+    /* 20px */
+    padding: 1.563em 0 0 80px;
+    height: auto;
+}
+
+li input:checked + ol > li {
+    display: block;
+    margin: 0 0 0.125em;
+    /* 2px */
+}
+
+li input:checked + ol > li:last-child {
+    margin: 0 0 0.063em;
+    /* 1px */
+}
