@@ -821,8 +821,10 @@ FileSystem.prototype.mkfile = function (path) {
 
 // Ensures all directories have been build along path
 FileSystem.prototype._buildPath = function (path) {
+  var self = this
+  
   var split = path.split('/')
-  for (var i=0; i<split; i++) {
+  for (var i=0; i<=split; i++) {
     var check = split.slice(0,i).join('/')
     if (!self._getNode(check)) {
       self.mkdir(check)
