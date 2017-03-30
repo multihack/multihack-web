@@ -55,7 +55,7 @@ FileSystem.prototype._buildPath = function (path) {
   var self = this
   
   var split = path.split('/')
-  for (var i=0; i<=split; i++) {
+  for (var i=0; i<=split.length; i++) {
     var check = split.slice(0,i).join('/')
     if (!self._getNode(check)) {
       self.mkdir(check)
