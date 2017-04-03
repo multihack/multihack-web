@@ -1,6 +1,7 @@
 /* globals io */
 
 // TODO: Replace socket forwarding with WebRTC
+var VoiceCall = require('./voice')
 
 function RemoteManager (hostname, room) {
   var self = this
@@ -16,6 +17,8 @@ function RemoteManager (hostname, room) {
     console.log(data)
     self._emit(data.event, data)
   })  
+  
+  self.voice = new VoiceCall(self._socket, room)
 }
 
 RemoteManager.prototype.deleteFile = function (filePath) {

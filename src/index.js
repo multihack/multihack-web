@@ -46,6 +46,10 @@ Multihack.prototype._initRemote = function () {
     self.roomID = roomID
     self._remote = new Remote(config.hostname, roomID)
     
+    Interface.on('voiceToggle', function () {
+      self._remote.voice.toggle()
+    })
+    
     self._remote.on('change', function (data) {
       if (Editor.change(data.filePath, data.change)) {
         Interface.treeview.render(tree)

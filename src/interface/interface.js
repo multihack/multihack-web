@@ -39,6 +39,11 @@ function Interface () {
   document.getElementById('save').addEventListener('click', function () {
     self.emit('saveAs', 'zip')
   })
+  
+  // Setup voice button
+  document.getElementById('voice').addEventListener('click', function () {
+    self.emit('voiceToggle')
+  })
 }
 
 Interface.prototype.getProject = function (cb) {
