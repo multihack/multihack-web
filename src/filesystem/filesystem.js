@@ -11,11 +11,9 @@ function FileSystem () {
   var self = this
   if (!(self instanceof FileSystem)) return new FileSystem()
   
-  self._counter = 0
   self._tree = [
     new Directory('')
   ]
-  self.currentFile = null
 }
 
 // Takes a zip file and loads the project
@@ -27,6 +25,27 @@ FileSystem.prototype.loadProject = function (file, cb) {
   })
   
   // TODO: More input options
+}
+
+FileSystem.prototype.saveProject = function (saveType, cb) {
+  var self = this
+  
+  if (saveType === 'zip') {
+      try {
+        var isFileSaverSupported = !!new Blob
+
+        var zip = new JSZip()
+        util.zipTree(zip, self._tree[0].children)
+
+        zip.generateAsync({type: 'blob'}).then(function (content) {
+          saveAs(content, 'myProject.zip')
+          cb(true)
+        })
+      } catch (err) {
+        console.error(err)
+        cb(false)
+      }
+  }
 }
 
 FileSystem.prototype.mkdir = function (path) {

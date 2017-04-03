@@ -763,6 +763,15 @@ function File (path) {
   self.viewMapping = util.getViewMapping(path)
 }
 
+File.prototype.getRawContent = function () {
+  var self = this
+  
+  if (self.viewMapping === 'image') {
+    return atob(self.content)
+  } else {
+    return self.content.getValue()
+  }
+}
 
   
 module.exports = File
@@ -780,11 +789,9 @@ function FileSystem () {
   var self = this
   if (!(self instanceof FileSystem)) return new FileSystem()
   
-  self._counter = 0
   self._tree = [
     new Directory('')
   ]
-  self.currentFile = null
 }
 
 // Takes a zip file and loads the project
@@ -796,6 +803,27 @@ FileSystem.prototype.loadProject = function (file, cb) {
   })
   
   // TODO: More input options
+}
+
+FileSystem.prototype.saveProject = function (saveType, cb) {
+  var self = this
+  
+  if (saveType === 'zip') {
+      try {
+        var isFileSaverSupported = !!new Blob
+
+        var zip = new JSZip()
+        util.zipTree(zip, self._tree[0].children)
+
+        zip.generateAsync({type: 'blob'}).then(function (content) {
+          saveAs(content, 'myProject.zip')
+          cb(true)
+        })
+      } catch (err) {
+        console.error(err)
+        cb(false)
+      }
+  }
 }
 
 FileSystem.prototype.mkdir = function (path) {
@@ -969,6 +997,7 @@ util.getExtension = function (path) {
 
 var CM_MAPPINGS = {
   "js": "javascript",
+  "coffee": "javascript",
   "ts": "javascript",
   "json": "javascript",
   "css": "css",
@@ -996,6 +1025,19 @@ var VIEW_MAPPINGS = {
 util.getViewMapping = function (path){
   return VIEW_MAPPINGS[util.getExtension(path)] || "text"
 }
+
+// Creates a zip archive from a file tree
+util.zipTree = function (zip, nodeList) {
+  console.log(nodeList)
+    for (var i = 0; i < nodeList.length; i++) { //Iterate children
+      
+        if (nodeList[i].isDir) {
+            util.zipTree(zip, nodeList[i].children);
+        } else {
+            zip.file(nodeList[i].path.slice(1), nodeList[i].getRawContent());
+        }
+    }
+}
   
 module.exports = util
 },{}],9:[function(require,module,exports){
@@ -1016,6 +1058,16 @@ function Multihack () {
   
   // Initialize project and room
   self.roomID = Math.random().toString(36).substr(2, 20)
+  
+  Interface.on('saveAs', function (saveType) {
+    FileSystem.saveProject(saveType, function (success) {
+      if (success) {
+        Interface.alert('Save Completed', 'Your project has been successfully saved.')
+      } else {
+        Interface.alert('Save Failed', 'An error occured while trying to save your project.<br>Please select a different method.')
+      }
+    })
+  })
     
   Interface.removeOverlay()
   Interface.getProject(function (project) {
@@ -1029,6 +1081,7 @@ function Multihack () {
       })
     }
   })
+  
 }
 
 Multihack.prototype._initRemote = function () {
@@ -1082,11 +1135,17 @@ function Interface () {
     }
   })
   
+  // Setup contrast toggle
   var contrast = false
   document.getElementById('image-contrast').addEventListener('click', function () {
     contrast = !contrast
     document.querySelector('.image-wrapper').style.backgroundColor = contrast ? 'white' : 'black'
     document.querySelector('#image-contrast > img').src = contrast ? 'static/img/contrast-black.png' : 'static/img/contrast-white.png'
+  })
+  
+  // Setup save button
+  document.getElementById('save').addEventListener('click', function () {
+    self.emit('saveAs', 'zip')
   })
 }
 
@@ -1097,9 +1156,9 @@ Interface.prototype.getProject = function (cb) {
     title: 'Load Project',
     message: 'Upload a zip file containing a project.'
   })
-  projectModal.on('done', function (inputs) {
+  projectModal.on('done', function (e) {
     projectModal.close()
-    if (cb) cb(inputs[0].files[0])
+    if (cb) cb(e.inputs[0].files[0])
   })
   projectModal.on('cancel', function () {
     projectModal.close()
@@ -1118,13 +1177,13 @@ Interface.prototype.getRoom = function (roomID, cb) {
     placeholder: 'RoomID',
     default: roomID
   })
-  roomModal.on('done', function (inputs) {
+  roomModal.on('done', function (e) {
     roomModal.close()
-    if (cb) cb(inputs[0].value)
+    if (cb) cb(e.inputs[0].value)
   })
   roomModal.on('cancel', function () {
     roomModal.close()
-    self.alert('Offline Mode', 'You are now in offline mode.<br>Refresh to join a room.')
+    self.alert('Offline Mode', 'You are now in offline mode.<br>Save and refresh to join a room.')
   })
   roomModal.open()
 }
@@ -1134,7 +1193,7 @@ Interface.prototype.alert = function (title, message, cb) {
     title: title,
     message: message
   })
-  alertModal.on('done', function (inputs) {
+  alertModal.on('done', function (e) {
     alertModal.close()
     if (cb) cb()
   })
@@ -1174,21 +1233,23 @@ Modal.prototype.open = function () {
     self.overlay.style.display = ''
     self.el.innerHTML = self._html
     
-    function done() {
-        self.emit('done', self.el.querySelectorAll('input'))
+    function done(e) {
+        e.inputs = self.el.querySelectorAll('input')
+        self.emit('done', e)
     }
     
     function cancel() {
       self.emit('cancel')
     }
     
-    var go = self.el.querySelector('.go-button')
-    if (go) {
-      if (go.tagName === 'BUTTON') {
-          go.addEventListener('click', done)
+    var go = Array.prototype.slice.call(self.el.querySelectorAll('.go-button'))
+    while (go[0]) {
+      if (go[0].tagName === 'BUTTON') {
+          go[0].addEventListener('click', done)
       } else {
-          go.addEventListener('change', done)
+          go[0].addEventListener('change', done)
       }
+      go.shift()
     }
     
     var no = self.el.querySelector('.no-button')

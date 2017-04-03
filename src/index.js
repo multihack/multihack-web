@@ -15,6 +15,16 @@ function Multihack () {
   
   // Initialize project and room
   self.roomID = Math.random().toString(36).substr(2, 20)
+  
+  Interface.on('saveAs', function (saveType) {
+    FileSystem.saveProject(saveType, function (success) {
+      if (success) {
+        Interface.alert('Save Completed', 'Your project has been successfully saved.')
+      } else {
+        Interface.alert('Save Failed', 'An error occured while trying to save your project.<br>Please select a different method.')
+      }
+    })
+  })
     
   Interface.removeOverlay()
   Interface.getProject(function (project) {
@@ -28,6 +38,7 @@ function Multihack () {
       })
     }
   })
+  
 }
 
 Multihack.prototype._initRemote = function () {

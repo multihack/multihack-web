@@ -27,11 +27,17 @@ function Interface () {
     }
   })
   
+  // Setup contrast toggle
   var contrast = false
   document.getElementById('image-contrast').addEventListener('click', function () {
     contrast = !contrast
     document.querySelector('.image-wrapper').style.backgroundColor = contrast ? 'white' : 'black'
     document.querySelector('#image-contrast > img').src = contrast ? 'static/img/contrast-black.png' : 'static/img/contrast-white.png'
+  })
+  
+  // Setup save button
+  document.getElementById('save').addEventListener('click', function () {
+    self.emit('saveAs', 'zip')
   })
 }
 
@@ -42,9 +48,9 @@ Interface.prototype.getProject = function (cb) {
     title: 'Load Project',
     message: 'Upload a zip file containing a project.'
   })
-  projectModal.on('done', function (inputs) {
+  projectModal.on('done', function (e) {
     projectModal.close()
-    if (cb) cb(inputs[0].files[0])
+    if (cb) cb(e.inputs[0].files[0])
   })
   projectModal.on('cancel', function () {
     projectModal.close()
@@ -63,13 +69,13 @@ Interface.prototype.getRoom = function (roomID, cb) {
     placeholder: 'RoomID',
     default: roomID
   })
-  roomModal.on('done', function (inputs) {
+  roomModal.on('done', function (e) {
     roomModal.close()
-    if (cb) cb(inputs[0].value)
+    if (cb) cb(e.inputs[0].value)
   })
   roomModal.on('cancel', function () {
     roomModal.close()
-    self.alert('Offline Mode', 'You are now in offline mode.<br>Refresh to join a room.')
+    self.alert('Offline Mode', 'You are now in offline mode.<br>Save and refresh to join a room.')
   })
   roomModal.open()
 }
@@ -79,7 +85,7 @@ Interface.prototype.alert = function (title, message, cb) {
     title: title,
     message: message
   })
-  alertModal.on('done', function (inputs) {
+  alertModal.on('done', function (e) {
     alertModal.close()
     if (cb) cb()
   })

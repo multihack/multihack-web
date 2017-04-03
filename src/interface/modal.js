@@ -21,21 +21,23 @@ Modal.prototype.open = function () {
     self.overlay.style.display = ''
     self.el.innerHTML = self._html
     
-    function done() {
-        self.emit('done', self.el.querySelectorAll('input'))
+    function done(e) {
+        e.inputs = self.el.querySelectorAll('input')
+        self.emit('done', e)
     }
     
     function cancel() {
       self.emit('cancel')
     }
     
-    var go = self.el.querySelector('.go-button')
-    if (go) {
-      if (go.tagName === 'BUTTON') {
-          go.addEventListener('click', done)
+    var go = Array.prototype.slice.call(self.el.querySelectorAll('.go-button'))
+    while (go[0]) {
+      if (go[0].tagName === 'BUTTON') {
+          go[0].addEventListener('click', done)
       } else {
-          go.addEventListener('change', done)
+          go[0].addEventListener('change', done)
       }
+      go.shift()
     }
     
     var no = self.el.querySelector('.no-button')

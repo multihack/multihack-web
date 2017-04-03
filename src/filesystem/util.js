@@ -14,6 +14,7 @@ util.getExtension = function (path) {
 
 var CM_MAPPINGS = {
   "js": "javascript",
+  "coffee": "javascript",
   "ts": "javascript",
   "json": "javascript",
   "css": "css",
@@ -40,6 +41,19 @@ var VIEW_MAPPINGS = {
 }
 util.getViewMapping = function (path){
   return VIEW_MAPPINGS[util.getExtension(path)] || "text"
+}
+
+// Creates a zip archive from a file tree
+util.zipTree = function (zip, nodeList) {
+  console.log(nodeList)
+    for (var i = 0; i < nodeList.length; i++) { //Iterate children
+      
+        if (nodeList[i].isDir) {
+            util.zipTree(zip, nodeList[i].children);
+        } else {
+            zip.file(nodeList[i].path.slice(1), nodeList[i].getRawContent());
+        }
+    }
 }
   
 module.exports = util

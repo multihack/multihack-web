@@ -12,6 +12,15 @@ function File (path) {
   self.viewMapping = util.getViewMapping(path)
 }
 
+File.prototype.getRawContent = function () {
+  var self = this
+  
+  if (self.viewMapping === 'image') {
+    return atob(self.content)
+  } else {
+    return self.content.getValue()
+  }
+}
 
   
 module.exports = File
