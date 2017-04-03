@@ -48,10 +48,6 @@
     color: #9a9a9a;
 }
 
-.theme-material input[type="text"]:focus {
-    border-color: #40525B !important;
-}
-
 .theme-material *::-webkit-scrollbar-track {
     border-color: #5A6D76;
     background: #182A33;
@@ -123,9 +119,6 @@
     color: #9a9a9a;
 }
 
-.theme-atom input[type="text"]:focus {
-    border-color: rgb(239, 234, 225) !important;
-}
 
 .theme-atom *::-webkit-scrollbar-track {
     border-color: #1D1F21;
@@ -214,10 +207,6 @@
     color: #9a9a9a;
 }
 
-.theme-codepen input[type="text"]:focus {
-    border-color: rgb(239, 234, 225) !important;
-}
-
 .theme-codepen *::-webkit-scrollbar-track {
     border-color: #1D1F20;
     background: #1D1F20;
@@ -302,10 +291,6 @@
 
 .theme-brackets a{
     color: #9a9a9a;
-}
-
-.theme-brackets input[type="text"]:focus {
-    border-color: rgb(239, 234, 225) !important;
 }
 
 .theme-brackets *::-webkit-scrollbar-track {

@@ -341,11 +341,6 @@ input[type="text"] {
     max-width: 100% !important;
 }
 
-input[type="text"]:focus {
-    padding: 11px;
-    position: relative;
-}
-
 input[type="text"].long {
     width: 90%;
 }
