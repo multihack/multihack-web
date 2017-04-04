@@ -31,3 +31,11 @@ Save your project as a ZIP archive and use it in your favourite native IDE.
 
 ### Works Offline
 When your internet connection drops, MultiHack lets you keep working without interruptions.  
+
+## Introducing version 2.0!
+V2 is a complete rewrite of the old multihack-web (still available on the v1 branch)  
+- Greatly improved performance and code style.  
+- Compatability with multihack-brackets.  
+- Swapped PeerJS for simple-peer, for more reliable voice calls.  
+- Removed the social feature in favour of private rooms.  
+
