@@ -35,7 +35,7 @@ Save your project as a ZIP archive and use it in your favourite native IDE.
 When your internet connection drops, MultiHack lets you keep working without interruptions.  
 
 ## Run Your Own Instance
-To run your own instance of the server, see [multihack-server](https://github.com/RationalCoding/multihack-server).  
+To run your own instance, see [multihack-server](https://github.com/RationalCoding/multihack-server).  
 
 ## Introducing version 2.0!
 V2 is a complete rewrite of the old multihack-web (still available on the v1 branch)  
