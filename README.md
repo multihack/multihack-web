@@ -35,7 +35,7 @@ When your internet connection drops, MultiHack lets you keep working without int
 ## Introducing version 2.0!
 V2 is a complete rewrite of the old multihack-web (still available on the v1 branch)  
 - Greatly improved performance and code style.  
-- Compatability with multihack-brackets.  
+- Compatibility with multihack-brackets.  
 - Swapped PeerJS for simple-peer, for more reliable voice calls.  
 - Removed the social feature in favour of private rooms.  
 
