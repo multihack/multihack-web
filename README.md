@@ -4,7 +4,9 @@
   <br>
   <br>
 </h1>
-<h3 align="center">Real-Time Editor, Web Host, and Voice Chat.</h3>
+<h3 align="center">Real-Time Editor, Web Host, and Voice Chat.</h3>  
+
+[![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)  
 
 <b>MultiHack V2 is out! Fully compatible with <a href="https://github.com/RationalCoding/multihack-brackets">multihack-brackets</a>!</b>
 
