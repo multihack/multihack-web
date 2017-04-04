@@ -4,9 +4,11 @@ var Editor = require('./editor/editor')
 var Remote = require('./network/remote')
 var HyperHostWrapper = require('./network/hyperhostwrapper')
 
-function Multihack (hostname) {
+function Multihack (config) {
   var self = this
-  if (!(self instanceof Multihack)) return new Multihack()
+  if (!(self instanceof Multihack)) return new Multihack(config)
+  
+  config = config || {}
   
   Interface.on('openFile', function (path) {
     Editor.open(path)
@@ -14,7 +16,7 @@ function Multihack (hostname) {
   
   // Initialize project and room
   self.roomID = Math.random().toString(36).substr(2, 20)
-  self.hostname = hostname
+  self.hostname = config.hostname
   
   Interface.on('saveAs', function (saveType) {
     FileSystem.saveProject(saveType, function (success) {
@@ -48,8 +50,11 @@ function Multihack (hostname) {
 }
 
 Multihack.prototype._initRemote = function () {
+  var self = this
+  
   Interface.getRoom(self.roomID, function (roomID) {
     self.roomID = roomID
+    console.log(self, self.hostname)
     self._remote = new Remote(self.hostname, roomID)
     
     Interface.on('voiceToggle', function () {
