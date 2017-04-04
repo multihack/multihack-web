@@ -1,0 +1,491 @@
+@font-face {
+    font-family: SourceCodeRegular;
+    src: url('sourcecoderegular.ttf') format('truetype');
+    /* others */
+}
+
+@font-face {
+    font-family: SourceCodeLight;
+    src: url('sourcecodelight.ttf') format('truetype');
+    /* others */
+}
+
+@font-face {
+    font-family: Monaco;
+    src: url('Monaco.ttf') format('truetype');
+    /* others */
+}
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-size: 14px;
+    background: black;
+}
+
+* {
+    font-family: Monaco;
+}
+
+.nav {
+    height: 60px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    padding-right: 10px;
+}
+
+.nav .logo {
+    color: white;
+    font-family: SourceCodeLight;
+    margin-top: 10px;
+    margin-left: 30px;
+    font-size: 30px;
+    cursor: pointer;
+    float: left;
+}
+
+.nav .icon-button {
+    float: right;
+    margin-top: 15px;
+}
+
+.nav .icon-button span {
+    float: right;
+}
+
+.nav .icon-button img ~ span {
+    margin-left: 6px;
+}
+
+.noselect,
+.userlist *,
+.tree *,
+.topbar,
+.topbar *,
+.logo,
+.panel-topbar{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+.nodrag,
+img ,
+.statusbar{ 
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+    -webkit-touch-callout: none;
+    pointer-events: none;
+}
+
+.sidebar {
+    width: 150px;
+    position: fixed;
+    left: 0;
+    top: 60px;
+    bottom: 0px;
+    z-index: 1;
+    overflow: auto;
+}
+
+.sidebar.collapsed {
+  width: 24px;
+  overflow-x: hidden;
+}
+
+.sidebar.collapsed ~ .workspace {
+  left: 24px;
+}
+
+.panel-topbar {
+    height: 20px;
+    border-bottom: solid transparent 1px;
+    position: fixed;
+    top: 60px;
+    width: 142px;
+    left: 0;
+    text-align: center;
+    padding: 5px;
+}
+
+.sidebar.collapsed > .panel-topbar {
+  display: none;
+  width: 24px;
+}
+
+.sidebar.collapsed > .tree {
+  display: none;
+}
+
+.panel {
+    position: absolute;
+    top: 20px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+    margin: 15px 0 5px 0;
+}
+
+.workspace {
+    position: fixed;
+    background: black;
+    top: 60px;
+    left: 150px;
+    right: 0;
+    bottom: 0px;
+}
+
+.minus {
+    margin-left: 10px;
+}
+
+.icon-button {
+    padding: 5px 10px;
+    transition: none;
+    min-width: 30px;
+}
+
+.icon-button:hover {
+    outline: solid white 2px;
+}
+
+.icon-button img {
+    width: 13px;
+    height: 13px;
+}
+.workspace .delete {
+    background: firebrick;
+    position: absolute;
+    right: 10px;
+    bottom: 30px;
+    border-color: red;
+    z-index: 10;
+}
+
+.workspace .image-contrast {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    z-index: 10;
+    background: none !important;
+}
+.workspace .image-contrast:hover{
+    outline: none;
+}
+
+.workspace .image-wrapper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: -16px;
+    background: black;
+    z-index: 7;
+    text-align: center;
+    overflow: auto;
+}
+
+.workspace .image-wrapper > img{
+    margin-top: 40px;
+    width: 70%;
+    margin-bottom: 60px;
+}
+
+.workspace .editor-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 20px;
+}
+
+.workspace .editor {
+    background: black;
+    height: 100%;
+    width: 100%;
+    border: none;
+}
+
+.workspace .statusbar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 18px;
+    z-index: 999999;
+    border-top: solid transparent 1px;
+    font-size: 12px;
+    padding: 2px 5px 0 5px;
+}
+
+.workspace .statusbar #themebutton:hover{
+    outline: 0;
+}
+
+.sidebar #collapsesidebar{
+    position: absolute;
+    left: 0;
+    top: 0;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.sidebar #collapsesidebar:hover{
+    outline: 0;
+}
+
+.modal {
+    margin: auto;
+    width: 500px;
+    max-width: 80%;
+    z-index: 99999;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: transparent 10px solid;
+    padding: 20px;
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.blocking-overlay {
+    background: black;
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+    text-align: center;
+    padding-top: 100px;
+    font-size: 30px;
+}
+
+.blocking-overlay > span {
+    position: relative;
+    animation: swirl 2s infinite alternate;
+    animation-timing-function: ease-out;
+}
+
+
+@keyframes swirl {
+    0% {
+        top: 10px;
+    }
+    
+    50% {
+        top: -10px;
+    }
+    
+    100% {
+        top: 10px;
+    }
+}
+
+button {
+    height: 33px;
+    padding: 10px 15px 10px 15px;
+    margin: 5px;
+    display: inline-block;
+    border: 0;
+    cursor: pointer;
+    outline: none;
+    color: white;
+    font-size: 13px;
+    line-height: 13px;
+    min-width: 23px;
+}
+
+
+.text-center {
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+}
+
+.red {
+    color: firebrick !important;
+}
+
+.pull-right {
+    float: right;
+}
+
+input[type="text"] {
+    color: white;
+    background: black;
+    border: 3px transparent solid;
+    outline: none;
+    font-size: 16px;
+    padding: 5px;
+    transition: all .3s;
+    max-width: 100% !important;
+}
+
+input[type="text"].long {
+    width: 90%;
+}
+
+.CodeMirror {
+    height: 100%;
+}
+
+.cursor {
+    position: fixed;
+    height: 12px;
+    width: 12px;
+    z-index: 9999999;
+    transition: top .3s ease-out, left .3s ease-out;
+    border-radius: 100%;
+}
+
+
+/* Custom scrollbars */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    border: solid 1px gray;
+    border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    border-radius: 0;
+}
+
+/* File upload */
+input[type='file'] {
+    width: 63px;
+    padding: 3px 6px 6px 6px;
+    height: 24px;
+    position: relative;
+    top: 32px;
+    outline: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+input[type='file']:hover {
+    outline: solid white 2px;
+}
+
+input[type='file']::-webkit-file-upload-button {
+    visibility: hidden; 
+}
+
+input[type='file']::before {
+    content: 'Upload';
+    display: inline-block;
+    outline: none;
+    white-space: nowrap;
+    cursor: pointer;
+    padding: 10px 15px;
+    font-size: 13px;
+    color: white;
+    position: relative;
+    bottom: 4px;
+    left: -7px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+input[type='file']:hover::before {
+    border-color: black;
+}
+
+input[type='file']:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+.icon-collapse > span{
+    display: none;
+}
+
+span.mobile-hide{
+    display: none;
+}
+
+
+/* Custom, iPhone Retina */
+@media only screen and (max-width: 480px) {
+    .modal {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        right: 0px;        
+        bottom: 0px;
+        margin: 0;
+        padding: 0;
+        padding-top: 40px;
+        border: 0;
+        transform: none;
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+
+/* Small Devices, Tablets */
+
+@media only screen and (min-width: 768px) {
+    .workspace {
+        left: 340px;
+    }
+    .sidebar {
+      width: 340px;
+    }
+    .sidebar .panel-topbar {
+        width: 330px;
+    }
+    .icon-collapse > span{
+        display: inline-block;
+    }
+    span.mobile-hide{
+        display: inline-block;
+    }
+}
+
+
+/* Medium Devices, Desktops */
+
+@media only screen and (min-width: 992px) {}
+
+
+/* Large Devices, Wide Screens */
+
+@media only screen and (min-width: 1200px) {}
