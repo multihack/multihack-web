@@ -110,7 +110,7 @@ exports.allocUnsafeSlow = function allocUnsafeSlow(size) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"buffer":51}],2:[function(require,module,exports){
+},{"buffer":50}],2:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -220,8 +220,8 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js")})
-},{"../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js":54}],3:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
+},{"../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":53}],3:[function(require,module,exports){
 /**
  * cuid.js
  * Collision-resistant UID generator for browsers and node.
@@ -485,14 +485,17 @@ function save(namespaces) {
  */
 
 function load() {
+  var r;
   try {
-    return exports.storage.debug;
+    r = exports.storage.debug;
   } catch(e) {}
 
   // If debug isn't set in LS, and we're in Electron, try to load $DEBUG
-  if (typeof process !== 'undefined' && 'env' in process) {
-    return process.env.DEBUG;
+  if (!r && typeof process !== 'undefined' && 'env' in process) {
+    r = process.env.DEBUG;
   }
+
+  return r;
 }
 
 /**
@@ -519,7 +522,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":5,"_process":56}],5:[function(require,module,exports){
+},{"./debug":5,"_process":55}],5:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -1679,7 +1682,7 @@ function nextTick(fn, arg1, arg2, arg3) {
 }
 
 }).call(this,require('_process'))
-},{"_process":56}],13:[function(require,module,exports){
+},{"_process":55}],13:[function(require,module,exports){
 (function (process,global,Buffer){
 'use strict'
 
@@ -1719,7 +1722,7 @@ function randomBytes (size, cb) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"_process":56,"buffer":51}],14:[function(require,module,exports){
+},{"_process":55,"buffer":50}],14:[function(require,module,exports){
 // a duplex stream is just a stream that is both readable and writable.
 // Since JS doesn't have multiple prototypal inheritance, this class
 // prototypally inherits from Readable, and then parasitically from
@@ -1918,7 +1921,7 @@ function ReadableState(options, stream) {
   this.highWaterMark = hwm || hwm === 0 ? hwm : defaultHwm;
 
   // cast to ints.
-  this.highWaterMark = ~ ~this.highWaterMark;
+  this.highWaterMark = ~~this.highWaterMark;
 
   // A linked list is used to store data chunks instead of an array because the
   // linked list can remove elements from the beginning faster than
@@ -2766,7 +2769,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'))
-},{"./_stream_duplex":14,"./internal/streams/BufferList":19,"_process":56,"buffer":51,"buffer-shims":1,"core-util-is":2,"events":52,"inherits":8,"isarray":9,"process-nextick-args":12,"string_decoder/":24,"util":50}],17:[function(require,module,exports){
+},{"./_stream_duplex":14,"./internal/streams/BufferList":19,"_process":55,"buffer":50,"buffer-shims":1,"core-util-is":2,"events":51,"inherits":8,"isarray":9,"process-nextick-args":12,"string_decoder/":24,"util":49}],17:[function(require,module,exports){
 // a transform stream is a readable/writable stream where you do
 // something with the data.  Sometimes it's called a "filter",
 // but that's not a great name for it, since that implies a thing where
@@ -3030,7 +3033,7 @@ function WritableState(options, stream) {
   this.highWaterMark = hwm || hwm === 0 ? hwm : defaultHwm;
 
   // cast to ints.
-  this.highWaterMark = ~ ~this.highWaterMark;
+  this.highWaterMark = ~~this.highWaterMark;
 
   // drain event flag.
   this.needDrain = false;
@@ -3185,20 +3188,16 @@ function writeAfterEnd(stream, cb) {
   processNextTick(cb, er);
 }
 
-// If we get something that is not a buffer, string, null, or undefined,
-// and we're not in objectMode, then that's an error.
-// Otherwise stream chunks are all considered to be of length=1, and the
-// watermarks determine how many objects to keep in the buffer, rather than
-// how many bytes or characters.
+// Checks that a user-supplied chunk is valid, especially for the particular
+// mode the stream is in. Currently this means that `null` is never accepted
+// and undefined/non-string values are only allowed in object mode.
 function validChunk(stream, state, chunk, cb) {
   var valid = true;
   var er = false;
-  // Always throw error if a null is written
-  // if we are not in object mode then throw
-  // if it is not a buffer, string, or undefined.
+
   if (chunk === null) {
     er = new TypeError('May not write null values to stream');
-  } else if (!Buffer.isBuffer(chunk) && typeof chunk !== 'string' && chunk !== undefined && !state.objectMode) {
+  } else if (typeof chunk !== 'string' && chunk !== undefined && !state.objectMode) {
     er = new TypeError('Invalid non-string/buffer chunk');
   }
   if (er) {
@@ -3212,19 +3211,20 @@ function validChunk(stream, state, chunk, cb) {
 Writable.prototype.write = function (chunk, encoding, cb) {
   var state = this._writableState;
   var ret = false;
+  var isBuf = Buffer.isBuffer(chunk);
 
   if (typeof encoding === 'function') {
     cb = encoding;
     encoding = null;
   }
 
-  if (Buffer.isBuffer(chunk)) encoding = 'buffer';else if (!encoding) encoding = state.defaultEncoding;
+  if (isBuf) encoding = 'buffer';else if (!encoding) encoding = state.defaultEncoding;
 
   if (typeof cb !== 'function') cb = nop;
 
-  if (state.ended) writeAfterEnd(this, cb);else if (validChunk(this, state, chunk, cb)) {
+  if (state.ended) writeAfterEnd(this, cb);else if (isBuf || validChunk(this, state, chunk, cb)) {
     state.pendingcb++;
-    ret = writeOrBuffer(this, state, chunk, encoding, cb);
+    ret = writeOrBuffer(this, state, isBuf, chunk, encoding, cb);
   }
 
   return ret;
@@ -3264,10 +3264,11 @@ function decodeChunk(state, chunk, encoding) {
 // if we're already writing something, then just put this
 // in the queue, and wait our turn.  Otherwise, call _write
 // If we return false, then we need a drain event, so set that flag.
-function writeOrBuffer(stream, state, chunk, encoding, cb) {
-  chunk = decodeChunk(state, chunk, encoding);
-
-  if (Buffer.isBuffer(chunk)) encoding = 'buffer';
+function writeOrBuffer(stream, state, isBuf, chunk, encoding, cb) {
+  if (!isBuf) {
+    chunk = decodeChunk(state, chunk, encoding);
+    if (Buffer.isBuffer(chunk)) encoding = 'buffer';
+  }
   var len = state.objectMode ? 1 : chunk.length;
 
   state.length += len;
@@ -3336,8 +3337,8 @@ function onwrite(stream, er) {
       asyncWrite(afterWrite, stream, state, finished, cb);
       /*</replacement>*/
     } else {
-        afterWrite(stream, state, finished, cb);
-      }
+      afterWrite(stream, state, finished, cb);
+    }
   }
 }
 
@@ -3488,7 +3489,6 @@ function CorkedRequest(state) {
 
   this.next = null;
   this.entry = null;
-
   this.finish = function (err) {
     var entry = _this.entry;
     _this.entry = null;
@@ -3506,7 +3506,7 @@ function CorkedRequest(state) {
   };
 }
 }).call(this,require('_process'))
-},{"./_stream_duplex":14,"_process":56,"buffer":51,"buffer-shims":1,"core-util-is":2,"events":52,"inherits":8,"process-nextick-args":12,"util-deprecate":25}],19:[function(require,module,exports){
+},{"./_stream_duplex":14,"_process":55,"buffer":50,"buffer-shims":1,"core-util-is":2,"events":51,"inherits":8,"process-nextick-args":12,"util-deprecate":25}],19:[function(require,module,exports){
 'use strict';
 
 var Buffer = require('buffer').Buffer;
@@ -3571,7 +3571,7 @@ BufferList.prototype.concat = function (n) {
   }
   return ret;
 };
-},{"buffer":51,"buffer-shims":1}],20:[function(require,module,exports){
+},{"buffer":50,"buffer-shims":1}],20:[function(require,module,exports){
 (function (process){
 var Stream = (function (){
   try {
@@ -3591,7 +3591,7 @@ if (!process.browser && process.env.READABLE_STREAM === 'disable' && Stream) {
 }
 
 }).call(this,require('_process'))
-},{"./lib/_stream_duplex.js":14,"./lib/_stream_passthrough.js":15,"./lib/_stream_readable.js":16,"./lib/_stream_transform.js":17,"./lib/_stream_writable.js":18,"_process":56}],21:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":14,"./lib/_stream_passthrough.js":15,"./lib/_stream_readable.js":16,"./lib/_stream_transform.js":17,"./lib/_stream_writable.js":18,"_process":55}],21:[function(require,module,exports){
  /* eslint-env node */
 'use strict';
 
@@ -4930,7 +4930,7 @@ Peer.prototype._transformConstraints = function (constraints) {
 function noop () {}
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":51,"debug":4,"get-browser-rtc":6,"inherits":8,"randombytes":13,"readable-stream":20}],23:[function(require,module,exports){
+},{"buffer":50,"debug":4,"get-browser-rtc":6,"inherits":8,"randombytes":13,"readable-stream":20}],23:[function(require,module,exports){
 module.exports = SimpleSignalClient
 
 var SimplePeer = require('simple-peer')
@@ -5301,7 +5301,7 @@ function base64DetectIncompleteChar(buffer) {
   this.charLength = this.charReceived ? 3 : 0;
 }
 
-},{"buffer":51}],25:[function(require,module,exports){
+},{"buffer":50}],25:[function(require,module,exports){
 (function (global){
 
 /**
@@ -7587,10 +7587,6 @@ module.exports = {
 };
 
 },{}],35:[function(require,module,exports){
-module.exports={
-  "hostname": "quiet-shelf-57463.herokuapp.com"
-}
-},{}],36:[function(require,module,exports){
 /* globals CodeMirror */
 
 var EventEmitter = require('events').EventEmitter
@@ -7664,7 +7660,7 @@ Editor.prototype.open = function (filePath) {
 }
   
 module.exports = new Editor()
-},{"./../filesystem/filesystem":39,"events":52,"inherits":8}],37:[function(require,module,exports){
+},{"./../filesystem/filesystem":38,"events":51,"inherits":8}],36:[function(require,module,exports){
 var util = require('./util')
 var mustache = require('mustache')
 
@@ -7679,7 +7675,7 @@ function Directory (path) {
 }
   
 module.exports = Directory
-},{"./util":40,"mustache":11}],38:[function(require,module,exports){
+},{"./util":39,"mustache":11}],37:[function(require,module,exports){
 var util = require('./util')
 var mustache = require('mustache')
 
@@ -7710,7 +7706,7 @@ File.prototype.getRawContent = function () {
 
   
 module.exports = File
-},{"./util":40,"mustache":11}],39:[function(require,module,exports){
+},{"./util":39,"mustache":11}],38:[function(require,module,exports){
 /* globals JSZip, JSZipUtils, CodeMirror */
 
 var File = require('./file')
@@ -7921,7 +7917,7 @@ FileSystem.prototype.unzip = function (file, cb) {
 }
     
 module.exports = new FileSystem()
-},{"./../interface/interface":42,"./directory":37,"./file":38,"./util":40}],40:[function(require,module,exports){
+},{"./../interface/interface":41,"./directory":36,"./file":37,"./util":39}],39:[function(require,module,exports){
 var util = {}
 
 
@@ -7981,16 +7977,14 @@ util.zipTree = function (zip, nodeList) {
 }
   
 module.exports = util
-},{}],41:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 var FileSystem = require('./filesystem/filesystem')
 var Interface = require('./interface/interface')
 var Editor = require('./editor/editor')
 var Remote = require('./network/remote')
 var HyperHostWrapper = require('./network/hyperhostwrapper')
 
-var config = require('./config.json')
-
-function Multihack () {
+function Multihack (hostname) {
   var self = this
   if (!(self instanceof Multihack)) return new Multihack()
   
@@ -8000,6 +7994,7 @@ function Multihack () {
   
   // Initialize project and room
   self.roomID = Math.random().toString(36).substr(2, 20)
+  self.hostname = hostname
   
   Interface.on('saveAs', function (saveType) {
     FileSystem.saveProject(saveType, function (success) {
@@ -8035,7 +8030,7 @@ function Multihack () {
 Multihack.prototype._initRemote = function () {
   Interface.getRoom(self.roomID, function (roomID) {
     self.roomID = roomID
-    self._remote = new Remote(config.hostname, roomID)
+    self._remote = new Remote(self.hostname, roomID)
     
     Interface.on('voiceToggle', function () {
       self._remote.voice.toggle()
@@ -8057,7 +8052,7 @@ Multihack.prototype._initRemote = function () {
 }
     
 module.exports = Multihack
-},{"./config.json":35,"./editor/editor":36,"./filesystem/filesystem":39,"./interface/interface":42,"./network/hyperhostwrapper":46,"./network/remote":47}],42:[function(require,module,exports){
+},{"./editor/editor":35,"./filesystem/filesystem":38,"./interface/interface":41,"./network/hyperhostwrapper":45,"./network/remote":46}],41:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 var Modal = require('./modal')
@@ -8171,7 +8166,7 @@ Interface.prototype.showOverlay = function (msg, cb) {
 }
   
 module.exports = new Interface()
-},{"./modal":43,"./treeview":45,"events":52,"inherits":8}],43:[function(require,module,exports){
+},{"./modal":42,"./treeview":44,"events":51,"inherits":8}],42:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 var mustache = require('mustache')
@@ -8234,7 +8229,7 @@ Modal.prototype.close = function () {
 
     
 module.exports = Modal
-},{"./templates":44,"events":52,"inherits":8,"mustache":11}],44:[function(require,module,exports){
+},{"./templates":43,"events":51,"inherits":8,"mustache":11}],43:[function(require,module,exports){
 var dict = {}
 
 dict['file'] = 
@@ -8257,7 +8252,7 @@ dict['alert'] =
 
 
 module.exports = dict
-},{}],45:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 var mustache = require('mustache')
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
@@ -8335,7 +8330,7 @@ TreeView.prototype.add = function (parent, file) {
 }
     
 module.exports = TreeView
-},{"events":52,"inherits":8,"mustache":11}],46:[function(require,module,exports){
+},{"events":51,"inherits":8,"mustache":11}],45:[function(require,module,exports){
 /* globals HyperHost */
 
 // Wraps the HyperHost instance
@@ -8365,7 +8360,7 @@ HyperHostWrapper.prototype.deploy = function (tree, cb) {
 }
   
 module.exports = new HyperHostWrapper()
-},{}],47:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 /* globals io */
 
 // TODO: Replace socket forwarding with WebRTC
@@ -8445,7 +8440,7 @@ RemoteManager.prototype.on = function (event, handler) {
 
 module.exports = RemoteManager
 
-},{"./voice":48}],48:[function(require,module,exports){
+},{"./voice":47}],47:[function(require,module,exports){
 var SimpleSignalClient = require('simple-signal-client')
 var getBrowserRTC = require('get-browser-rtc')
 var getusermedia = require('getusermedia')
@@ -8563,7 +8558,7 @@ VoiceCall.prototype.toggle = function () {
 }
   
 module.exports = VoiceCall
-},{"get-browser-rtc":6,"getusermedia":7,"simple-signal-client":23}],49:[function(require,module,exports){
+},{"get-browser-rtc":6,"getusermedia":7,"simple-signal-client":23}],48:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -8679,9 +8674,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],50:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 
-},{}],51:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 (function (global){
 /*!
  * The buffer module from node.js, for the browser.
@@ -10474,7 +10469,7 @@ function isnan (val) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"base64-js":49,"ieee754":53,"isarray":55}],52:[function(require,module,exports){
+},{"base64-js":48,"ieee754":52,"isarray":54}],51:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -10778,7 +10773,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],53:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -10864,7 +10859,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],54:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -10887,9 +10882,9 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
-},{}],55:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 arguments[4][9][0].apply(exports,arguments)
-},{"dup":9}],56:[function(require,module,exports){
+},{"dup":9}],55:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -11071,5 +11066,5 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}]},{},[41])(41)
+},{}]},{},[40])(40)
 });
