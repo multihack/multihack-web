@@ -7,18 +7,22 @@ function File (path) {
 
   self.name = util.getFilename(path)
   self.path = path
-  self.content = null
+  self.doc = null
   self.isDir = false
   self.viewMapping = util.getViewMapping(path)
+  // HACK: To get working with HyperHost
+  Object.defineProperty(self, 'content', {
+    get: self.getRawContent.bind(self)
+  })
 }
 
 File.prototype.getRawContent = function () {
   var self = this
   
   if (self.viewMapping === 'image') {
-    return atob(self.content)
+    return atob(self.doc)
   } else {
-    return self.content.getValue()
+    return self.doc.getValue()
   }
 }
 

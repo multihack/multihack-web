@@ -43,7 +43,7 @@ TreeView.prototype.render = function (nodeList, parentElement) {
         input.type = 'checkbox'
         
         var ol = document.createElement('ol')
-        self.render(nodeList[i].children, ol)
+        self.render(nodeList[i].nodes, ol)
         
         el.appendChild(label)
         el.appendChild(input)

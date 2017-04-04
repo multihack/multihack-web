@@ -21,7 +21,7 @@ FileSystem.prototype.loadProject = function (file, cb) {
   var self = this
   self.unzip(file, function () {
     console.log('done')
-    cb(self._tree[0].children)
+    cb(self._tree[0].nodes)
   })
   
   // TODO: More input options
@@ -35,7 +35,7 @@ FileSystem.prototype.saveProject = function (saveType, cb) {
         var isFileSaverSupported = !!new Blob
 
         var zip = new JSZip()
-        util.zipTree(zip, self._tree[0].children)
+        util.zipTree(zip, self._tree[0].nodes)
 
         zip.generateAsync({type: 'blob'}).then(function (content) {
           saveAs(content, 'myProject.zip')
@@ -56,7 +56,7 @@ FileSystem.prototype.mkdir = function (path) {
   parentPath = parentPath.join('/')
   
   self._buildPath(parentPath)
-  self._getNode(parentPath).children.push(new Directory(path))
+  self._getNode(parentPath).nodes.push(new Directory(path))
 }
 
 FileSystem.prototype.mkfile = function (path) {
@@ -66,7 +66,7 @@ FileSystem.prototype.mkfile = function (path) {
   parentPath = parentPath.join('/')
 
   self._buildPath(parentPath)
-  self._getNode(parentPath).children.push(new File(path))
+  self._getNode(parentPath).nodes.push(new File(path))
 }
 
 // Ensures all directories have been build along path
@@ -89,8 +89,8 @@ FileSystem.prototype._getNode = function (path, nodeList) {
   for (var i = 0; i < nodeList.length; i++) { 
       if (nodeList[i].path === path) {
           return nodeList[i]
-      } else if (nodeList[i].children) {
-          var recur = self._getNode(path, nodeList[i].children) 
+      } else if (nodeList[i].isDir) {
+          var recur = self._getNode(path, nodeList[i].nodes) 
           if (recur) return recur
       }
   }
@@ -118,8 +118,8 @@ FileSystem.prototype.getFile = function (path) {
   self._buildPath(parentPath)
   return self._getNode(path) || (function () {
     self.mkfile(path)
-    self._getNode(path).content = new CodeMirror.Doc('', util.pathToMode(path))
-    Interface.treeview.render(self._tree[0].children)
+    self._getNode(path).doc = new CodeMirror.Doc('', util.pathToMode(path))
+    Interface.treeview.render(self._tree[0].nodes)
     console.log(self._tree)
     return self._getNode(path)
   }())
@@ -130,12 +130,18 @@ FileSystem.prototype.delete = function (path) {
   var parentPath = relativePath.split('/')
   parentPath.splice(-1,1)
   parentPath = parentPath.join('/')
-  self._getNode(parentPath).children = self._getNode(parentPath).children.filter(function (e) {
+  self._getNode(parentPath).nodes = self._getNode(parentPath).nodes.filter(function (e) {
     if (e.path === path) {
       return false
     }
     return true
   })
+}
+
+FileSystem.prototype.getTree = function () {
+  var self = this
+
+  return self._tree[0].nodes
 }
 
 // Takes a zip file and writes to the directory
@@ -184,14 +190,14 @@ FileSystem.prototype.unzip = function (file, cb) {
         switch (viewMapping) {
           case 'image':
             zipEntry.async('base64').then(function (content) {  
-              self.get(relativePath).content = content
+              self.get(relativePath).doc = content
               if (--awaiting <= 0) cb() 
             })
             break
           default:
             // Load as text
             zipEntry.async('string').then(function (content) {  
-              self.get(relativePath).content = new CodeMirror.Doc(content, util.pathToMode(relativePath))
+              self.get(relativePath).doc = new CodeMirror.Doc(content, util.pathToMode(relativePath))
               if (--awaiting <= 0) cb() 
             })
             break

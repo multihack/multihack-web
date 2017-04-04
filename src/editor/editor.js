@@ -46,7 +46,7 @@ Editor.prototype.change = function (filePath, change) {
   var self = this
   self._mutex = true
   if (!self._workingFile || filePath !== self._workingFile.path) {
-    FileSystem.getFile(filePath).content.replaceRange(change.text, change.to, change.from)
+    FileSystem.getFile(filePath).doc.replaceRange(change.text, change.to, change.from)
   } else {
     self._cm.replaceRange(change.text, change.to, change.from)
   }
@@ -61,11 +61,11 @@ Editor.prototype.open = function (filePath) {
   switch (self._workingFile.viewMapping) {
     case 'image':
       document.querySelector('.image-wrapper').style.display = ''
-      document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,'+self._workingFile.content
+      document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,'+self._workingFile.doc
     break
     default:
       document.querySelector('.image-wrapper').style.display = 'none'
-      self._cm.swapDoc(self._workingFile.content)
+      self._cm.swapDoc(self._workingFile.doc)
     break
   }
 }

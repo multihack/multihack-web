@@ -2,6 +2,7 @@ var FileSystem = require('./filesystem/filesystem')
 var Interface = require('./interface/interface')
 var Editor = require('./editor/editor')
 var Remote = require('./network/remote')
+var HyperHostWrapper = require('./network/hyperhostwrapper')
 
 var config = require('./config.json')
 
@@ -23,6 +24,12 @@ function Multihack () {
       } else {
         Interface.alert('Save Failed', 'An error occured while trying to save your project.<br>Please select a different method.')
       }
+    })
+  })
+  
+  Interface.on('deploy', function () {
+    HyperHostWrapper.deploy(FileSystem.getTree(), function (url) {
+      Interface.alert('Website Deployed', 'Anyone can visit your site at<br><a target="_blank" href="'+url+'">'+url+'</a>')
     })
   })
     

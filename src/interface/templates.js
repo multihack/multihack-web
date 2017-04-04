@@ -16,7 +16,7 @@ dict['input'] =
 dict['alert'] = 
     '<h1>{{title}}</h1>'+
     '<p>{{{message}}}</p>'+
-    '<button class="go-button">Ok</button>'
+    '<button class="go-button">Continue</button>'
 
 
 module.exports = dict

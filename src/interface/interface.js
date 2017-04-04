@@ -44,6 +44,11 @@ function Interface () {
   document.getElementById('voice').addEventListener('click', function () {
     self.emit('voiceToggle')
   })
+  
+  // Setup deploy button
+  document.getElementById('deploy').addEventListener('click', function () {
+    self.emit('deploy')
+  })
 }
 
 Interface.prototype.getProject = function (cb) {

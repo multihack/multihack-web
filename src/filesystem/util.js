@@ -49,9 +49,9 @@ util.zipTree = function (zip, nodeList) {
     for (var i = 0; i < nodeList.length; i++) { //Iterate children
       
         if (nodeList[i].isDir) {
-            util.zipTree(zip, nodeList[i].children);
+            util.zipTree(zip, nodeList[i].nodes);
         } else {
-            zip.file(nodeList[i].path.slice(1), nodeList[i].getRawContent());
+            zip.file(nodeList[i].path.slice(1), nodeList[i].content);
         }
     }
 }

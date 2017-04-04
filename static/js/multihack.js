@@ -110,7 +110,7 @@ exports.allocUnsafeSlow = function allocUnsafeSlow(size) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"buffer":50}],2:[function(require,module,exports){
+},{"buffer":51}],2:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -221,7 +221,7 @@ function objectToString(o) {
 }
 
 }).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js")})
-},{"../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js":53}],3:[function(require,module,exports){
+},{"../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js":54}],3:[function(require,module,exports){
 /**
  * cuid.js
  * Collision-resistant UID generator for browsers and node.
@@ -519,7 +519,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":5,"_process":55}],5:[function(require,module,exports){
+},{"./debug":5,"_process":56}],5:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -1679,7 +1679,7 @@ function nextTick(fn, arg1, arg2, arg3) {
 }
 
 }).call(this,require('_process'))
-},{"_process":55}],13:[function(require,module,exports){
+},{"_process":56}],13:[function(require,module,exports){
 (function (process,global,Buffer){
 'use strict'
 
@@ -1719,7 +1719,7 @@ function randomBytes (size, cb) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"_process":55,"buffer":50}],14:[function(require,module,exports){
+},{"_process":56,"buffer":51}],14:[function(require,module,exports){
 // a duplex stream is just a stream that is both readable and writable.
 // Since JS doesn't have multiple prototypal inheritance, this class
 // prototypally inherits from Readable, and then parasitically from
@@ -2766,7 +2766,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'))
-},{"./_stream_duplex":14,"./internal/streams/BufferList":19,"_process":55,"buffer":50,"buffer-shims":1,"core-util-is":2,"events":51,"inherits":8,"isarray":9,"process-nextick-args":12,"string_decoder/":24,"util":49}],17:[function(require,module,exports){
+},{"./_stream_duplex":14,"./internal/streams/BufferList":19,"_process":56,"buffer":51,"buffer-shims":1,"core-util-is":2,"events":52,"inherits":8,"isarray":9,"process-nextick-args":12,"string_decoder/":24,"util":50}],17:[function(require,module,exports){
 // a transform stream is a readable/writable stream where you do
 // something with the data.  Sometimes it's called a "filter",
 // but that's not a great name for it, since that implies a thing where
@@ -3506,7 +3506,7 @@ function CorkedRequest(state) {
   };
 }
 }).call(this,require('_process'))
-},{"./_stream_duplex":14,"_process":55,"buffer":50,"buffer-shims":1,"core-util-is":2,"events":51,"inherits":8,"process-nextick-args":12,"util-deprecate":25}],19:[function(require,module,exports){
+},{"./_stream_duplex":14,"_process":56,"buffer":51,"buffer-shims":1,"core-util-is":2,"events":52,"inherits":8,"process-nextick-args":12,"util-deprecate":25}],19:[function(require,module,exports){
 'use strict';
 
 var Buffer = require('buffer').Buffer;
@@ -3571,7 +3571,7 @@ BufferList.prototype.concat = function (n) {
   }
   return ret;
 };
-},{"buffer":50,"buffer-shims":1}],20:[function(require,module,exports){
+},{"buffer":51,"buffer-shims":1}],20:[function(require,module,exports){
 (function (process){
 var Stream = (function (){
   try {
@@ -3591,7 +3591,7 @@ if (!process.browser && process.env.READABLE_STREAM === 'disable' && Stream) {
 }
 
 }).call(this,require('_process'))
-},{"./lib/_stream_duplex.js":14,"./lib/_stream_passthrough.js":15,"./lib/_stream_readable.js":16,"./lib/_stream_transform.js":17,"./lib/_stream_writable.js":18,"_process":55}],21:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":14,"./lib/_stream_passthrough.js":15,"./lib/_stream_readable.js":16,"./lib/_stream_transform.js":17,"./lib/_stream_writable.js":18,"_process":56}],21:[function(require,module,exports){
  /* eslint-env node */
 'use strict';
 
@@ -4930,7 +4930,7 @@ Peer.prototype._transformConstraints = function (constraints) {
 function noop () {}
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":50,"debug":4,"get-browser-rtc":6,"inherits":8,"randombytes":13,"readable-stream":20}],23:[function(require,module,exports){
+},{"buffer":51,"debug":4,"get-browser-rtc":6,"inherits":8,"randombytes":13,"readable-stream":20}],23:[function(require,module,exports){
 module.exports = SimpleSignalClient
 
 var SimplePeer = require('simple-peer')
@@ -5301,7 +5301,7 @@ function base64DetectIncompleteChar(buffer) {
   this.charLength = this.charReceived ? 3 : 0;
 }
 
-},{"buffer":50}],25:[function(require,module,exports){
+},{"buffer":51}],25:[function(require,module,exports){
 (function (global){
 
 /**
@@ -7639,7 +7639,7 @@ Editor.prototype.change = function (filePath, change) {
   var self = this
   self._mutex = true
   if (!self._workingFile || filePath !== self._workingFile.path) {
-    FileSystem.getFile(filePath).content.replaceRange(change.text, change.to, change.from)
+    FileSystem.getFile(filePath).doc.replaceRange(change.text, change.to, change.from)
   } else {
     self._cm.replaceRange(change.text, change.to, change.from)
   }
@@ -7654,17 +7654,17 @@ Editor.prototype.open = function (filePath) {
   switch (self._workingFile.viewMapping) {
     case 'image':
       document.querySelector('.image-wrapper').style.display = ''
-      document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,'+self._workingFile.content
+      document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,'+self._workingFile.doc
     break
     default:
       document.querySelector('.image-wrapper').style.display = 'none'
-      self._cm.swapDoc(self._workingFile.content)
+      self._cm.swapDoc(self._workingFile.doc)
     break
   }
 }
   
 module.exports = new Editor()
-},{"./../filesystem/filesystem":39,"events":51,"inherits":8}],37:[function(require,module,exports){
+},{"./../filesystem/filesystem":39,"events":52,"inherits":8}],37:[function(require,module,exports){
 var util = require('./util')
 var mustache = require('mustache')
 
@@ -7674,7 +7674,7 @@ function Directory (path) {
   
   self.name = util.getFilename(path)
   self.path = path
-  self.children = []
+  self.nodes = []
   self.isDir = true
 }
   
@@ -7689,18 +7689,22 @@ function File (path) {
 
   self.name = util.getFilename(path)
   self.path = path
-  self.content = null
+  self.doc = null
   self.isDir = false
   self.viewMapping = util.getViewMapping(path)
+  // HACK: To get working with HyperHost
+  Object.defineProperty(self, 'content', {
+    get: self.getRawContent.bind(self)
+  })
 }
 
 File.prototype.getRawContent = function () {
   var self = this
   
   if (self.viewMapping === 'image') {
-    return atob(self.content)
+    return atob(self.doc)
   } else {
-    return self.content.getValue()
+    return self.doc.getValue()
   }
 }
 
@@ -7730,7 +7734,7 @@ FileSystem.prototype.loadProject = function (file, cb) {
   var self = this
   self.unzip(file, function () {
     console.log('done')
-    cb(self._tree[0].children)
+    cb(self._tree[0].nodes)
   })
   
   // TODO: More input options
@@ -7744,7 +7748,7 @@ FileSystem.prototype.saveProject = function (saveType, cb) {
         var isFileSaverSupported = !!new Blob
 
         var zip = new JSZip()
-        util.zipTree(zip, self._tree[0].children)
+        util.zipTree(zip, self._tree[0].nodes)
 
         zip.generateAsync({type: 'blob'}).then(function (content) {
           saveAs(content, 'myProject.zip')
@@ -7765,7 +7769,7 @@ FileSystem.prototype.mkdir = function (path) {
   parentPath = parentPath.join('/')
   
   self._buildPath(parentPath)
-  self._getNode(parentPath).children.push(new Directory(path))
+  self._getNode(parentPath).nodes.push(new Directory(path))
 }
 
 FileSystem.prototype.mkfile = function (path) {
@@ -7775,7 +7779,7 @@ FileSystem.prototype.mkfile = function (path) {
   parentPath = parentPath.join('/')
 
   self._buildPath(parentPath)
-  self._getNode(parentPath).children.push(new File(path))
+  self._getNode(parentPath).nodes.push(new File(path))
 }
 
 // Ensures all directories have been build along path
@@ -7798,8 +7802,8 @@ FileSystem.prototype._getNode = function (path, nodeList) {
   for (var i = 0; i < nodeList.length; i++) { 
       if (nodeList[i].path === path) {
           return nodeList[i]
-      } else if (nodeList[i].children) {
-          var recur = self._getNode(path, nodeList[i].children) 
+      } else if (nodeList[i].isDir) {
+          var recur = self._getNode(path, nodeList[i].nodes) 
           if (recur) return recur
       }
   }
@@ -7827,8 +7831,8 @@ FileSystem.prototype.getFile = function (path) {
   self._buildPath(parentPath)
   return self._getNode(path) || (function () {
     self.mkfile(path)
-    self._getNode(path).content = new CodeMirror.Doc('', util.pathToMode(path))
-    Interface.treeview.render(self._tree[0].children)
+    self._getNode(path).doc = new CodeMirror.Doc('', util.pathToMode(path))
+    Interface.treeview.render(self._tree[0].nodes)
     console.log(self._tree)
     return self._getNode(path)
   }())
@@ -7839,12 +7843,18 @@ FileSystem.prototype.delete = function (path) {
   var parentPath = relativePath.split('/')
   parentPath.splice(-1,1)
   parentPath = parentPath.join('/')
-  self._getNode(parentPath).children = self._getNode(parentPath).children.filter(function (e) {
+  self._getNode(parentPath).nodes = self._getNode(parentPath).nodes.filter(function (e) {
     if (e.path === path) {
       return false
     }
     return true
   })
+}
+
+FileSystem.prototype.getTree = function () {
+  var self = this
+
+  return self._tree[0].nodes
 }
 
 // Takes a zip file and writes to the directory
@@ -7893,14 +7903,14 @@ FileSystem.prototype.unzip = function (file, cb) {
         switch (viewMapping) {
           case 'image':
             zipEntry.async('base64').then(function (content) {  
-              self.get(relativePath).content = content
+              self.get(relativePath).doc = content
               if (--awaiting <= 0) cb() 
             })
             break
           default:
             // Load as text
             zipEntry.async('string').then(function (content) {  
-              self.get(relativePath).content = new CodeMirror.Doc(content, util.pathToMode(relativePath))
+              self.get(relativePath).doc = new CodeMirror.Doc(content, util.pathToMode(relativePath))
               if (--awaiting <= 0) cb() 
             })
             break
@@ -7963,9 +7973,9 @@ util.zipTree = function (zip, nodeList) {
     for (var i = 0; i < nodeList.length; i++) { //Iterate children
       
         if (nodeList[i].isDir) {
-            util.zipTree(zip, nodeList[i].children);
+            util.zipTree(zip, nodeList[i].nodes);
         } else {
-            zip.file(nodeList[i].path.slice(1), nodeList[i].getRawContent());
+            zip.file(nodeList[i].path.slice(1), nodeList[i].content);
         }
     }
 }
@@ -7976,6 +7986,7 @@ var FileSystem = require('./filesystem/filesystem')
 var Interface = require('./interface/interface')
 var Editor = require('./editor/editor')
 var Remote = require('./network/remote')
+var HyperHostWrapper = require('./network/hyperhostwrapper')
 
 var config = require('./config.json')
 
@@ -7997,6 +8008,12 @@ function Multihack () {
       } else {
         Interface.alert('Save Failed', 'An error occured while trying to save your project.<br>Please select a different method.')
       }
+    })
+  })
+  
+  Interface.on('deploy', function () {
+    HyperHostWrapper.deploy(FileSystem.getTree(), function (url) {
+      Interface.alert('Website Deployed', 'Anyone can visit your site at<br><a target="_blank" href="'+url+'">'+url+'</a>')
     })
   })
     
@@ -8040,7 +8057,7 @@ Multihack.prototype._initRemote = function () {
 }
     
 module.exports = Multihack
-},{"./config.json":35,"./editor/editor":36,"./filesystem/filesystem":39,"./interface/interface":42,"./network/remote":46}],42:[function(require,module,exports){
+},{"./config.json":35,"./editor/editor":36,"./filesystem/filesystem":39,"./interface/interface":42,"./network/hyperhostwrapper":46,"./network/remote":47}],42:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 var Modal = require('./modal')
@@ -8086,6 +8103,11 @@ function Interface () {
   // Setup voice button
   document.getElementById('voice').addEventListener('click', function () {
     self.emit('voiceToggle')
+  })
+  
+  // Setup deploy button
+  document.getElementById('deploy').addEventListener('click', function () {
+    self.emit('deploy')
   })
 }
 
@@ -8149,7 +8171,7 @@ Interface.prototype.showOverlay = function (msg, cb) {
 }
   
 module.exports = new Interface()
-},{"./modal":43,"./treeview":45,"events":51,"inherits":8}],43:[function(require,module,exports){
+},{"./modal":43,"./treeview":45,"events":52,"inherits":8}],43:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 var mustache = require('mustache')
@@ -8212,7 +8234,7 @@ Modal.prototype.close = function () {
 
     
 module.exports = Modal
-},{"./templates":44,"events":51,"inherits":8,"mustache":11}],44:[function(require,module,exports){
+},{"./templates":44,"events":52,"inherits":8,"mustache":11}],44:[function(require,module,exports){
 var dict = {}
 
 dict['file'] = 
@@ -8231,7 +8253,7 @@ dict['input'] =
 dict['alert'] = 
     '<h1>{{title}}</h1>'+
     '<p>{{{message}}}</p>'+
-    '<button class="go-button">Ok</button>'
+    '<button class="go-button">Continue</button>'
 
 
 module.exports = dict
@@ -8281,7 +8303,7 @@ TreeView.prototype.render = function (nodeList, parentElement) {
         input.type = 'checkbox'
         
         var ol = document.createElement('ol')
-        self.render(nodeList[i].children, ol)
+        self.render(nodeList[i].nodes, ol)
         
         el.appendChild(label)
         el.appendChild(input)
@@ -8313,7 +8335,37 @@ TreeView.prototype.add = function (parent, file) {
 }
     
 module.exports = TreeView
-},{"events":51,"inherits":8,"mustache":11}],46:[function(require,module,exports){
+},{"events":52,"inherits":8,"mustache":11}],46:[function(require,module,exports){
+/* globals HyperHost */
+
+// Wraps the HyperHost instance
+// TODO: When HyperHost uses simple-signal, make child of remote.js
+
+function HyperHostWrapper () {
+  var self = this
+  if (!(self instanceof HyperHostWrapper)) return new HyperHostWrapper()
+
+  self._host = new HyperHost()
+}
+
+HyperHostWrapper.prototype.deploy = function (tree, cb) {
+  var self = this
+  
+  self._host.on('ready', function(url) {
+      cb(url)
+  })
+
+  self._host.io.on('digest', function () {
+    console.log('hello world')
+    self._host.launch()
+  })
+  
+  console.log(tree)
+  self._host.io.contentTree(tree)
+}
+  
+module.exports = new HyperHostWrapper()
+},{}],47:[function(require,module,exports){
 /* globals io */
 
 // TODO: Replace socket forwarding with WebRTC
@@ -8393,7 +8445,7 @@ RemoteManager.prototype.on = function (event, handler) {
 
 module.exports = RemoteManager
 
-},{"./voice":47}],47:[function(require,module,exports){
+},{"./voice":48}],48:[function(require,module,exports){
 var SimpleSignalClient = require('simple-signal-client')
 var getBrowserRTC = require('get-browser-rtc')
 var getusermedia = require('getusermedia')
@@ -8511,7 +8563,7 @@ VoiceCall.prototype.toggle = function () {
 }
   
 module.exports = VoiceCall
-},{"get-browser-rtc":6,"getusermedia":7,"simple-signal-client":23}],48:[function(require,module,exports){
+},{"get-browser-rtc":6,"getusermedia":7,"simple-signal-client":23}],49:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -8627,9 +8679,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],49:[function(require,module,exports){
-
 },{}],50:[function(require,module,exports){
+
+},{}],51:[function(require,module,exports){
 (function (global){
 /*!
  * The buffer module from node.js, for the browser.
@@ -10422,7 +10474,7 @@ function isnan (val) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"base64-js":48,"ieee754":52,"isarray":54}],51:[function(require,module,exports){
+},{"base64-js":49,"ieee754":53,"isarray":55}],52:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -10726,7 +10778,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],52:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -10812,7 +10864,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -10835,9 +10887,9 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 arguments[4][9][0].apply(exports,arguments)
-},{"dup":9}],55:[function(require,module,exports){
+},{"dup":9}],56:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

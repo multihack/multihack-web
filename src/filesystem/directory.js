@@ -7,7 +7,7 @@ function Directory (path) {
   
   self.name = util.getFilename(path)
   self.path = path
-  self.children = []
+  self.nodes = []
   self.isDir = true
 }
   
