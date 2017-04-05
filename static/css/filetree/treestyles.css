@@ -7,7 +7,7 @@ ol.tree {
 
 .beside {
   margin-left: 5px;
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 .beside.plus {
