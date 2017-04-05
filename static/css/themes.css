@@ -44,7 +44,7 @@
     background-color: #5A6D76;
 }
 
-.theme-material a{
+.theme-material a, .beside{
     color: #9a9a9a;
 }
 
@@ -139,8 +139,11 @@
 .theme-atom .tree li.file a {
     color: #aaaaaa;
 }
-.theme-atom .tree .plus {
+.theme-atom .beside.plus:hover {
     color: #2BDA77;
+}
+.theme-atom .beside.delete:hover {
+    color: firebrick;
 }
 .theme-atom .tree li.file a:hover {
     color: #2BDA77;

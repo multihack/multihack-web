@@ -10,8 +10,35 @@ function Multihack (config) {
   
   config = config || {}
   
-  Interface.on('openFile', function (path) {
-    Editor.open(path)
+  Interface.on('openFile', function (e) {
+    Editor.open(e.path)
+  })
+  
+  Interface.on('addFile', function (e) {
+    FileSystem.getFile(e.path)
+    Interface.treeview.addFile(e.parentElement, FileSystem.get(e.path))
+    Editor.open(e.path)
+  })
+  
+  Interface.on('addDir', function (e) {
+    FileSystem.mkdir(e.path)
+    Interface.treeview.addDir(e.parentElement, FileSystem.get(e.path))
+  })
+  
+  Interface.on('removeFile', function (e) {
+    Interface.treeview.remove(e.parentElement, FileSystem.get(e.path))
+    FileSystem.delete(e.path)
+    if (self._remote) {
+      self._remote.deleteFile(e.path)
+    }
+  })
+  
+  Interface.on('deleteCurrent', function (e) {
+    var workingPath = Editor.getWorkingFile().path
+    var parentElement = Interface.treeview.getParentElement(workingPath)
+    Interface.treeview.remove(parentElement, FileSystem.get(workingPath))
+    FileSystem.delete(workingPath)
+    Editor.close()
   })
   
   // Initialize project and room
@@ -54,7 +81,6 @@ Multihack.prototype._initRemote = function () {
   
   Interface.getRoom(self.roomID, function (roomID) {
     self.roomID = roomID
-    console.log(self, self.hostname)
     self._remote = new Remote(self.hostname, roomID)
     
     Interface.on('voiceToggle', function () {
@@ -62,13 +88,16 @@ Multihack.prototype._initRemote = function () {
     })
     
     self._remote.on('change', function (data) {
-      if (Editor.change(data.filePath, data.change)) {
-        Interface.treeview.render(tree)
+      var outOfSync = !FileSystem.exists(data.filePath)
+      Editor.change(data.filePath, data.change)
+      if (outOfSync) {
+        Interface.treeview.rerender(FileSystem.getTree())
       }
     })
     self._remote.on('deleteFile', function (data) {
+      var parentElement = Interface.treeview.getParentElement(data.filePath)
+      Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
       FileSystem.delete(data.filePath)
-      Interface.treeview.render(tree)
     })
     Editor.on('change', function (data) {
       self._remote.change(data.filePath, data.change)
