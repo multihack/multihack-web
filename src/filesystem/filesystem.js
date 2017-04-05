@@ -3,7 +3,6 @@
 var File = require('./file')
 var Directory = require('./directory')
 var util = require('./util')
-var Interface = require('./../interface/interface')
 
 var ignoredFilenames = ['__MACOSX', '.DS_Store']
 
@@ -16,20 +15,23 @@ function FileSystem () {
   ]
 }
 
-// Takes a zip file and loads the project
+// Loads a project
 FileSystem.prototype.loadProject = function (file, cb) {
   var self = this
+  
+  // TODO: More load types
   self.unzip(file, function () {
-    console.log('done')
     cb(self._tree[0].nodes)
   })
   
   // TODO: More input options
 }
 
+// Saves the project 
 FileSystem.prototype.saveProject = function (saveType, cb) {
   var self = this
   
+  // TODO: More save types
   if (saveType === 'zip') {
       try {
         var isFileSaverSupported = !!new Blob
@@ -48,6 +50,7 @@ FileSystem.prototype.saveProject = function (saveType, cb) {
   }
 }
 
+// Makes a directory, building paths
 FileSystem.prototype.mkdir = function (path) {
   var self = this
   var self = this
@@ -59,6 +62,7 @@ FileSystem.prototype.mkdir = function (path) {
   self._getNode(parentPath).nodes.push(new Directory(path))
 }
 
+// Makes an empty file (must set doc), building paths
 FileSystem.prototype.mkfile = function (path) {
   var self = this
   var parentPath = path.split('/')
@@ -69,7 +73,7 @@ FileSystem.prototype.mkfile = function (path) {
   self._getNode(parentPath).nodes.push(new File(path))
 }
 
-// Ensures all directories have been build along path
+// Ensures all directories have been built along a path
 FileSystem.prototype._buildPath = function (path) {
   var self = this
   
@@ -82,7 +86,7 @@ FileSystem.prototype._buildPath = function (path) {
   }
 }
 
-// Recursive search
+// Recursive node search
 FileSystem.prototype._getNode = function (path, nodeList) {
   var self = this
   nodeList = nodeList || self._tree
@@ -97,6 +101,18 @@ FileSystem.prototype._getNode = function (path, nodeList) {
   return undefined
 }
 
+// Checks if a file/directory exists at a path
+FileSystem.prototype.exists = function (path) {
+  var self = this
+  
+  var parentPath = path.split('/')
+  parentPath.splice(-1,1)
+  parentPath = parentPath.join('/')
+  
+  return !!self._getNode(path)
+}
+
+// Gets a node, building any broken paths
 FileSystem.prototype.get = function (path) {
   var self = this
   
@@ -108,6 +124,7 @@ FileSystem.prototype.get = function (path) {
   return self._getNode(path)
 }
 
+// Gets an existing file, or creates one if none exists
 FileSystem.prototype.getFile = function (path) {
   var self = this
   
@@ -119,15 +136,14 @@ FileSystem.prototype.getFile = function (path) {
   return self._getNode(path) || (function () {
     self.mkfile(path)
     self._getNode(path).doc = new CodeMirror.Doc('', util.pathToMode(path))
-    Interface.treeview.render(self._tree[0].nodes)
-    console.log(self._tree)
     return self._getNode(path)
   }())
 }
 
+// Deletes a file/directory on a path
 FileSystem.prototype.delete = function (path) {
   var self = this
-  var parentPath = relativePath.split('/')
+  var parentPath = path.split('/')
   parentPath.splice(-1,1)
   parentPath = parentPath.join('/')
   self._getNode(parentPath).nodes = self._getNode(parentPath).nodes.filter(function (e) {
@@ -138,13 +154,14 @@ FileSystem.prototype.delete = function (path) {
   })
 }
 
+// Returns the useable part of the tree
 FileSystem.prototype.getTree = function () {
   var self = this
 
   return self._tree[0].nodes
 }
 
-// Takes a zip file and writes to the directory
+// Loads a project from a zip file
 FileSystem.prototype.unzip = function (file, cb) {
   var self = this
   

@@ -44,6 +44,7 @@
     <div id="sidebar" class="sidebar theme-light">
         <div class="panel-topbar theme-border">
             <span class="mobile-hide">Project&nbsp;</span>Files
+            <span id="root-plus" class="beside plus">&#43;</span>
         </div>
         <div class="icon-button" id="collapsesidebar">
             <img src="static/img/collapse.png">
@@ -59,7 +60,7 @@
             </button>
             <img>
         </div>
-        <div class="editor-wrapper">
+        <div class="editor-wrapper" style="display:none;">
             <textarea class="editor" id="editor"></textarea>
         </div>
         <div class="statusbar theme-mid theme-border">
@@ -95,7 +96,7 @@
 <!-- Core modules -->
 <script src="static/js/multihack.js"></script>
 <script>Multihack({
-    hostname: ''
+    hostname: 'quiet-shelf-57463.herokuapp.com'
   })</script>
 
 </html>

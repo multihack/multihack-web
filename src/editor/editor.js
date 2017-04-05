@@ -60,14 +60,29 @@ Editor.prototype.open = function (filePath) {
   document.getElementById('working-file').innerHTML = self._workingFile.name
   switch (self._workingFile.viewMapping) {
     case 'image':
+      document.querySelector('.editor-wrapper').style.display = 'none'
       document.querySelector('.image-wrapper').style.display = ''
       document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,'+self._workingFile.doc
     break
     default:
+      document.querySelector('.editor-wrapper').style.display = ''
       document.querySelector('.image-wrapper').style.display = 'none'
       self._cm.swapDoc(self._workingFile.doc)
     break
   }
+}
+
+Editor.prototype.close = function () {
+  var self = this
+  self._workingFile = null
+  document.getElementById('working-file').innerHTML = ''
+  document.querySelector('.editor-wrapper').style.display = 'none'
+  document.querySelector('.editor-wrapper').style.display = 'none'
+}
+
+Editor.prototype.getWorkingFile = function () {
+  var self = this
+  return self._workingFile
 }
   
 module.exports = new Editor()

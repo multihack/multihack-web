@@ -122,6 +122,12 @@ img ,
     padding: 5px;
 }
 
+#root-plus {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+}
+
 .sidebar.collapsed > .panel-topbar {
   display: none;
   width: 24px;

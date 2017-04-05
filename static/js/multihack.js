@@ -220,8 +220,8 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
-},{"../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":53}],3:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js")})
+},{"../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js":53}],3:[function(require,module,exports){
 /**
  * cuid.js
  * Collision-resistant UID generator for browsers and node.
@@ -7649,14 +7649,29 @@ Editor.prototype.open = function (filePath) {
   document.getElementById('working-file').innerHTML = self._workingFile.name
   switch (self._workingFile.viewMapping) {
     case 'image':
+      document.querySelector('.editor-wrapper').style.display = 'none'
       document.querySelector('.image-wrapper').style.display = ''
       document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,'+self._workingFile.doc
     break
     default:
+      document.querySelector('.editor-wrapper').style.display = ''
       document.querySelector('.image-wrapper').style.display = 'none'
       self._cm.swapDoc(self._workingFile.doc)
     break
   }
+}
+
+Editor.prototype.close = function () {
+  var self = this
+  self._workingFile = null
+  document.getElementById('working-file').innerHTML = ''
+  document.querySelector('.editor-wrapper').style.display = 'none'
+  document.querySelector('.editor-wrapper').style.display = 'none'
+}
+
+Editor.prototype.getWorkingFile = function () {
+  var self = this
+  return self._workingFile
 }
   
 module.exports = new Editor()
@@ -7712,7 +7727,6 @@ module.exports = File
 var File = require('./file')
 var Directory = require('./directory')
 var util = require('./util')
-var Interface = require('./../interface/interface')
 
 var ignoredFilenames = ['__MACOSX', '.DS_Store']
 
@@ -7725,20 +7739,23 @@ function FileSystem () {
   ]
 }
 
-// Takes a zip file and loads the project
+// Loads a project
 FileSystem.prototype.loadProject = function (file, cb) {
   var self = this
+  
+  // TODO: More load types
   self.unzip(file, function () {
-    console.log('done')
     cb(self._tree[0].nodes)
   })
   
   // TODO: More input options
 }
 
+// Saves the project 
 FileSystem.prototype.saveProject = function (saveType, cb) {
   var self = this
   
+  // TODO: More save types
   if (saveType === 'zip') {
       try {
         var isFileSaverSupported = !!new Blob
@@ -7757,6 +7774,7 @@ FileSystem.prototype.saveProject = function (saveType, cb) {
   }
 }
 
+// Makes a directory, building paths
 FileSystem.prototype.mkdir = function (path) {
   var self = this
   var self = this
@@ -7768,6 +7786,7 @@ FileSystem.prototype.mkdir = function (path) {
   self._getNode(parentPath).nodes.push(new Directory(path))
 }
 
+// Makes an empty file (must set doc), building paths
 FileSystem.prototype.mkfile = function (path) {
   var self = this
   var parentPath = path.split('/')
@@ -7778,7 +7797,7 @@ FileSystem.prototype.mkfile = function (path) {
   self._getNode(parentPath).nodes.push(new File(path))
 }
 
-// Ensures all directories have been build along path
+// Ensures all directories have been built along a path
 FileSystem.prototype._buildPath = function (path) {
   var self = this
   
@@ -7791,7 +7810,7 @@ FileSystem.prototype._buildPath = function (path) {
   }
 }
 
-// Recursive search
+// Recursive node search
 FileSystem.prototype._getNode = function (path, nodeList) {
   var self = this
   nodeList = nodeList || self._tree
@@ -7806,6 +7825,18 @@ FileSystem.prototype._getNode = function (path, nodeList) {
   return undefined
 }
 
+// Checks if a file/directory exists at a path
+FileSystem.prototype.exists = function (path) {
+  var self = this
+  
+  var parentPath = path.split('/')
+  parentPath.splice(-1,1)
+  parentPath = parentPath.join('/')
+  
+  return !!self._getNode(path)
+}
+
+// Gets a node, building any broken paths
 FileSystem.prototype.get = function (path) {
   var self = this
   
@@ -7817,6 +7848,7 @@ FileSystem.prototype.get = function (path) {
   return self._getNode(path)
 }
 
+// Gets an existing file, or creates one if none exists
 FileSystem.prototype.getFile = function (path) {
   var self = this
   
@@ -7828,15 +7860,14 @@ FileSystem.prototype.getFile = function (path) {
   return self._getNode(path) || (function () {
     self.mkfile(path)
     self._getNode(path).doc = new CodeMirror.Doc('', util.pathToMode(path))
-    Interface.treeview.render(self._tree[0].nodes)
-    console.log(self._tree)
     return self._getNode(path)
   }())
 }
 
+// Deletes a file/directory on a path
 FileSystem.prototype.delete = function (path) {
   var self = this
-  var parentPath = relativePath.split('/')
+  var parentPath = path.split('/')
   parentPath.splice(-1,1)
   parentPath = parentPath.join('/')
   self._getNode(parentPath).nodes = self._getNode(parentPath).nodes.filter(function (e) {
@@ -7847,13 +7878,14 @@ FileSystem.prototype.delete = function (path) {
   })
 }
 
+// Returns the useable part of the tree
 FileSystem.prototype.getTree = function () {
   var self = this
 
   return self._tree[0].nodes
 }
 
-// Takes a zip file and writes to the directory
+// Loads a project from a zip file
 FileSystem.prototype.unzip = function (file, cb) {
   var self = this
   
@@ -7917,7 +7949,7 @@ FileSystem.prototype.unzip = function (file, cb) {
 }
     
 module.exports = new FileSystem()
-},{"./../interface/interface":41,"./directory":36,"./file":37,"./util":39}],39:[function(require,module,exports){
+},{"./directory":36,"./file":37,"./util":39}],39:[function(require,module,exports){
 var util = {}
 
 
@@ -7990,8 +8022,35 @@ function Multihack (config) {
   
   config = config || {}
   
-  Interface.on('openFile', function (path) {
-    Editor.open(path)
+  Interface.on('openFile', function (e) {
+    Editor.open(e.path)
+  })
+  
+  Interface.on('addFile', function (e) {
+    FileSystem.getFile(e.path)
+    Interface.treeview.addFile(e.parentElement, FileSystem.get(e.path))
+    Editor.open(e.path)
+  })
+  
+  Interface.on('addDir', function (e) {
+    FileSystem.mkdir(e.path)
+    Interface.treeview.addDir(e.parentElement, FileSystem.get(e.path))
+  })
+  
+  Interface.on('removeFile', function (e) {
+    Interface.treeview.remove(e.parentElement, FileSystem.get(e.path))
+    FileSystem.delete(e.path)
+    if (self._remote) {
+      self._remote.deleteFile(e.path)
+    }
+  })
+  
+  Interface.on('deleteCurrent', function (e) {
+    var workingPath = Editor.getWorkingFile().path
+    var parentElement = Interface.treeview.getParentElement(workingPath)
+    Interface.treeview.remove(parentElement, FileSystem.get(workingPath))
+    FileSystem.delete(workingPath)
+    Editor.close()
   })
   
   // Initialize project and room
@@ -8034,7 +8093,6 @@ Multihack.prototype._initRemote = function () {
   
   Interface.getRoom(self.roomID, function (roomID) {
     self.roomID = roomID
-    console.log(self, self.hostname)
     self._remote = new Remote(self.hostname, roomID)
     
     Interface.on('voiceToggle', function () {
@@ -8042,13 +8100,16 @@ Multihack.prototype._initRemote = function () {
     })
     
     self._remote.on('change', function (data) {
-      if (Editor.change(data.filePath, data.change)) {
-        Interface.treeview.render(tree)
+      var outOfSync = !FileSystem.exists(data.filePath)
+      Editor.change(data.filePath, data.change)
+      if (outOfSync) {
+        Interface.treeview.rerender(FileSystem.getTree())
       }
     })
     self._remote.on('deleteFile', function (data) {
+      var parentElement = Interface.treeview.getParentElement(data.filePath)
+      Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
       FileSystem.delete(data.filePath)
-      Interface.treeview.render(tree)
     })
     Editor.on('change', function (data) {
       self._remote.change(data.filePath, data.change)
@@ -8071,8 +8132,24 @@ function Interface () {
   
   self.treeview = new TreeView()
   
-  self.treeview.on('open', function (path) {
-    self.emit('openFile', path)
+  self.treeview.on('open', function (e) {
+    self.emit('openFile', e)
+  })
+  
+  self.treeview.on('remove', function (e) {
+    self.emit('removeFile', e)
+  })
+  
+  self.addCounter = 1
+  self.treeview.on('add', function (e) {
+    self.newFileDialog(e.path, function (name, type) {
+      e.path = e.path+'/'+name
+      if (type === 'dir') {
+        self.emit('addDir', e)
+      } else {
+        self.emit('addFile', e)
+      }
+    })
   })
   
   // Setup sidebar
@@ -8109,6 +8186,34 @@ function Interface () {
   document.getElementById('deploy').addEventListener('click', function () {
     self.emit('deploy')
   })
+  
+  // Setup delete button
+  document.getElementById('delete').addEventListener('click', function () {
+    self.emit('deleteCurrent')
+  })
+}
+
+Interface.prototype.newFileDialog = function (path, cb) {
+  var self = this
+  
+  var modal = new Modal('newFile', {
+    title: 'Create File/Folder',
+    path: path
+  })
+  
+  modal.on('done', function (e) {
+    modal.close()
+    var name = e.inputs[0].value
+    var type = e.target.dataset['type']
+    if (!name) {
+      name = (type === 'dir' ? 'New Folder' : 'New File') + self.addCounter++
+    }
+    if (cb) cb(name, type)
+  })
+  modal.on('cancel', function () {
+    modal.close()
+  })
+  modal.open()
 }
 
 Interface.prototype.getProject = function (cb) {
@@ -8255,6 +8360,13 @@ dict['alert'] =
     '<p>{{{message}}}</p>'+
     '<button class="go-button">Continue</button>'
 
+dict['newFile'] = 
+    '<h1>{{title}}</h1>'+
+    '<input type="text" placeholder="Name"></input><br>'+
+    '<button class="go-button" data-type="file">File</button>'+
+    '<button class="go-button" data-type="dir">Folder</button>'+
+    '<button class="no-button">Cancel</button>'
+
 
 module.exports = dict
 },{}],44:[function(require,module,exports){
@@ -8268,6 +8380,13 @@ function TreeView () {
   var self = this
   if (!(self instanceof TreeView)) return new TreeView()
 
+  document.getElementById('root-plus').addEventListener('click', function (e) {
+    self.emit('add', {
+      target: null,
+      path: '',
+      parentElement: document.querySelector('#tree')
+    })
+  })
 }
 
 TreeView.prototype.render = function (nodeList, parentElement) {
@@ -8276,62 +8395,126 @@ TreeView.prototype.render = function (nodeList, parentElement) {
   parentElement = parentElement || document.querySelector('#tree')
     
   for (var i = 0; i < nodeList.length; i++) { 
-      if (!nodeList[i].isDir) {
-        // Render file
-        var el = document.createElement('li')
-        el.className = 'file'
-        
-        var a = document.createElement('a')
-        a.className = 'filelink'
-        a.id = nodeList[i].path
-        a.innerHTML = nodeList[i].name
-        a.addEventListener('click', self._handleFileClick.bind(self))
-        
-        el.appendChild(a)
-        parentElement.appendChild(el)
-      } else {
-        //Render dir
-        var el = document.createElement('li')
-        
-        var label = document.createElement('label')
-        label.setAttribute('for', nodeList[i].path)
-        label.innerHTML = nodeList[i].name
-        label.addEventListener('click', self._handleFolderClick.bind(self))
-        
-        var input = document.createElement('input')
-        input.id = nodeList[i].path
-        input.type = 'checkbox'
-        
-        var ol = document.createElement('ol')
-        self.render(nodeList[i].nodes, ol)
-        
-        el.appendChild(label)
-        el.appendChild(input)
-        el.appendChild(ol)
-        parentElement.appendChild(el)
-      }
+    self.add(parentElement, nodeList[i])
   }
+}
+
+TreeView.prototype.rerender = function (nodeList) {
+  var self = this
+  
+  var rootElement = document.querySelector('#tree')
+  while (rootElement.firstChild) {
+    rootElement.removeChild(rootElement.firstChild)
+  }
+  
+  self.render(nodeList)
 }
 
 TreeView.prototype._handleFileClick = function (e) {
   var self = this
-  self.emit('open', e.target.id)
+  self.emit('open', {
+      target: e.target,
+      path: e.target.id,
+      parentElement: parentElement
+    })
 }
 
 TreeView.prototype._handleFolderClick = function (e) {
   var self = this
-  console.log(e.target.getAttribute('for'))
-  
+  // Nothing
 }
 
-TreeView.prototype.remove = function (file) {
+// Returns parentElement of node if it already exists
+TreeView.prototype.getParentElement = function (path) {
   var self = this
-  
+  return document.getElementById(path).parentElement.parentElement
 }
 
-TreeView.prototype.add = function (parent, file) {
+TreeView.prototype.remove = function (parentElement, file) {
   var self = this
   
+  var element = document.getElementById(file.path).parentElement
+  parentElement.removeChild(element)
+}
+
+TreeView.prototype.add = function (parentElement, file) {
+  var self = this
+  
+  if (file.isDir) {
+    self.addDir(parentElement, file)
+  } else {
+    self.addFile(parentElement, file)
+  }
+}
+
+TreeView.prototype.addFile = function (parentElement, file) {
+  var self = this
+  
+  // Render file
+  var el = document.createElement('li')
+  el.className = 'file'
+
+  var a = document.createElement('a')
+  a.className = 'filelink'
+  a.id = file.path
+  a.innerHTML = file.name
+  a.addEventListener('click', function (e) {
+    self.emit('open', {
+      target: e.target,
+      path: file.path,
+      parentElement: parentElement
+    })
+  })
+
+  el.appendChild(a)
+  parentElement.appendChild(el)
+}
+
+TreeView.prototype.addDir = function (parentElement, file) {
+  var self = this
+  
+  var el = document.createElement('li')
+        
+  var label = document.createElement('label')
+  label.setAttribute('for', file.path)
+  label.innerHTML = file.name
+  label.addEventListener('click', self._handleFolderClick.bind(self))
+
+  var input = document.createElement('input')
+  input.id = file.path
+  input.type = 'checkbox'
+
+  var ol = document.createElement('ol')
+  self.render(file.nodes, ol)
+
+  var plus = document.createElement('span')
+  plus.className = 'beside plus'
+  plus.innerHTML = '&#43;'
+  plus.addEventListener('click', function (e) {
+    self.emit('add', {
+      target: null,
+      path: file.path,
+      parentElement: ol
+    })
+  })
+
+  var del = document.createElement('span')
+  del.className = 'beside delete'
+  del.innerHTML = '&#9003;'
+  del.addEventListener('click', function (e) {
+    self.emit('remove', {
+      target: e.target,
+      path: file.path,
+      parentElement: parentElement
+    })
+  })
+
+  el.appendChild(label)
+  el.appendChild(input)
+  el.appendChild(plus)
+  el.appendChild(del)
+  el.appendChild(ol)
+  parentElement.appendChild(el)
 }
     
 module.exports = TreeView
