@@ -11,8 +11,24 @@ function Interface () {
   
   self.treeview = new TreeView()
   
-  self.treeview.on('open', function (path) {
-    self.emit('openFile', path)
+  self.treeview.on('open', function (e) {
+    self.emit('openFile', e)
+  })
+  
+  self.treeview.on('remove', function (e) {
+    self.emit('removeFile', e)
+  })
+  
+  self.addCounter = 1
+  self.treeview.on('add', function (e) {
+    self.newFileDialog(e.path, function (name, type) {
+      e.path = e.path+'/'+name
+      if (type === 'dir') {
+        self.emit('addDir', e)
+      } else {
+        self.emit('addFile', e)
+      }
+    })
   })
   
   // Setup sidebar
@@ -49,6 +65,34 @@ function Interface () {
   document.getElementById('deploy').addEventListener('click', function () {
     self.emit('deploy')
   })
+  
+  // Setup delete button
+  document.getElementById('delete').addEventListener('click', function () {
+    self.emit('deleteCurrent')
+  })
+}
+
+Interface.prototype.newFileDialog = function (path, cb) {
+  var self = this
+  
+  var modal = new Modal('newFile', {
+    title: 'Create File/Folder',
+    path: path
+  })
+  
+  modal.on('done', function (e) {
+    modal.close()
+    var name = e.inputs[0].value
+    var type = e.target.dataset['type']
+    if (!name) {
+      name = (type === 'dir' ? 'New Folder' : 'New File') + self.addCounter++
+    }
+    if (cb) cb(name, type)
+  })
+  modal.on('cancel', function () {
+    modal.close()
+  })
+  modal.open()
 }
 
 Interface.prototype.getProject = function (cb) {

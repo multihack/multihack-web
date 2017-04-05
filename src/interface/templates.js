@@ -18,5 +18,12 @@ dict['alert'] =
     '<p>{{{message}}}</p>'+
     '<button class="go-button">Continue</button>'
 
+dict['newFile'] = 
+    '<h1>{{title}}</h1>'+
+    '<input type="text" placeholder="Name"></input><br>'+
+    '<button class="go-button" data-type="file">File</button>'+
+    '<button class="go-button" data-type="dir">Folder</button>'+
+    '<button class="no-button">Cancel</button>'
+
 
 module.exports = dict
