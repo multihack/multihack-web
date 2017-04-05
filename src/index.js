@@ -39,6 +39,7 @@ function Multihack (config) {
     Interface.treeview.remove(parentElement, FileSystem.get(workingPath))
     FileSystem.delete(workingPath)
     Editor.close()
+    self._remote.deleteFile(workingPath)
   })
   
   // Initialize project and room
