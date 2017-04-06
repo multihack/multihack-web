@@ -20,9 +20,12 @@ Modal.prototype.open = function () {
     self.el.style.display = ''
     self.overlay.style.display = ''
     self.el.innerHTML = self._html
+  
+    var inputs = self.el.querySelectorAll('input')
+    if (inputs[0] && inputs[0].type === 'text') inputs[0].select()
     
     function done(e) {
-        e.inputs = self.el.querySelectorAll('input')
+        e.inputs = inputs
         self.emit('done', e)
     }
     

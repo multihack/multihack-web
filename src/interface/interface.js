@@ -70,6 +70,11 @@ function Interface () {
   document.getElementById('delete').addEventListener('click', function () {
     self.emit('deleteCurrent')
   })
+  
+  // Resync button
+  document.getElementById('resync').addEventListener('click', function () {
+    self.emit('resync')
+  })
 }
 
 Interface.prototype.newFileDialog = function (path, cb) {

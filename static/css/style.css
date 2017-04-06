@@ -115,7 +115,7 @@ img ,
     height: 20px;
     border-bottom: solid transparent 1px;
     position: fixed;
-    top: 60px;
+    top: 62px;
     width: 142px;
     left: 0;
     text-align: center;
@@ -124,8 +124,14 @@ img ,
 
 #root-plus {
   position: absolute;
-  right: 10px;
+  right: 3px;
   cursor: pointer;
+  top: -1px;
+  padding: 5px;
+  z-index: 10;
+}
+#root-plus:active {
+  transform: scale(0.95)
 }
 
 .sidebar.collapsed > .panel-topbar {
@@ -166,10 +172,6 @@ img ,
     min-width: 30px;
 }
 
-.icon-button:hover {
-    outline: solid white 2px;
-}
-
 .icon-button img {
     width: 13px;
     height: 13px;
@@ -189,9 +191,6 @@ img ,
     top: 10px;
     z-index: 10;
     background: none !important;
-}
-.workspace .image-contrast:hover{
-    outline: none;
 }
 
 .workspace .image-wrapper {
@@ -239,20 +238,28 @@ img ,
     padding: 2px 5px 0 5px;
 }
 
-.workspace .statusbar #themebutton:hover{
-    outline: 0;
-}
-
 .sidebar #collapsesidebar{
     position: absolute;
     left: 0;
-    top: 0;
+    top: 2px;
     cursor: pointer;
     padding: 5px;
 }
+.sidebar #collapsesidebar:active {
+  transform: scale(0.95)
+}
 
-.sidebar #collapsesidebar:hover{
-    outline: 0;
+.sidebar #resync{
+    position: absolute;
+    right: 17px;
+    top: 2px;
+    cursor: pointer;
+    padding: 5px;
+    width: 19px;
+    min-width: 19px;
+}
+.sidebar #resync:active {
+  transform: scale(0.95)
 }
 
 .modal {
@@ -402,10 +409,6 @@ input[type='file'] {
     margin-right: 5px;
 }
 
-input[type='file']:hover {
-    outline: solid white 2px;
-}
-
 input[type='file']::-webkit-file-upload-button {
     visibility: hidden; 
 }
@@ -428,14 +431,6 @@ input[type='file']::before {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}
-
-input[type='file']:hover::before {
-    border-color: black;
-}
-
-input[type='file']:active::before {
-    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
 }
 
 .icon-collapse > span{

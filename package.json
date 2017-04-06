@@ -1,8 +1,8 @@
 {
-  "name": "node-boilerplate",
-  "version": "1.0.0",
-  "description": "A boilerplate to kickstart Node projects.",
-  "main": "index.js",
+  "name": "multihack-web",
+  "version": "2.0.0",
+  "description": "A web-based editor with realtime collaboration and voice calls.",
+  "main": "src/index.js",
   "directories": {
     "test": "test"
   },

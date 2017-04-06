@@ -87,6 +87,9 @@ Multihack.prototype._initRemote = function () {
     Interface.on('voiceToggle', function () {
       self._remote.voice.toggle()
     })
+    Interface.on('resync', function () {
+      self._remote.requestProject()
+    })
     
     self._remote.on('change', function (data) {
       var outOfSync = !FileSystem.exists(data.filePath)
@@ -100,6 +103,24 @@ Multihack.prototype._initRemote = function () {
       Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
       FileSystem.delete(data.filePath)
     })
+    self._remote.on('requestProject', function (data) {
+      // Get a list of all non-directory files, sorted by ascending path length
+      var allFiles = FileSystem.getAllFiles().sort(function (a,b) {
+        return a.path.length - b.path.length
+      }).filter(function (a) {
+        return !a.isDir
+      })
+      
+      for (var i=0; i<allFiles.length; i++) {
+        self._remote.provideFile(allFiles[i].path, allFiles[i].content, data.requester, i, allFiles.length-1)
+      }
+    })
+    self._remote.on('provideFile', function (data) {
+      FileSystem.getFile(data.filePath).doc.setValue(data.content)
+      Interface.treeview.rerender(FileSystem.getTree())
+      console.log(data.num+' of '+data.total)
+    })
+    
     Editor.on('change', function (data) {
       self._remote.change(data.filePath, data.change)
     })
