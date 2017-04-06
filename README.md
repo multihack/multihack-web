@@ -4,7 +4,9 @@
   <br>
   <br>
 </h1>
-<h3 align="center">Real-Time Editor, Web Host, and Voice Chat.</h3>
+<h3 align="center">Real-Time Editor, Web Host, and Voice Chat.</h3>  
+
+[![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)  
 
 <b>MultiHack V2 is out! Fully compatible with <a href="https://github.com/RationalCoding/multihack-brackets">multihack-brackets</a>!</b>
 
@@ -31,6 +33,9 @@ Save your project as a ZIP archive and use it in your favourite native IDE.
 
 ### Works Offline
 When your internet connection drops, MultiHack lets you keep working without interruptions.  
+
+## Run Your Own Instance
+To run your own instance, see [multihack-server](https://github.com/RationalCoding/multihack-server).  
 
 ## Introducing version 2.0!
 V2 is a complete rewrite of the old multihack-web (still available on the v1 branch)  
