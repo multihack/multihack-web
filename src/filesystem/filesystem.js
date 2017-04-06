@@ -161,6 +161,26 @@ FileSystem.prototype.getTree = function () {
   return self._tree[0].nodes
 }
 
+// Return array of all files and folders
+FileSystem.prototype.getAllFiles = function () {
+  var self = this
+  
+  var all = []
+  
+  function walk (dir) {
+    for (var i=0; i<dir.nodes.length; i++){
+      if (dir.nodes[i].isDir) {
+        walk(dir.nodes[i])
+      }
+      all.push(dir.nodes[i])
+    }
+  }
+  
+  walk(self._tree[0])
+  
+  return all
+}
+
 // Loads a project from a zip file
 FileSystem.prototype.unzip = function (file, cb) {
   var self = this

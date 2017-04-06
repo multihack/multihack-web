@@ -220,8 +220,8 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js")})
-},{"../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js":53}],3:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
+},{"../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":53}],3:[function(require,module,exports){
 /**
  * cuid.js
  * Collision-resistant UID generator for browsers and node.
@@ -7885,6 +7885,26 @@ FileSystem.prototype.getTree = function () {
   return self._tree[0].nodes
 }
 
+// Return array of all files and folders
+FileSystem.prototype.getAllFiles = function () {
+  var self = this
+  
+  var all = []
+  
+  function walk (dir) {
+    for (var i=0; i<dir.nodes.length; i++){
+      if (dir.nodes[i].isDir) {
+        walk(dir.nodes[i])
+      }
+      all.push(dir.nodes[i])
+    }
+  }
+  
+  walk(self._tree[0])
+  
+  return all
+}
+
 // Loads a project from a zip file
 FileSystem.prototype.unzip = function (file, cb) {
   var self = this
@@ -8051,6 +8071,7 @@ function Multihack (config) {
     Interface.treeview.remove(parentElement, FileSystem.get(workingPath))
     FileSystem.delete(workingPath)
     Editor.close()
+    self._remote.deleteFile(workingPath)
   })
   
   // Initialize project and room
@@ -8098,6 +8119,9 @@ Multihack.prototype._initRemote = function () {
     Interface.on('voiceToggle', function () {
       self._remote.voice.toggle()
     })
+    Interface.on('resync', function () {
+      self._remote.requestProject()
+    })
     
     self._remote.on('change', function (data) {
       var outOfSync = !FileSystem.exists(data.filePath)
@@ -8111,6 +8135,24 @@ Multihack.prototype._initRemote = function () {
       Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
       FileSystem.delete(data.filePath)
     })
+    self._remote.on('requestProject', function (data) {
+      // Get a list of all non-directory files, sorted by ascending path length
+      var allFiles = FileSystem.getAllFiles().sort(function (a,b) {
+        return a.path.length - b.path.length
+      }).filter(function (a) {
+        return !a.isDir
+      })
+      
+      for (var i=0; i<allFiles.length; i++) {
+        self._remote.provideFile(allFiles[i].path, allFiles[i].content, data.requester, i, allFiles.length-1)
+      }
+    })
+    self._remote.on('provideFile', function (data) {
+      FileSystem.getFile(data.filePath).doc.setValue(data.content)
+      Interface.treeview.rerender(FileSystem.getTree())
+      console.log(data.num+' of '+data.total)
+    })
+    
     Editor.on('change', function (data) {
       self._remote.change(data.filePath, data.change)
     })
@@ -8190,6 +8232,11 @@ function Interface () {
   // Setup delete button
   document.getElementById('delete').addEventListener('click', function () {
     self.emit('deleteCurrent')
+  })
+  
+  // Resync button
+  document.getElementById('resync').addEventListener('click', function () {
+    self.emit('resync')
   })
 }
 
@@ -8299,9 +8346,12 @@ Modal.prototype.open = function () {
     self.el.style.display = ''
     self.overlay.style.display = ''
     self.el.innerHTML = self._html
+  
+    var inputs = self.el.querySelectorAll('input')
+    if (inputs[0] && inputs[0].type === 'text') inputs[0].select()
     
     function done(e) {
-        e.inputs = self.el.querySelectorAll('input')
+        e.inputs = inputs
         self.emit('done', e)
     }
     
@@ -8562,12 +8612,26 @@ function RemoteManager (hostname, room) {
   self._handlers = {}
   self._socket = new io(hostname)
 
-  self._socket.emit('join', {room: room})
+  self._socket.emit('join', {
+    room: room
+  })
 
   self._socket.on('forward', function (data) {
     console.log(data)
     self._emit(data.event, data)
   })  
+  
+  // Get a file
+  self._socket.on('provideFile', function (data) {
+    console.log('got provideFile')
+    self._emit('provideFile', data)
+  })
+  
+  // Get a request for all files
+  self._socket.on('requestProject', function (data) {
+    console.log('got requestProject')
+    self._emit('requestProject', data)
+  })
   
   self.voice = new VoiceCall(self._socket, room)
 }
@@ -8591,6 +8655,26 @@ RemoteManager.prototype.change = function (filePath, change) {
     change: change
   })
 }
+
+RemoteManager.prototype.requestProject = function () {
+  var self = this
+  
+  console.log('called requestProject')
+  self._socket.emit('requestProject')
+}
+
+RemoteManager.prototype.provideFile = function (filePath, content, requester, num, total) {
+  var self = this
+  
+  self._socket.emit('provideFile', {
+    filePath: filePath,
+    content: content,
+    requester: requester,
+    num: num,
+    total: total
+  })
+}
+
 
 RemoteManager.prototype.destroy = function () {
   var self = this

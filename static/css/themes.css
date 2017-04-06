@@ -1,72 +1,3 @@
-/* Classic MultiHack theme */
-.theme-material .theme-dark{
-    background: #182A33;
-}
-
-.theme-material .theme-mid{
-    background: #263238;
-}
-
-.theme-material .theme-light{
-    background: #40525B;
-}
-
-.theme-material .theme-font-primary{
-    color : white;
-}
-
-.theme-material .theme-font-secondary{
-    color: #7ea1b1;
-}
-
-.theme-material .theme-border{
-    border-color: #5A6D76 !important;
-}
-
-.theme-material .theme-dark-border, input[type="text"] {
-    border-color: #182A33 !important;
-}
-
-.theme-material .go-button{
-    background: #40525B;
-}
-
-.theme-material .no-button {
-    background: #182A33;
-}
-
-.theme-material .go-button:hover,
-.theme-material .no-button:hover {
-    outline: 2px solid #5A6D76;
-}
-
-.theme-material button:active {
-    background-color: #5A6D76;
-}
-
-.theme-material a, .beside{
-    color: #9a9a9a;
-}
-
-.theme-material *::-webkit-scrollbar-track {
-    border-color: #5A6D76;
-    background: #182A33;
-}
-
-.theme-material *::-webkit-scrollbar-thumb {
-    background: #5A6D76;
-}
-
-.theme-material *::-webkit-scrollbar-thumb:hover {
-    background: #648a9b;
-}
-
-.theme-material .modal {
-    background: #0D2029;
-}
-/* ---------------- */
-
-
 /* Atom-inspired theme */
 .theme-atom .theme-dark{
     background: #222222;
@@ -101,18 +32,17 @@
 
 .theme-atom .go-button{
     background: #16191c;
+    outline: solid #31343F 1px;
 }
 
 .theme-atom .no-button {
     background: #31343F;
+    outline: solid #16191c 1px;
 }
 
-.theme-atom .go-button:hover,
-.theme-atom .no-button:hover {
-    outline: 2px solid white;
-}
-.theme-atom button:active {
-    background-color: white;
+.theme-atom .go-button:active,
+.theme-atom .no-button:active {
+    transform: scale(0.95)
 }
 
 .theme-atom a{
@@ -147,177 +77,5 @@
 }
 .theme-atom .tree li.file a:hover {
     color: #2BDA77;
-}
-/* ---------------- */
-
-
-/* Codepen inspired theme */
-.theme-codepen .theme-dark{
-    background: black;
-    border: none;
-}
-
-.theme-codepen .theme-mid{
-    background: #1A1C1D;
-    border: none;
-}
-
-.theme-codepen .theme-light{
-    background: #1A1C1D;
-    border: none;
-    border-right: 1px #343436 solid;
-
-}
-
-.theme-codepen .theme-font-primary{
-    color : white;
-}
-
-.theme-codepen .theme-font-secondary{
-    color: rgb(239, 234, 225);
-}
-
-.theme-codepen .theme-border{
-    border-color: #343436 !important;
-}
-
-.theme-codepen .theme-dark-border, input[type="text"] {
-    border-color: #343436 !important;
-}
-
-.theme-codepen .go-button{
-    background: #343436;
-}
-
-.theme-codepen .no-button {
-    background: #47CF73;
-}
-
-.theme-codepen .go-button:hover{
-    background: #4d4d50;
-    outline: none;
-
-}
-.theme-codepen .no-button:hover {
-    background: #2fb45a;
-    outline: none;
-}
-.theme-codepen button:active {
-    background-color: white;
-}
-
-.theme-codepen a{
-    color: #9a9a9a;
-}
-
-.theme-codepen *::-webkit-scrollbar-track {
-    border-color: #1D1F20;
-    background: #1D1F20;
-}
-
-.theme-codepen *::-webkit-scrollbar-thumb {
-    background: #666666;
-}
-
-.theme-codepen *::-webkit-scrollbar-thumb:hover {
-    background: #666666;
-}
-
-.theme-codepen .modal {
-    background: white;
-    border: none;
-    color: black;
-}
-.theme-codepen .plus {
-    color: #81c08b;
-}
-.theme-codepen li.file a:hover {
-    color: #81c08b;
-}
-/* ---------------- */
-
-
-/* Brackets inspired theme */
-.theme-brackets .theme-dark{
-    background: #3C3F41;
-    border: none;
-}
-
-.theme-brackets .theme-mid{
-    background: #1C1C1E;
-    border: none;
-}
-
-.theme-brackets .theme-light{
-    background: #47484B;
-    border: none;
-    border-right: 1px #343436 solid;
-
-}
-
-.theme-brackets .theme-font-primary{
-    color : white;
-}
-
-.theme-brackets .theme-font-secondary{
-    color: rgb(239, 234, 225);
-}
-
-.theme-brackets .theme-border{
-    border-color: rgba(255,255,255,0.05) !important;
-}
-
-.theme-brackets .theme-dark-border, input[type="text"] {
-    border-color: #343436 !important;
-}
-
-.theme-brackets .go-button{
-    background: #343436;
-}
-
-.theme-brackets .no-button {
-    background: #8fddff;
-}
-
-.theme-brackets .go-button:hover{
-    background: #4d4d50;
-    outline: none;
-
-}
-.theme-brackets .no-button:hover {
-    background: #74b2cc;
-    outline: none;
-}
-.theme-brackets button:active {
-    background-color: white;
-}
-
-.theme-brackets a{
-    color: #9a9a9a;
-}
-
-.theme-brackets *::-webkit-scrollbar-track {
-    border-color: #1D1F20;
-    background: #1D1F20;
-}
-
-.theme-brackets *::-webkit-scrollbar-thumb {
-    background: #666666;
-}
-
-.theme-brackets *::-webkit-scrollbar-thumb:hover {
-    background: #666666;
-}
-
-.theme-brackets .modal {
-    background: black;
-    color: white;
-    border: none;
-}
-.theme-brackets .plus {
-    color: #8fddff;
-}
-.theme-brackets li.file a:hover {
-    color: #8fddff;
 }
 /* ---------------- */
