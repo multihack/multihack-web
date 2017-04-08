@@ -8,7 +8,7 @@
 
 [![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)  
 
-<b>MultiHack V2 is out! Fully compatible with <a href="https://github.com/RationalCoding/multihack-brackets">multihack-brackets</a>!</b>
+<b>Fully compatible with <a href="https://github.com/RationalCoding/multihack-brackets">multihack-brackets</a>!</b>
 
 Tired of struggling to set up remote collaboration with your team? Try <a href="https://rationalcoding.github.io/multihack-web/">multihack.co</a>
 
