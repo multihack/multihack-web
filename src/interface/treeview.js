@@ -23,6 +23,7 @@ TreeView.prototype.render = function (nodeList, parentElement) {
   parentElement = parentElement || document.querySelector('#tree')
     
   for (var i = 0; i < nodeList.length; i++) { 
+    if (nodeList[i].path === '') continue
     self.add(parentElement, nodeList[i])
   }
 }
@@ -110,6 +111,7 @@ TreeView.prototype.addDir = function (parentElement, file) {
 
   var input = document.createElement('input')
   input.id = file.path
+  input.checked = true
   input.type = 'checkbox'
 
   var ol = document.createElement('ol')
