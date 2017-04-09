@@ -220,8 +220,8 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
-},{"../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":53}],3:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js")})
+},{"../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js":53}],3:[function(require,module,exports){
 /**
  * cuid.js
  * Collision-resistant UID generator for browsers and node.
@@ -7600,29 +7600,44 @@ function Editor () {
   if (!(self instanceof Editor)) return new Editor()
 
   var textArea = document.getElementById('editor')
-  
+
   var options = {
-                  mode: 'javascript',
-                  lineNumbers: true,
-                  theme: self._theme || 'atom',
-                  tabSize: 4,
-                  indentUnit: 4,
-                  lineWrapping: !!(window.innerWidth < 480), // No wrap on mobile
-                  styleActiveLine: true
-                }
-  
+    mode: {name: 'javascript', globalVars: true},
+    extraKeys: {'tab': 'autocomplete'},
+    lineNumbers: true,
+    theme: self._theme || 'atom',
+    tabSize: 4,
+    indentUnit: 4,
+    lineWrapping: !!(window.innerWidth < 480), // No wrap on mobile
+    styleActiveLine: true,
+    matchBrackets: true,
+    autoCloseBrackets: true,
+    matchTags: {bothTags: true},
+    autoCloseTags: true
+  }
+
   self._cm = CodeMirror.fromTextArea(textArea, options)
-  
+
+  self._cm.on('keyup', function (editor, event) {
+    
+    console.log(event.keyCode, event.which)
+
+    if (!ExcludedIntelliSenseTriggerKeys[(event.keyCode || event.which).toString()]) {
+      console.log('completed')
+      CodeMirror.commands.autocomplete(editor, null, { completeSingle: false })
+    }
+  })
+
   self._workingFile = null
   self._mutex = false
   self._cm.on('change', self._onchange.bind(self))
-  
+
   self._theme = null
 }
 
 Editor.prototype._onchange = function (cm, change) {
   var self = this
-  
+
   if (self._mutex || !self._workingFile) return
   self.emit('change', {
     filePath: self._workingFile.path,
@@ -7651,13 +7666,13 @@ Editor.prototype.open = function (filePath) {
     case 'image':
       document.querySelector('.editor-wrapper').style.display = 'none'
       document.querySelector('.image-wrapper').style.display = ''
-      document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,'+self._workingFile.doc
-    break
+      document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,' + self._workingFile.doc
+      break
     default:
       document.querySelector('.editor-wrapper').style.display = ''
       document.querySelector('.image-wrapper').style.display = 'none'
       self._cm.swapDoc(self._workingFile.doc)
-    break
+      break
   }
 }
 
@@ -7673,26 +7688,78 @@ Editor.prototype.getWorkingFile = function () {
   var self = this
   return self._workingFile
 }
-  
+
 module.exports = new Editor()
+
+var ExcludedIntelliSenseTriggerKeys = {
+  '8': 'backspace',
+  '9': 'tab',
+  '13': 'enter',
+  '16': 'shift',
+  '17': 'ctrl',
+  '18': 'alt',
+  '19': 'pause',
+  '20': 'capslock',
+  '27': 'escape',
+  '32': 'space',
+  '33': 'pageup',
+  '34': 'pagedown',
+  '35': 'end',
+  '36': 'home',
+  '37': 'left',
+  '38': 'up',
+  '39': 'right',
+  '40': 'down',
+  '45': 'insert',
+  '46': 'delete',
+  '91': 'left window key',
+  '92': 'right window key',
+  '93': 'select',
+  '107': 'add',
+  '109': 'subtract',
+  '110': 'decimal point',
+  '111': 'divide',
+  '112': 'f1',
+  '113': 'f2',
+  '114': 'f3',
+  '115': 'f4',
+  '116': 'f5',
+  '117': 'f6',
+  '118': 'f7',
+  '119': 'f8',
+  '120': 'f9',
+  '121': 'f10',
+  '122': 'f11',
+  '123': 'f12',
+  '144': 'numlock',
+  '145': 'scrolllock',
+  '186': 'semicolon',
+  '187': 'equalsign',
+  '188': 'comma',
+  '189': 'dash',
+  '191': 'slash',
+  '192': 'graveaccent',
+  '219': 'bracket',
+  '220': 'backslash',
+  '222': 'quote'
+}
 },{"./../filesystem/filesystem":38,"events":51,"inherits":8}],36:[function(require,module,exports){
 var util = require('./util')
-var mustache = require('mustache')
 
 function Directory (path) {
   var self = this
   if (!(self instanceof Directory)) return new Directory()
-  
+
   self.name = util.getFilename(path)
   self.path = path
   self.nodes = []
   self.isDir = true
 }
-  
+
 module.exports = Directory
-},{"./util":39,"mustache":11}],37:[function(require,module,exports){
+
+},{"./util":39}],37:[function(require,module,exports){
 var util = require('./util')
-var mustache = require('mustache')
 
 function File (path) {
   var self = this
@@ -7711,18 +7778,18 @@ function File (path) {
 
 File.prototype.getRawContent = function () {
   var self = this
-  
+
   if (self.viewMapping === 'image') {
-    return atob(self.doc)
+    return window.atob(self.doc)
   } else {
     return self.doc.getValue()
   }
 }
 
-  
 module.exports = File
-},{"./util":39,"mustache":11}],38:[function(require,module,exports){
-/* globals JSZip, JSZipUtils, CodeMirror */
+
+},{"./util":39}],38:[function(require,module,exports){
+/* globals JSZip, Blob, CodeMirror */
 
 var File = require('./file')
 var Directory = require('./directory')
@@ -7733,7 +7800,7 @@ var ignoredFilenames = ['__MACOSX', '.DS_Store']
 function FileSystem () {
   var self = this
   if (!(self instanceof FileSystem)) return new FileSystem()
-  
+
   self._tree = [
     new Directory('')
   ]
@@ -7742,46 +7809,45 @@ function FileSystem () {
 // Loads a project
 FileSystem.prototype.loadProject = function (file, cb) {
   var self = this
-  
+
   // TODO: More load types
   self.unzip(file, function () {
     cb(self._tree[0].nodes)
   })
-  
+
   // TODO: More input options
 }
 
-// Saves the project 
+// Saves the project
 FileSystem.prototype.saveProject = function (saveType, cb) {
   var self = this
-  
+
   // TODO: More save types
   if (saveType === 'zip') {
-      try {
-        var isFileSaverSupported = !!new Blob
+    try {
+      if (new Blob()) cb(false)
 
-        var zip = new JSZip()
-        util.zipTree(zip, self._tree[0].nodes)
+      var zip = new JSZip()
+      util.zipTree(zip, self._tree[0].nodes)
 
-        zip.generateAsync({type: 'blob'}).then(function (content) {
-          saveAs(content, 'myProject.zip')
-          cb(true)
-        })
-      } catch (err) {
-        console.error(err)
-        cb(false)
-      }
+      zip.generateAsync({type: 'blob'}).then(function (content) {
+        window.saveAs(content, 'myProject.zip')
+        cb(true)
+      })
+    } catch (err) {
+      console.error(err)
+      cb(false)
+    }
   }
 }
 
 // Makes a directory, building paths
 FileSystem.prototype.mkdir = function (path) {
   var self = this
-  var self = this
   var parentPath = path.split('/')
-  parentPath.splice(-1,1)
+  parentPath.splice(-1, 1)
   parentPath = parentPath.join('/')
-  
+
   self._buildPath(parentPath)
   self._getNode(parentPath).nodes.push(new Directory(path))
 }
@@ -7790,7 +7856,7 @@ FileSystem.prototype.mkdir = function (path) {
 FileSystem.prototype.mkfile = function (path) {
   var self = this
   var parentPath = path.split('/')
-  parentPath.splice(-1,1)
+  parentPath.splice(-1, 1)
   parentPath = parentPath.join('/')
 
   self._buildPath(parentPath)
@@ -7800,10 +7866,10 @@ FileSystem.prototype.mkfile = function (path) {
 // Ensures all directories have been built along a path
 FileSystem.prototype._buildPath = function (path) {
   var self = this
-  
+
   var split = path.split('/')
-  for (var i=0; i<=split.length; i++) {
-    var check = split.slice(0,i).join('/')
+  for (var i = 0; i <= split.length; i++) {
+    var check = split.slice(0, i).join('/')
     if (!self._getNode(check)) {
       self.mkdir(check)
     }
@@ -7814,13 +7880,13 @@ FileSystem.prototype._buildPath = function (path) {
 FileSystem.prototype._getNode = function (path, nodeList) {
   var self = this
   nodeList = nodeList || self._tree
-  for (var i = 0; i < nodeList.length; i++) { 
-      if (nodeList[i].path === path) {
-          return nodeList[i]
-      } else if (nodeList[i].isDir) {
-          var recur = self._getNode(path, nodeList[i].nodes) 
-          if (recur) return recur
-      }
+  for (var i = 0; i < nodeList.length; i++) {
+    if (nodeList[i].path === path) {
+      return nodeList[i]
+    } else if (nodeList[i].isDir) {
+      var recur = self._getNode(path, nodeList[i].nodes)
+      if (recur) return recur
+    }
   }
   return undefined
 }
@@ -7828,22 +7894,22 @@ FileSystem.prototype._getNode = function (path, nodeList) {
 // Checks if a file/directory exists at a path
 FileSystem.prototype.exists = function (path) {
   var self = this
-  
+
   var parentPath = path.split('/')
-  parentPath.splice(-1,1)
+  parentPath.splice(-1, 1)
   parentPath = parentPath.join('/')
-  
+
   return !!self._getNode(path)
 }
 
 // Gets a node, building any broken paths
 FileSystem.prototype.get = function (path) {
   var self = this
-  
+
   var parentPath = path.split('/')
-  parentPath.splice(-1,1)
+  parentPath.splice(-1, 1)
   parentPath = parentPath.join('/')
-  
+
   self._buildPath(parentPath)
   return self._getNode(path)
 }
@@ -7851,11 +7917,11 @@ FileSystem.prototype.get = function (path) {
 // Gets an existing file, or creates one if none exists
 FileSystem.prototype.getFile = function (path) {
   var self = this
-  
+
   var parentPath = path.split('/')
-  parentPath.splice(-1,1)
+  parentPath.splice(-1, 1)
   parentPath = parentPath.join('/')
-  
+
   self._buildPath(parentPath)
   return self._getNode(path) || (function () {
     self.mkfile(path)
@@ -7868,7 +7934,7 @@ FileSystem.prototype.getFile = function (path) {
 FileSystem.prototype.delete = function (path) {
   var self = this
   var parentPath = path.split('/')
-  parentPath.splice(-1,1)
+  parentPath.splice(-1, 1)
   parentPath = parentPath.join('/')
   self._getNode(parentPath).nodes = self._getNode(parentPath).nodes.filter(function (e) {
     if (e.path === path) {
@@ -7888,33 +7954,32 @@ FileSystem.prototype.getTree = function () {
 // Return array of all files and folders
 FileSystem.prototype.getAllFiles = function () {
   var self = this
-  
+
   var all = []
-  
+
   function walk (dir) {
-    for (var i=0; i<dir.nodes.length; i++){
+    for (var i = 0; i < dir.nodes.length; i++) {
       if (dir.nodes[i].isDir) {
         walk(dir.nodes[i])
       }
       all.push(dir.nodes[i])
     }
   }
-  
+
   walk(self._tree[0])
-  
+
   return all
 }
 
 // Loads a project from a zip file
 FileSystem.prototype.unzip = function (file, cb) {
   var self = this
-  
+
   JSZip.loadAsync(file).then(function (zip) {
-    
     var awaiting = Object.keys(zip.files).length
     var first = true
-    
-    zip.forEach(function (relativePath, zipEntry) {  
+
+    zip.forEach(function (relativePath, zipEntry) {
       if (first) {
         first = false
         awaiting--
@@ -7922,113 +7987,118 @@ FileSystem.prototype.unzip = function (file, cb) {
       }
 
       // Filter out ignored files
-      for (var i=0; i<ignoredFilenames.length; i++) {
+      for (var i = 0; i < ignoredFilenames.length; i++) {
         if (relativePath.indexOf(ignoredFilenames[i]) !== -1) {
-          if (--awaiting <= 0) cb() 
+          if (--awaiting <= 0) cb()
           return
         }
-      } 
-      
+      }
+
       relativePath = relativePath.split('/')
-      relativePath.splice(0,1)
+      relativePath.splice(0, 1)
       relativePath = relativePath.join('/')
-      relativePath='/'+relativePath
-      
+      relativePath = '/' + relativePath
+
       if (zipEntry.dir) {
         relativePath = relativePath.slice(0, -1)
       }
-      
+
       var parentPath = relativePath.split('/')
-      parentPath.splice(-1,1)
+      parentPath.splice(-1, 1)
       parentPath = parentPath.join('/')
-      
+
       if (zipEntry.dir) {
         self.mkdir(relativePath)
-        if (--awaiting <= 0) cb() 
+        if (--awaiting <= 0) cb()
       } else {
         self.mkfile(relativePath)
         var viewMapping = util.getViewMapping(relativePath)
         switch (viewMapping) {
           case 'image':
-            zipEntry.async('base64').then(function (content) {  
+            zipEntry.async('base64').then(function (content) {
               self.get(relativePath).doc = content
-              if (--awaiting <= 0) cb() 
+              if (--awaiting <= 0) cb()
             })
             break
           default:
             // Load as text
-            zipEntry.async('string').then(function (content) {  
+            zipEntry.async('string').then(function (content) {
               self.get(relativePath).doc = new CodeMirror.Doc(content, util.pathToMode(relativePath))
-              if (--awaiting <= 0) cb() 
+              if (--awaiting <= 0) cb()
             })
             break
         }
-      }   
+      }
     })
   })
 }
-    
+
 module.exports = new FileSystem()
+
 },{"./directory":36,"./file":37,"./util":39}],39:[function(require,module,exports){
 var util = {}
 
-
 util.getFilename = function (path) {
   var split = path.split('/')
-  return split[split.length-1]
+  return split[split.length - 1]
 }
 
 util.getExtension = function (path) {
   path = util.getFilename(path)
   var split = path.split('.')
-  return split[split.length-1]
+  return split[split.length - 1]
 }
 
 var CM_MAPPINGS = {
-  "js": "javascript",
-  "coffee": "javascript",
-  "ts": "javascript",
-  "json": "javascript",
-  "css": "css",
-  "sass": "css",
-  "less": "css",
-  "html": "htmlmixed",
-  "xml": "xml",
-  "php": "application/x-httpd-php"
+  'js': 'javascript',
+  'coffee': 'javascript',
+  'ts': 'javascript',
+  'json': 'javascript',
+  'css': 'css',
+  'sass': 'css',
+  'less': 'css',
+  'html': 'htmlmixed',
+  'xml': 'xml',
+  'php': 'application/x-httpd-php'
 }
 util.pathToMode = function (path) {
-  return CM_MAPPINGS[util.getExtension(path)]
+  return {
+    name: CM_MAPPINGS[util.getExtension(path)],
+    globalVars: true
+  }
 }
 
 var VIEW_MAPPINGS = {
-  "png" : "image", 
-  "jpg": "image",
-  "jpeg": "image",
-  "jpeg2000": "image",
-  "tif": "image", 
-  "tiff": "image",
-  "gif": "image",
-  "bmp": "image",
-  "ico": "image"
+  'png': 'image',
+  'jpg': 'image',
+  'jpeg': 'image',
+  'jpeg2000': 'image',
+  'tif': 'image',
+  'tiff': 'image',
+  'gif': 'image',
+  'bmp': 'image',
+  'ico': 'image'
 }
-util.getViewMapping = function (path){
-  return VIEW_MAPPINGS[util.getExtension(path)] || "text"
+util.getViewMapping = function (path) {
+  return VIEW_MAPPINGS[util.getExtension(path)] || 'text'
 }
 
 // Creates a zip archive from a file tree
 util.zipTree = function (zip, nodeList) {
   console.log(nodeList)
-    for (var i = 0; i < nodeList.length; i++) { //Iterate children
-      
-        if (nodeList[i].isDir) {
-            util.zipTree(zip, nodeList[i].nodes);
-        } else {
-            zip.file(nodeList[i].path.slice(1), nodeList[i].content);
-        }
+  for (var i = 0; i < nodeList.length; i++) {
+ // Iterate children
+
+    if (nodeList[i].isDir) {
+      util.zipTree(zip, nodeList[i].nodes)
+    } else {
+      zip.file(nodeList[i].path.slice(1), nodeList[i].content)
     }
+  }
 }
-  
+
 module.exports = util
+
 },{}],40:[function(require,module,exports){
 var FileSystem = require('./filesystem/filesystem')
 var Interface = require('./interface/interface')
@@ -8045,24 +8115,24 @@ var MAX_PUBLIC_NUMBER = 500 // 500 files
 function Multihack (config) {
   var self = this
   if (!(self instanceof Multihack)) return new Multihack(config)
-  
+
   config = config || {}
-  
+
   Interface.on('openFile', function (e) {
     Editor.open(e.path)
   })
-  
+
   Interface.on('addFile', function (e) {
     FileSystem.getFile(e.path)
     Interface.treeview.addFile(e.parentElement, FileSystem.get(e.path))
     Editor.open(e.path)
   })
-  
+
   Interface.on('addDir', function (e) {
     FileSystem.mkdir(e.path)
     Interface.treeview.addDir(e.parentElement, FileSystem.get(e.path))
   })
-  
+
   Interface.on('removeFile', function (e) {
     Interface.treeview.remove(e.parentElement, FileSystem.get(e.path))
     FileSystem.delete(e.path)
@@ -8070,7 +8140,7 @@ function Multihack (config) {
       self._remote.deleteFile(e.path)
     }
   })
-  
+
   Interface.on('deleteCurrent', function (e) {
     var workingPath = Editor.getWorkingFile().path
     var parentElement = Interface.treeview.getParentElement(workingPath)
@@ -8079,11 +8149,11 @@ function Multihack (config) {
     Editor.close()
     self._remote.deleteFile(workingPath)
   })
-  
+
   // Initialize project and room
   self.roomID = Math.random().toString(36).substr(2, 20)
   self.hostname = config.hostname
-  
+
   Interface.on('saveAs', function (saveType) {
     FileSystem.saveProject(saveType, function (success) {
       if (success) {
@@ -8093,16 +8163,16 @@ function Multihack (config) {
       }
     })
   })
-  
+
   Interface.on('deploy', function () {
     HyperHostWrapper.deploy(FileSystem.getTree(), function (url) {
-      Interface.alert('Website Deployed', 'Anyone can visit your site at<br><a target="_blank" href="'+url+'">'+url+'</a>')
+      Interface.alert('Website Deployed', 'Anyone can visit your site at<br><a target="_blank" href="' + url + '">' + url + '</a>')
     })
   })
-    
+
   Interface.removeOverlay()
   Interface.getProject(function (project) {
-    if (!project){
+    if (!project) {
       self._initRemote()
     } else {
       Interface.showOverlay()
@@ -8112,23 +8182,22 @@ function Multihack (config) {
       })
     }
   })
-  
 }
 
 Multihack.prototype._initRemote = function () {
   var self = this
-  
+
   Interface.getRoom(self.roomID, function (roomID) {
     self.roomID = roomID
     self._remote = new Remote(self.hostname, roomID)
-    
+
     Interface.on('voiceToggle', function () {
       self._remote.voice.toggle()
     })
     Interface.on('resync', function () {
       self._remote.requestProject()
     })
-    
+
     self._remote.on('change', function (data) {
       var outOfSync = !FileSystem.exists(data.filePath)
       Editor.change(data.filePath, data.change)
@@ -8144,40 +8213,54 @@ Multihack.prototype._initRemote = function () {
     self._remote.on('requestProject', function (data) {
       var isPublicServer = self.hostname === DEFAULT_HOSTNAME
       var size = 0
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> master
       // Get a list of all non-directory files, sorted by ascending path length
-      var allFiles = FileSystem.getAllFiles().sort(function (a,b) {
+      var allFiles = FileSystem.getAllFiles().sort(function (a, b) {
         return a.path.length - b.path.length
       }).filter(function (a) {
         return !a.isDir
       })
+<<<<<<< HEAD
       
       if (isPublicServer && allFiles.length > MAX_PUBLIC_NUMBER)  {
         return alert('More than 500 files. Please use a private server.')
       }
       
       for (var i=0; i<allFiles.length; i++) {
+=======
+
+      if (isPublicServer && allFiles.length > MAX_PUBLIC_NUMBER) {
+        return window.alert('More than 500 files. Please use a private server.')
+      }
+
+      for (var i = 0; i < allFiles.length; i++) {
+>>>>>>> master
         size = size + allFiles[i].content.length
         if (size > MAX_PUBLIC_SIZE) {
-          return alert('Project over 20mb. Please use a private server.')
+          return window.alert('Project over 20mb. Please use a private server.')
         }
-        
-        self._remote.provideFile(allFiles[i].path, allFiles[i].content, data.requester, i, allFiles.length-1)
+
+        self._remote.provideFile(allFiles[i].path, allFiles[i].content, data.requester, i, allFiles.length - 1)
       }
     })
     self._remote.on('provideFile', function (data) {
       FileSystem.getFile(data.filePath).doc.setValue(data.content)
       Interface.treeview.rerender(FileSystem.getTree())
-      console.log(data.num+' of '+data.total)
+      console.log(data.num + ' of ' + data.total)
     })
-    
+
     Editor.on('change', function (data) {
       self._remote.change(data.filePath, data.change)
     })
   })
 }
-    
+
 module.exports = Multihack
+
 },{"./editor/editor":35,"./filesystem/filesystem":38,"./interface/interface":41,"./network/hyperhostwrapper":45,"./network/remote":46}],41:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
@@ -8189,21 +8272,21 @@ inherits(Interface, EventEmitter)
 function Interface () {
   var self = this
   if (!(self instanceof Interface)) return new Interface()
-  
+
   self.treeview = new TreeView()
-  
+
   self.treeview.on('open', function (e) {
     self.emit('openFile', e)
   })
-  
+
   self.treeview.on('remove', function (e) {
     self.emit('removeFile', e)
   })
-  
+
   self.addCounter = 1
   self.treeview.on('add', function (e) {
     self.newFileDialog(e.path, function (name, type) {
-      e.path = e.path+'/'+name
+      e.path = e.path + '/' + name
       if (type === 'dir') {
         self.emit('addDir', e)
       } else {
@@ -8211,11 +8294,11 @@ function Interface () {
       }
     })
   })
-  
+
   // Setup sidebar
   var sidebar = document.getElementById('sidebar')
   var collapsed = false
-  document.getElementById('collapsesidebar').addEventListener('click', function (){
+  document.getElementById('collapsesidebar').addEventListener('click', function () {
     collapsed = !collapsed
     if (collapsed) {
       sidebar.className = sidebar.className + ' collapsed'
@@ -8223,7 +8306,7 @@ function Interface () {
       sidebar.className = sidebar.className.replace('collapsed', '')
     }
   })
-  
+
   // Setup contrast toggle
   var contrast = false
   document.getElementById('image-contrast').addEventListener('click', function () {
@@ -8231,27 +8314,27 @@ function Interface () {
     document.querySelector('.image-wrapper').style.backgroundColor = contrast ? 'white' : 'black'
     document.querySelector('#image-contrast > img').src = contrast ? 'static/img/contrast-black.png' : 'static/img/contrast-white.png'
   })
-  
+
   // Setup save button
   document.getElementById('save').addEventListener('click', function () {
     self.emit('saveAs', 'zip')
   })
-  
+
   // Setup voice button
   document.getElementById('voice').addEventListener('click', function () {
     self.emit('voiceToggle')
   })
-  
+
   // Setup deploy button
   document.getElementById('deploy').addEventListener('click', function () {
     self.emit('deploy')
   })
-  
+
   // Setup delete button
   document.getElementById('delete').addEventListener('click', function () {
     self.emit('deleteCurrent')
   })
-  
+
   // Resync button
   document.getElementById('resync').addEventListener('click', function () {
     self.emit('resync')
@@ -8260,12 +8343,12 @@ function Interface () {
 
 Interface.prototype.newFileDialog = function (path, cb) {
   var self = this
-  
+
   var modal = new Modal('newFile', {
     title: 'Create File/Folder',
     path: path
   })
-  
+
   modal.on('done', function (e) {
     modal.close()
     var name = e.inputs[0].value
@@ -8282,8 +8365,8 @@ Interface.prototype.newFileDialog = function (path, cb) {
 }
 
 Interface.prototype.getProject = function (cb) {
-  var self = this
-  
+  // var self = this
+
   var projectModal = new Modal('file', {
     title: 'Load Project',
     message: 'Upload a zip file containing a project.'
@@ -8301,7 +8384,7 @@ Interface.prototype.getProject = function (cb) {
 
 Interface.prototype.getRoom = function (roomID, cb) {
   var self = this
-  
+
   var roomModal = new Modal('input', {
     roomID: roomID,
     title: 'Join Room',
@@ -8339,8 +8422,9 @@ Interface.prototype.removeOverlay = function (msg, cb) {
 Interface.prototype.showOverlay = function (msg, cb) {
   document.getElementById('overlay').style.display = ''
 }
-  
+
 module.exports = new Interface()
+
 },{"./modal":42,"./treeview":44,"events":51,"inherits":8}],42:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
@@ -8350,95 +8434,94 @@ var templates = require('./templates')
 inherits(Modal, EventEmitter)
 
 function Modal (name, data) {
-    var self = this
-    if (!(self instanceof Modal)) return new Modal()
+  var self = this
+  if (!(self instanceof Modal)) return new Modal()
 
-    self._html = mustache.render(templates[name], data)
-    self.el = document.getElementById('modal')
-    self.overlay = document.getElementById('overlay')
+  self._html = mustache.render(templates[name], data)
+  self.el = document.getElementById('modal')
+  self.overlay = document.getElementById('overlay')
 }
 
 Modal.prototype.open = function () {
-    var self = this
-    
-    self.el.style.display = ''
-    self.overlay.style.display = ''
-    self.el.innerHTML = self._html
-  
-    var inputs = self.el.querySelectorAll('input')
-    if (inputs[0] && inputs[0].type === 'text') inputs[0].select()
-    
-    function done(e) {
-        e.inputs = inputs
-        self.emit('done', e)
+  var self = this
+
+  self.el.style.display = ''
+  self.overlay.style.display = ''
+  self.el.innerHTML = self._html
+
+  var inputs = self.el.querySelectorAll('input')
+  if (inputs[0] && inputs[0].type === 'text') inputs[0].select()
+
+  function done (e) {
+    e.inputs = inputs
+    self.emit('done', e)
+  }
+
+  function cancel () {
+    self.emit('cancel')
+  }
+
+  var go = Array.prototype.slice.call(self.el.querySelectorAll('.go-button'))
+  while (go[0]) {
+    if (go[0].tagName === 'BUTTON') {
+      go[0].addEventListener('click', done)
+    } else {
+      go[0].addEventListener('change', done)
     }
-    
-    function cancel() {
-      self.emit('cancel')
+    go.shift()
+  }
+
+  var no = self.el.querySelector('.no-button')
+  if (no) {
+    if (no.tagName === 'BUTTON') {
+      no.addEventListener('click', cancel)
+    } else {
+      no.addEventListener('change', cancel)
     }
-    
-    var go = Array.prototype.slice.call(self.el.querySelectorAll('.go-button'))
-    while (go[0]) {
-      if (go[0].tagName === 'BUTTON') {
-          go[0].addEventListener('click', done)
-      } else {
-          go[0].addEventListener('change', done)
-      }
-      go.shift()
-    }
-    
-    var no = self.el.querySelector('.no-button')
-    if (no) {
-      if (no.tagName === 'BUTTON') {
-          no.addEventListener('click', cancel)
-      } else {
-          no.addEventListener('change', cancel)
-      }
-    }
+  }
 }
 
 Modal.prototype.close = function () {
-    var self = this
-    
-    self.el.style.display = 'none'
-    self.overlay.style.display = 'none'
-    self.el.innerHTML = ''
+  var self = this
+
+  self.el.style.display = 'none'
+  self.overlay.style.display = 'none'
+  self.el.innerHTML = ''
 }
 
-    
 module.exports = Modal
+
 },{"./templates":43,"events":51,"inherits":8,"mustache":11}],43:[function(require,module,exports){
 var dict = {}
 
-dict['file'] = 
-    '<h1>{{title}}</h1><br>'+
-    '<p>{{{message}}}</p>'+
-    '<input class="go-button modal-input" type="file">'+
+dict['file'] =
+    '<h1>{{title}}</h1><br>' +
+    '<p>{{{message}}}</p>' +
+    '<input class="go-button modal-input" type="file">' +
     '<button class="no-button">Skip</button>'
 
-dict['input'] = 
-    '<h1>{{title}}</h1>'+
-    '<p>{{{message}}}</p>'+
-    '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text">'+
-    '<button class="go-button">Join</button>'+
+dict['input'] =
+    '<h1>{{title}}</h1>' +
+    '<p>{{{message}}}</p>' +
+    '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text">' +
+    '<button class="go-button">Join</button>' +
     '<button class="no-button">Skip</button>'
 
-dict['alert'] = 
-    '<h1>{{title}}</h1>'+
-    '<p>{{{message}}}</p>'+
+dict['alert'] =
+    '<h1>{{title}}</h1>' +
+    '<p>{{{message}}}</p>' +
     '<button class="go-button">Continue</button>'
 
-dict['newFile'] = 
-    '<h1>{{title}}</h1>'+
-    '<input type="text" placeholder="Name"></input><br>'+
-    '<button class="go-button" data-type="file">File</button>'+
-    '<button class="go-button" data-type="dir">Folder</button>'+
+dict['newFile'] =
+    '<h1>{{title}}</h1>' +
+    '<input type="text" placeholder="Name"></input><br>' +
+    '<button class="go-button" data-type="file">File</button>' +
+    '<button class="go-button" data-type="dir">Folder</button>' +
     '<button class="no-button">Cancel</button>'
 
-
 module.exports = dict
+
 },{}],44:[function(require,module,exports){
-var mustache = require('mustache')
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 
@@ -8459,10 +8542,10 @@ function TreeView () {
 
 TreeView.prototype.render = function (nodeList, parentElement) {
   var self = this
-  
+
   parentElement = parentElement || document.querySelector('#tree')
-    
-  for (var i = 0; i < nodeList.length; i++) { 
+
+  for (var i = 0; i < nodeList.length; i++) {
     if (nodeList[i].path === '') continue
     self.add(parentElement, nodeList[i])
   }
@@ -8470,45 +8553,45 @@ TreeView.prototype.render = function (nodeList, parentElement) {
 
 TreeView.prototype.rerender = function (nodeList) {
   var self = this
-  
+
   var rootElement = document.querySelector('#tree')
   while (rootElement.firstChild) {
     rootElement.removeChild(rootElement.firstChild)
   }
-  
+
   self.render(nodeList)
 }
 
 TreeView.prototype._handleFileClick = function (e) {
   var self = this
   self.emit('open', {
-      target: e.target,
-      path: e.target.id,
-      parentElement: parentElement
-    })
+    target: e.target,
+    path: e.target.id,
+    parentElement: e.parentElement
+  })
 }
 
 TreeView.prototype._handleFolderClick = function (e) {
-  var self = this
+  // var self = this
   // Nothing
 }
 
 // Returns parentElement of node if it already exists
 TreeView.prototype.getParentElement = function (path) {
-  var self = this
+  // var self = this
   return document.getElementById(path).parentElement.parentElement
 }
 
 TreeView.prototype.remove = function (parentElement, file) {
-  var self = this
-  
+  // var self = this
+
   var element = document.getElementById(file.path).parentElement
   parentElement.removeChild(element)
 }
 
 TreeView.prototype.add = function (parentElement, file) {
   var self = this
-  
+
   if (file.isDir) {
     self.addDir(parentElement, file)
   } else {
@@ -8518,7 +8601,7 @@ TreeView.prototype.add = function (parentElement, file) {
 
 TreeView.prototype.addFile = function (parentElement, file) {
   var self = this
-  
+
   // Render file
   var el = document.createElement('li')
   el.className = 'file'
@@ -8541,9 +8624,9 @@ TreeView.prototype.addFile = function (parentElement, file) {
 
 TreeView.prototype.addDir = function (parentElement, file) {
   var self = this
-  
+
   var el = document.createElement('li')
-        
+
   var label = document.createElement('label')
   label.setAttribute('for', file.path)
   label.innerHTML = file.name
@@ -8586,9 +8669,10 @@ TreeView.prototype.addDir = function (parentElement, file) {
   el.appendChild(ol)
   parentElement.appendChild(el)
 }
-    
+
 module.exports = TreeView
-},{"events":51,"inherits":8,"mustache":11}],45:[function(require,module,exports){
+
+},{"events":51,"inherits":8}],45:[function(require,module,exports){
 /* globals HyperHost */
 
 // Wraps the HyperHost instance
@@ -8603,26 +8687,28 @@ function HyperHostWrapper () {
 
 HyperHostWrapper.prototype.deploy = function (tree, cb) {
   var self = this
-  
-  self._host.on('ready', function(url) {
-      cb(url)
+
+  self._host.on('ready', function (url) {
+    cb(url)
   })
 
   self._host.io.on('digest', function () {
     console.log('hello world')
     self._host.launch()
   })
-  
+
   console.log(tree)
   self._host.io.contentTree(tree)
 }
-  
+
 module.exports = new HyperHostWrapper()
+
 },{}],46:[function(require,module,exports){
 /* globals io */
 
 // TODO: Replace socket forwarding with WebRTC
 var VoiceCall = require('./voice')
+var Io = io // standard constructor names
 
 function RemoteManager (hostname, room) {
   var self = this
@@ -8630,7 +8716,7 @@ function RemoteManager (hostname, room) {
   self.room = room
 
   self._handlers = {}
-  self._socket = new io(hostname)
+  self._socket = new Io(hostname)
 
   self._socket.emit('join', {
     room: room
@@ -8639,20 +8725,20 @@ function RemoteManager (hostname, room) {
   self._socket.on('forward', function (data) {
     console.log(data)
     self._emit(data.event, data)
-  })  
-  
+  })
+
   // Get a file
   self._socket.on('provideFile', function (data) {
     console.log('got provideFile')
     self._emit('provideFile', data)
   })
-  
+
   // Get a request for all files
   self._socket.on('requestProject', function (data) {
     console.log('got requestProject')
     self._emit('requestProject', data)
   })
-  
+
   self.voice = new VoiceCall(self._socket, room)
 }
 
@@ -8678,14 +8764,14 @@ RemoteManager.prototype.change = function (filePath, change) {
 
 RemoteManager.prototype.requestProject = function () {
   var self = this
-  
+
   console.log('called requestProject')
   self._socket.emit('requestProject')
 }
 
 RemoteManager.prototype.provideFile = function (filePath, content, requester, num, total) {
   var self = this
-  
+
   self._socket.emit('provideFile', {
     filePath: filePath,
     content: content,
@@ -8694,7 +8780,6 @@ RemoteManager.prototype.provideFile = function (filePath, content, requester, nu
     total: total
   })
 }
-
 
 RemoteManager.prototype.destroy = function () {
   var self = this
@@ -8740,7 +8825,7 @@ var getusermedia = require('getusermedia')
 function VoiceCall (socket, room) {
   var self = this
   if (!(self instanceof VoiceCall)) return new VoiceCall()
-  
+
   if (!getBrowserRTC()) {
     // TODO: Remove mic button
     console.error('No WebRTC support.')
@@ -8760,11 +8845,11 @@ function VoiceCall (socket, room) {
     self.ready = true
     console.log(self.client.id)
     console.log(peerIDs)
-    
+
     if (self.stream) {
-      for (var i=0; i<peerIDs.length; i++) {
+      for (var i = 0; i < peerIDs.length; i++) {
         self.client.connect(peerIDs[0], {
-          stream: self.stream, 
+          stream: self.stream,
           answerConstraints: {
             offerToReceiveAudio: true,
             offerToReceiveVideo: false
@@ -8781,7 +8866,7 @@ function VoiceCall (socket, room) {
     console.log('request')
     if (!self.stream) return
     request.accept({
-      stream: self.stream, 
+      stream: self.stream,
       answerConstraints: {
         offerToReceiveAudio: true,
         offerToReceiveVideo: false
@@ -8794,7 +8879,7 @@ function VoiceCall (socket, room) {
   })
   self.client.on('peer', function (peer) {
     self.peers.push(peer)
-    
+
     peer.on('stream', function (stream) {
       console.log('stream')
       var audio = document.createElement('audio')
@@ -8807,15 +8892,15 @@ function VoiceCall (socket, room) {
 
 VoiceCall.prototype.leave = function () {
   var self = this
-  
+
   if (!self.ready || !self.stream) return
-  
+
   while (self.peers[0]) {
     self.peers[0].destroy()
     self.peers.shift()
   }
   var audioEls = document.querySelectorAll('audio')
-  for (var i=0; i<audioEls.length; i++) {
+  for (var i = 0; i < audioEls.length; i++) {
     document.body.removeChild(audioEls[i])
   }
   self.stream = null
@@ -8824,13 +8909,13 @@ VoiceCall.prototype.leave = function () {
 
 VoiceCall.prototype.join = function () {
   var self = this
-  
+
   if (!self.ready || self.stream) return
-  
+
   getusermedia(function (err, stream) {
     if (err) return console.log(err)
     self.stream = stream
-    
+
     self.client.rediscover({
       room: self.room
     })
@@ -8841,15 +8926,16 @@ VoiceCall.prototype.join = function () {
 VoiceCall.prototype.toggle = function () {
   var self = this
   console.log('toggle')
-  
+
   if (!self.stream) {
     self.join()
   } else {
     self.leave()
   }
 }
-  
+
 module.exports = VoiceCall
+
 },{"get-browser-rtc":6,"getusermedia":7,"simple-signal-client":23}],48:[function(require,module,exports){
 'use strict'
 

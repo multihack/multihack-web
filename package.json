@@ -1,13 +1,17 @@
 {
   "name": "multihack-web",
+<<<<<<< HEAD
   "version": "2.0.1",
+=======
+  "version": "2.1.1",
+>>>>>>> master
   "description": "A web-based editor with realtime collaboration and voice calls.",
   "main": "src/index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "standard --fix src && standard --fix test && tape test/*.js",
+    "test": "standard --fix src/** && standard --fix test/** && tape test/*.js",
     "build": "browserify src/index.js -s Multihack -o static/js/multihack.js"
   },
   "author": "Thomas Mullen",
