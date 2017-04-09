@@ -8036,6 +8036,12 @@ var Editor = require('./editor/editor')
 var Remote = require('./network/remote')
 var HyperHostWrapper = require('./network/hyperhostwrapper')
 
+var DEFAULT_HOSTNAME = 'https://quiet-shelf-57463.herokuapp.com'
+
+// please don't change these! I'm working on improving this!
+var MAX_PUBLIC_SIZE = 20000000 // 20 mb max for public server
+var MAX_PUBLIC_NUMBER = 500 // 500 files
+
 function Multihack (config) {
   var self = this
   if (!(self instanceof Multihack)) return new Multihack(config)
@@ -8136,6 +8142,13 @@ Multihack.prototype._initRemote = function () {
       FileSystem.delete(data.filePath)
     })
     self._remote.on('requestProject', function (data) {
+      var isPublicServer = self.hostname === DEFAULT_HOSTNAME
+      var size = 0
+      
+      if (isPublicServer && allFiles.length > MAX_PUBLIC_NUMBER)  {
+        return alert('More than 500 files. Please use a private server.')
+      }
+      
       // Get a list of all non-directory files, sorted by ascending path length
       var allFiles = FileSystem.getAllFiles().sort(function (a,b) {
         return a.path.length - b.path.length
@@ -8144,6 +8157,11 @@ Multihack.prototype._initRemote = function () {
       })
       
       for (var i=0; i<allFiles.length; i++) {
+        size = size + allFiles[i].content.length
+        if (size > MAX_PUBLIC_SIZE) {
+          return alert('Project over 20mb. Please use a private server.')
+        }
+        
         self._remote.provideFile(allFiles[i].path, allFiles[i].content, data.requester, i, allFiles.length-1)
       }
     })
@@ -8396,14 +8414,14 @@ dict['file'] =
     '<h1>{{title}}</h1><br>'+
     '<p>{{{message}}}</p>'+
     '<input class="go-button modal-input" type="file">'+
-    '<button class="no-button">Cancel</button>'
+    '<button class="no-button">Skip</button>'
 
 dict['input'] = 
     '<h1>{{title}}</h1>'+
     '<p>{{{message}}}</p>'+
     '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text">'+
     '<button class="go-button">Join</button>'+
-    '<button class="no-button">Cancel</button>'
+    '<button class="no-button">Skip</button>'
 
 dict['alert'] = 
     '<h1>{{title}}</h1>'+
@@ -8445,6 +8463,7 @@ TreeView.prototype.render = function (nodeList, parentElement) {
   parentElement = parentElement || document.querySelector('#tree')
     
   for (var i = 0; i < nodeList.length; i++) { 
+    if (nodeList[i].path === '') continue
     self.add(parentElement, nodeList[i])
   }
 }
@@ -8532,6 +8551,7 @@ TreeView.prototype.addDir = function (parentElement, file) {
 
   var input = document.createElement('input')
   input.id = file.path
+  input.checked = true
   input.type = 'checkbox'
 
   var ol = document.createElement('ol')
