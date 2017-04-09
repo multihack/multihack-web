@@ -58,7 +58,9 @@ FileSystem.prototype.mkdir = function (path) {
   parentPath = parentPath.join('/')
 
   self._buildPath(parentPath)
+  if (self._getNode(path, self._getNode(parentPath).nodes)) return false
   self._getNode(parentPath).nodes.push(new Directory(path))
+  return true
 }
 
 // Makes an empty file (must set doc), building paths
@@ -69,7 +71,9 @@ FileSystem.prototype.mkfile = function (path) {
   parentPath = parentPath.join('/')
 
   self._buildPath(parentPath)
+  if (self._getNode(path, self._getNode(parentPath).nodes)) return false
   self._getNode(parentPath).nodes.push(new File(path))
+  return true
 }
 
 // Ensures all directories have been built along a path
@@ -88,6 +92,7 @@ FileSystem.prototype._buildPath = function (path) {
 // Recursive node search
 FileSystem.prototype._getNode = function (path, nodeList) {
   var self = this
+  
   nodeList = nodeList || self._tree
   for (var i = 0; i < nodeList.length; i++) {
     if (nodeList[i].path === path) {
@@ -121,22 +126,6 @@ FileSystem.prototype.get = function (path) {
 
   self._buildPath(parentPath)
   return self._getNode(path)
-}
-
-// Gets an existing file, or creates one if none exists
-FileSystem.prototype.getFile = function (path) {
-  var self = this
-
-  var parentPath = path.split('/')
-  parentPath.splice(-1, 1)
-  parentPath = parentPath.join('/')
-
-  self._buildPath(parentPath)
-  return self._getNode(path) || (function () {
-    self.mkfile(path)
-    self._getNode(path).doc = new CodeMirror.Doc('', util.pathToMode(path))
-    return self._getNode(path)
-  }())
 }
 
 // Deletes a file/directory on a path

@@ -7767,9 +7767,12 @@ function File (path) {
 
   self.name = util.getFilename(path)
   self.path = path
-  self.doc = null
   self.isDir = false
   self.viewMapping = util.getViewMapping(path)
+  
+  self.doc = util.getViewMapping(path) === 'text' ? new CodeMirror.Doc('', util.pathToMode(path)) : ''
+  console.log(self.doc)
+  
   // HACK: To get working with HyperHost
   Object.defineProperty(self, 'content', {
     get: self.getRawContent.bind(self)
@@ -7849,7 +7852,9 @@ FileSystem.prototype.mkdir = function (path) {
   parentPath = parentPath.join('/')
 
   self._buildPath(parentPath)
+  if (self._getNode(path, self._getNode(parentPath).nodes)) return false
   self._getNode(parentPath).nodes.push(new Directory(path))
+  return true
 }
 
 // Makes an empty file (must set doc), building paths
@@ -7860,7 +7865,9 @@ FileSystem.prototype.mkfile = function (path) {
   parentPath = parentPath.join('/')
 
   self._buildPath(parentPath)
+  if (self._getNode(path, self._getNode(parentPath).nodes)) return false
   self._getNode(parentPath).nodes.push(new File(path))
+  return true
 }
 
 // Ensures all directories have been built along a path
@@ -7879,6 +7886,7 @@ FileSystem.prototype._buildPath = function (path) {
 // Recursive node search
 FileSystem.prototype._getNode = function (path, nodeList) {
   var self = this
+  
   nodeList = nodeList || self._tree
   for (var i = 0; i < nodeList.length; i++) {
     if (nodeList[i].path === path) {
@@ -7912,22 +7920,6 @@ FileSystem.prototype.get = function (path) {
 
   self._buildPath(parentPath)
   return self._getNode(path)
-}
-
-// Gets an existing file, or creates one if none exists
-FileSystem.prototype.getFile = function (path) {
-  var self = this
-
-  var parentPath = path.split('/')
-  parentPath.splice(-1, 1)
-  parentPath = parentPath.join('/')
-
-  self._buildPath(parentPath)
-  return self._getNode(path) || (function () {
-    self.mkfile(path)
-    self._getNode(path).doc = new CodeMirror.Doc('', util.pathToMode(path))
-    return self._getNode(path)
-  }())
 }
 
 // Deletes a file/directory on a path
@@ -7975,12 +7967,6 @@ FileSystem.prototype.getAllFiles = function () {
 FileSystem.prototype.unzip = function (file, cb) {
   var self = this
   
-  var zipName = file.name.split('.')
-  if (zipName.length > 1) {
-    zipName.splice(-1)
-  }
-  zipName = zipName.join('')
-
   JSZip.loadAsync(file).then(function (zip) {
     var awaiting = Object.keys(zip.files).length
     zip.forEach(function (relativePath, zipEntry) {    
@@ -8123,14 +8109,20 @@ function Multihack (config) {
   })
 
   Interface.on('addFile', function (e) {
-    FileSystem.getFile(e.path)
-    Interface.treeview.addFile(e.parentElement, FileSystem.get(e.path))
-    Editor.open(e.path)
+    var created = FileSystem.mkfile(e.path)
+    
+    if (created) {
+      Interface.treeview.addFile(e.parentElement, FileSystem.get(e.path))
+      Editor.open(e.path)
+    }
   })
 
   Interface.on('addDir', function (e) {
-    FileSystem.mkdir(e.path)
-    Interface.treeview.addDir(e.parentElement, FileSystem.get(e.path))
+    var created = FileSystem.mkdir(e.path)
+    
+    if (created) {
+      Interface.treeview.addDir(e.parentElement, FileSystem.get(e.path))
+    }
   })
 
   Interface.on('removeFile', function (e) {
