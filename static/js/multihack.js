@@ -8213,32 +8213,19 @@ Multihack.prototype._initRemote = function () {
     self._remote.on('requestProject', function (data) {
       var isPublicServer = self.hostname === DEFAULT_HOSTNAME
       var size = 0
-<<<<<<< HEAD
-      
-=======
 
->>>>>>> master
       // Get a list of all non-directory files, sorted by ascending path length
       var allFiles = FileSystem.getAllFiles().sort(function (a, b) {
         return a.path.length - b.path.length
       }).filter(function (a) {
         return !a.isDir
       })
-<<<<<<< HEAD
-      
+
       if (isPublicServer && allFiles.length > MAX_PUBLIC_NUMBER)  {
         return alert('More than 500 files. Please use a private server.')
       }
-      
-      for (var i=0; i<allFiles.length; i++) {
-=======
-
-      if (isPublicServer && allFiles.length > MAX_PUBLIC_NUMBER) {
-        return window.alert('More than 500 files. Please use a private server.')
-      }
 
       for (var i = 0; i < allFiles.length; i++) {
->>>>>>> master
         size = size + allFiles[i].content.length
         if (size > MAX_PUBLIC_SIZE) {
           return window.alert('Project over 20mb. Please use a private server.')
