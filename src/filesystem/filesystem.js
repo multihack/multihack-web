@@ -183,17 +183,11 @@ FileSystem.prototype.getAllFiles = function () {
 // Loads a project from a zip file
 FileSystem.prototype.unzip = function (file, cb) {
   var self = this
-
+  
   JSZip.loadAsync(file).then(function (zip) {
     var awaiting = Object.keys(zip.files).length
-    var first = true
-
-    zip.forEach(function (relativePath, zipEntry) {
-      if (first) {
-        first = false
-        awaiting--
-        return
-      }
+    zip.forEach(function (relativePath, zipEntry) {    
+      if (relativePath[0] !== '/') relativePath = '/'+relativePath
 
       // Filter out ignored files
       for (var i = 0; i < ignoredFilenames.length; i++) {
