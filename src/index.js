@@ -69,9 +69,15 @@ function Multihack (config) {
   })
 
   Interface.on('deploy', function () {
-    HyperHostWrapper.deploy(FileSystem.getTree(), function (url) {
+    HyperHostWrapper.on('error', function (err) {
+      Interface.alert('Deploy Failed', err)
+    })
+    
+    HyperHostWrapper.on('ready', function (url) {
       Interface.alert('Website Deployed', 'Anyone can visit your site at<br><a target="_blank" href="' + url + '">' + url + '</a>')
     })
+    
+    HyperHostWrapper.deploy(FileSystem.getTree())
   })
 
   Interface.removeOverlay()
