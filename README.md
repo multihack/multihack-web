@@ -50,7 +50,7 @@ You can even run Node servers *in your browser*!
 
 When your internet connection drops, MultiHack lets you keep working without interruptions.  
 
-## Sharing Projects
+## Fetch Code
 
 Press the refresh icon next to "Project Files" to fetch your team's code.
 
