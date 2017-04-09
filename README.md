@@ -25,8 +25,8 @@ Code is synchronized in real time between everyone on your team.
 Join a secure group call in one click with WebRTC.
 
 ### Syntax Highlighting
-Syntax highlighting for all web languages is supported.  
-MultiHack is built with <a href="https://github.com/codemirror/CodeMirror">CodeMirror</a>, so adding new highlighting is a breeze!  
+Syntax highlighting for all web languages is supported. Adding new languages is as easy as adding a CSS file.    
+Autocompletion for Javscript and CSS!  
 
 ### Export Your Project
 Save your project as a ZIP archive and use it in your favourite native IDE.  
