@@ -113,16 +113,16 @@ Multihack.prototype._initRemote = function () {
       var isPublicServer = self.hostname === DEFAULT_HOSTNAME
       var size = 0
       
-      if (isPublicServer && allFiles.length > MAX_PUBLIC_NUMBER)  {
-        return alert('More than 500 files. Please use a private server.')
-      }
-      
       // Get a list of all non-directory files, sorted by ascending path length
       var allFiles = FileSystem.getAllFiles().sort(function (a,b) {
         return a.path.length - b.path.length
       }).filter(function (a) {
         return !a.isDir
       })
+      
+      if (isPublicServer && allFiles.length > MAX_PUBLIC_NUMBER)  {
+        return alert('More than 500 files. Please use a private server.')
+      }
       
       for (var i=0; i<allFiles.length; i++) {
         size = size + allFiles[i].content.length
