@@ -21,14 +21,20 @@ function Multihack (config) {
   })
 
   Interface.on('addFile', function (e) {
-    FileSystem.getFile(e.path)
-    Interface.treeview.addFile(e.parentElement, FileSystem.get(e.path))
-    Editor.open(e.path)
+    var created = FileSystem.mkfile(e.path)
+    
+    if (created) {
+      Interface.treeview.addFile(e.parentElement, FileSystem.get(e.path))
+      Editor.open(e.path)
+    }
   })
 
   Interface.on('addDir', function (e) {
-    FileSystem.mkdir(e.path)
-    Interface.treeview.addDir(e.parentElement, FileSystem.get(e.path))
+    var created = FileSystem.mkdir(e.path)
+    
+    if (created) {
+      Interface.treeview.addDir(e.parentElement, FileSystem.get(e.path))
+    }
   })
 
   Interface.on('removeFile', function (e) {

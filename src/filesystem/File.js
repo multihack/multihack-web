@@ -6,9 +6,12 @@ function File (path) {
 
   self.name = util.getFilename(path)
   self.path = path
-  self.doc = null
   self.isDir = false
   self.viewMapping = util.getViewMapping(path)
+  
+  self.doc = util.getViewMapping(path) === 'text' ? new CodeMirror.Doc('', util.pathToMode(path)) : ''
+  console.log(self.doc)
+  
   // HACK: To get working with HyperHost
   Object.defineProperty(self, 'content', {
     get: self.getRawContent.bind(self)
