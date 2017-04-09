@@ -50,7 +50,7 @@ function Multihack (config) {
   
   // Initialize project and room
   self.roomID = Math.random().toString(36).substr(2, 20)
-  self.hostname = config.hostname
+  self.hostname = config.hostname || DEFAULT_HOSTNAME
   
   Interface.on('saveAs', function (saveType) {
     FileSystem.saveProject(saveType, function (success) {
