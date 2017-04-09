@@ -1,5 +1,4 @@
 var util = require('./util')
-var mustache = require('mustache')
 
 function File (path) {
   var self = this
@@ -18,13 +17,12 @@ function File (path) {
 
 File.prototype.getRawContent = function () {
   var self = this
-  
+
   if (self.viewMapping === 'image') {
-    return atob(self.doc)
+    return window.atob(self.doc)
   } else {
     return self.doc.getValue()
   }
 }
 
-  
 module.exports = File

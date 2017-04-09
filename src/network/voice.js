@@ -5,7 +5,7 @@ var getusermedia = require('getusermedia')
 function VoiceCall (socket, room) {
   var self = this
   if (!(self instanceof VoiceCall)) return new VoiceCall()
-  
+
   if (!getBrowserRTC()) {
     // TODO: Remove mic button
     console.error('No WebRTC support.')
@@ -25,11 +25,11 @@ function VoiceCall (socket, room) {
     self.ready = true
     console.log(self.client.id)
     console.log(peerIDs)
-    
+
     if (self.stream) {
-      for (var i=0; i<peerIDs.length; i++) {
+      for (var i = 0; i < peerIDs.length; i++) {
         self.client.connect(peerIDs[0], {
-          stream: self.stream, 
+          stream: self.stream,
           answerConstraints: {
             offerToReceiveAudio: true,
             offerToReceiveVideo: false
@@ -46,7 +46,7 @@ function VoiceCall (socket, room) {
     console.log('request')
     if (!self.stream) return
     request.accept({
-      stream: self.stream, 
+      stream: self.stream,
       answerConstraints: {
         offerToReceiveAudio: true,
         offerToReceiveVideo: false
@@ -59,7 +59,7 @@ function VoiceCall (socket, room) {
   })
   self.client.on('peer', function (peer) {
     self.peers.push(peer)
-    
+
     peer.on('stream', function (stream) {
       console.log('stream')
       var audio = document.createElement('audio')
@@ -72,15 +72,15 @@ function VoiceCall (socket, room) {
 
 VoiceCall.prototype.leave = function () {
   var self = this
-  
+
   if (!self.ready || !self.stream) return
-  
+
   while (self.peers[0]) {
     self.peers[0].destroy()
     self.peers.shift()
   }
   var audioEls = document.querySelectorAll('audio')
-  for (var i=0; i<audioEls.length; i++) {
+  for (var i = 0; i < audioEls.length; i++) {
     document.body.removeChild(audioEls[i])
   }
   self.stream = null
@@ -89,13 +89,13 @@ VoiceCall.prototype.leave = function () {
 
 VoiceCall.prototype.join = function () {
   var self = this
-  
+
   if (!self.ready || self.stream) return
-  
+
   getusermedia(function (err, stream) {
     if (err) return console.log(err)
     self.stream = stream
-    
+
     self.client.rediscover({
       room: self.room
     })
@@ -106,12 +106,12 @@ VoiceCall.prototype.join = function () {
 VoiceCall.prototype.toggle = function () {
   var self = this
   console.log('toggle')
-  
+
   if (!self.stream) {
     self.join()
   } else {
     self.leave()
   }
 }
-  
+
 module.exports = VoiceCall

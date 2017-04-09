@@ -5,8 +5,10 @@
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <title>MultiHack - Realtime IDE</title>
     <link href="https://fonts.googleapis.com/css?family=Anonymous+Pro" rel="stylesheet">
+    <!-- CodeMirro -->
     <link rel="stylesheet" href="static/css/codemirror.css">
     <link rel="stylesheet" href="static/css/codemirror-themes/material.css">
+    <link rel="stylesheet" href="static/css/show-hint.css">
     <!-- MultiHack -->
     <link rel="stylesheet" href="static/css/codemirror-themes/atom.css">
     <!--atom-->
@@ -78,13 +80,26 @@
     <div id="modal" class="modal text-center theme-dark-border"></div>
     <div id="overlay" class="blocking-overlay overlay"></div>
 </body>
-<!-- CodeMirror -->
+  
+<!-- CodeMirror syntax -->
 <script src="static/js/vendor/codemirror.js"></script>
 <script src="static/js/vendor/syntaxmodes/javascript.js"></script>
 <script src="static/js/vendor/syntaxmodes/css.js"></script>
 <script src="static/js/vendor/syntaxmodes/xml.js"></script>
 <script src="static/js/vendor/syntaxmodes/htmlmixed.js"></script>
 <script src="static/js/vendor/syntaxmodes/php.js"></script>
+  
+<!-- CodeMirror addons -->
+<script src="static/js/vendor/addons/xml-fold.js"></script>
+<script src="static/js/vendor/addons/closebrackets.js"></script>
+<script src="static/js/vendor/addons/matchbrackets.js"></script>
+<script src="static/js/vendor/addons/closetag.js"></script>
+<script src="static/js/vendor/addons/matchtags.js"></script>
+<script src="static/js/vendor/addons/show-hint.js"></script>
+<script src="static/js/vendor/addons/javascript-hint.js"></script>
+<script src="static/js/vendor/addons/css-hint.js"></script>
+<script src="static/js/vendor/addons/html-hint.js"></script>
+  
 <!--For saving projects-->
 <script src="static/js/vendor/jszip.min.js"></script>
 <script src="static/js/vendor/jszip-utils.min.js"></script>
