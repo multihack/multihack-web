@@ -128,6 +128,22 @@ FileSystem.prototype.get = function (path) {
   return self._getNode(path)
 }
 
+// Gets an existing file, or creates one if none exists
+FileSystem.prototype.getFile = function (path) {
+  var self = this
+  
+  var parentPath = path.split('/')
+  parentPath.splice(-1,1)
+  parentPath = parentPath.join('/')
+  
+  self._buildPath(parentPath)
+  return self._getNode(path) || (function () {
+    self.mkfile(path)
+    self._getNode(path).doc = new CodeMirror.Doc('', util.pathToMode(path))
+    return self._getNode(path)
+  }())
+}
+
 // Deletes a file/directory on a path
 FileSystem.prototype.delete = function (path) {
   var self = this

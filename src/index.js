@@ -131,8 +131,8 @@ Multihack.prototype._initRemote = function () {
         return !a.isDir
       })
 
-      if (isPublicServer && allFiles.length > MAX_PUBLIC_NUMBER) {
-        return window.alert('More than 500 files. Please use a private server.')
+      if (isPublicServer && allFiles.length > MAX_PUBLIC_NUMBER)  {
+        return alert('More than 500 files. Please use a private server.')
       }
 
       for (var i = 0; i < allFiles.length; i++) {
