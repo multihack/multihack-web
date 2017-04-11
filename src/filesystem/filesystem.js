@@ -139,7 +139,6 @@ FileSystem.prototype.getFile = function (path) {
   self._buildPath(parentPath)
   return self._getNode(path) || (function () {
     self.mkfile(path)
-    self._getNode(path).doc = new CodeMirror.Doc('', util.pathToMode(path))
     return self._getNode(path)
   }())
 }

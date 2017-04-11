@@ -30,11 +30,7 @@ function Editor () {
   self._cm = CodeMirror.fromTextArea(textArea, options)
 
   self._cm.on('keyup', function (editor, event) {
-    
-    console.log(event.keyCode, event.which)
-
     if (!ExcludedIntelliSenseTriggerKeys[(event.keyCode || event.which).toString()]) {
-      console.log('completed')
       CodeMirror.commands.autocomplete(editor, null, { completeSingle: false })
     }
   })
