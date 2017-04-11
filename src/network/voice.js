@@ -1,30 +1,18 @@
-var SimpleSignalClient = require('simple-signal-client')
-var getBrowserRTC = require('get-browser-rtc')
 var getusermedia = require('getusermedia')
 
-function VoiceCall (socket, room) {
+function VoiceCall (socket, client, room) {
   var self = this
   if (!(self instanceof VoiceCall)) return new VoiceCall()
-
-  if (!getBrowserRTC()) {
-    // TODO: Remove mic button
-    console.error('No WebRTC support.')
-    return
-  }
-  console.log('constructor')
 
   self.room = room
   self.ready = false
   self.stream = null
   self.peers = []
   self.socket = socket
-  self.client = new SimpleSignalClient(socket, {
-    room: self.room
-  })
-  self.client.on('ready', function (peerIDs) {
-    self.ready = true
-    console.log(self.client.id)
-    console.log(peerIDs)
+  self.client = client
+  
+  socket.on('voice-discover', function (peerIDs) {    
+    console.log('voice peers', peerIDs)
 
     if (self.stream) {
       for (var i = 0; i < peerIDs.length; i++) {
@@ -32,48 +20,73 @@ function VoiceCall (socket, room) {
           stream: self.stream,
           answerConstraints: {
             offerToReceiveAudio: true,
-            offerToReceiveVideo: false
+            offerToReceiveVideo: true
           },
           offerConstraints: {
             offerToReceiveAudio: true,
-            offerToReceiveVideo: false
+            offerToReceiveVideo: true
           }
+        }, {
+          voice: true
         })
       }
     }
   })
+  
   self.client.on('request', function (request) {
-    console.log('request')
+    if (!request.metadata.voice) return
     if (!self.stream) return
+    
     request.accept({
       stream: self.stream,
       answerConstraints: {
         offerToReceiveAudio: true,
-        offerToReceiveVideo: false
+        offerToReceiveVideo: true
       },
       offerConstraints: {
         offerToReceiveAudio: true,
-        offerToReceiveVideo: false
+        offerToReceiveVideo: true
       }
+    }, {
+      voice: true
     })
   })
+  
   self.client.on('peer', function (peer) {
+    if (!peer.metadata.voice) return
     self.peers.push(peer)
 
+    var audio = document.createElement('audio')
     peer.on('stream', function (stream) {
       console.log('stream')
-      var audio = document.createElement('audio')
       audio.setAttribute('autoplay', true)
       audio.setAttribute('src', window.URL.createObjectURL(stream))
       document.body.appendChild(audio)
     })
+    
+    peer.on('close', function () {
+       document.body.removeChild(audio)
+       self._removePeer(peer)
+    })
   })
+}
+
+VoiceCall.prototype._removePeer = function (peer) {
+  var self = this
+  
+  for (var i=0; i<self.peers.length; i++) {
+    if (self.peers[i].id === peer.id) {
+      self.peers.splice(i, 1)
+      return
+    }
+  }
 }
 
 VoiceCall.prototype.leave = function () {
   var self = this
-
   if (!self.ready || !self.stream) return
+  
+  console.log('voice leave')
 
   while (self.peers[0]) {
     self.peers[0].destroy()
@@ -89,23 +102,19 @@ VoiceCall.prototype.leave = function () {
 
 VoiceCall.prototype.join = function () {
   var self = this
-
   if (!self.ready || self.stream) return
+  
+  console.log('voice join')
 
   getusermedia(function (err, stream) {
     if (err) return console.log(err)
     self.stream = stream
-
-    self.client.rediscover({
-      room: self.room
-    })
     self.socket.emit('voice-join')
   })
 }
 
 VoiceCall.prototype.toggle = function () {
   var self = this
-  console.log('toggle')
 
   if (!self.stream) {
     self.join()
