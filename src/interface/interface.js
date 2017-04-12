@@ -2,6 +2,7 @@ var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 var Modal = require('./modal')
 var TreeView = require('./treeview')
+var PeerGraph = require('p2p-graph')
 
 inherits(Interface, EventEmitter)
 
@@ -65,6 +66,11 @@ function Interface () {
   document.getElementById('deploy').addEventListener('click', function () {
     self.emit('deploy')
   })
+  
+  // Network button
+  document.getElementById('network').addEventListener('click', function () {
+    self.emit('showNetwork')
+  })
 
   // Setup delete button
   document.getElementById('delete').addEventListener('click', function () {
@@ -122,7 +128,6 @@ Interface.prototype.getRoom = function (roomID, cb) {
   var self = this
 
   var roomModal = new Modal('input', {
-    roomID: roomID,
     title: 'Join Room',
     message: 'Enter the ID of the room you want to join.',
     placeholder: 'RoomID',
@@ -130,13 +135,32 @@ Interface.prototype.getRoom = function (roomID, cb) {
   })
   roomModal.on('done', function (e) {
     roomModal.close()
-    if (cb) cb(e.inputs[0].value)
+    self.getNickname(e.inputs[0].value, cb)
   })
   roomModal.on('cancel', function () {
     roomModal.close()
     self.alert('Offline Mode', 'You are now in offline mode.<br>Save and refresh to join a room.')
   })
   roomModal.open()
+}
+
+Interface.prototype.getNickname = function (room, cb) {
+  var self = this
+
+  var modal = new Modal('force-input', {
+    title: 'Choose Nickname',
+    message: 'Enter any nickname so that your team can identify you.',
+    placeholder: 'Nickname',
+    default: ''
+  })
+  modal.on('done', function (e) {
+    modal.close()
+    if (cb) cb({
+      room: room,
+      nickname: e.inputs[0].value
+    })
+  })
+  modal.open()
 }
 
 Interface.prototype.alert = function (title, message, cb) {
@@ -149,6 +173,43 @@ Interface.prototype.alert = function (title, message, cb) {
     if (cb) cb()
   })
   alertModal.open()
+}
+
+Interface.prototype.showNetwork = function (peers, room) {
+
+  var modal = new Modal('network', {
+    peers: peers,
+    room: room
+  })
+  
+  modal.on('cancel', function () {
+    modal.close()
+  })
+  
+  modal.open()
+  
+  var el = document.querySelector('#network-graph')
+  el.style.overflow = 'hidden'
+  var graph = new PeerGraph(el)
+  
+  graph.add({
+    id: 'Me',
+    me: true,
+    name: 'You'
+  })
+  
+  for (var i=0; i<peers.length;i++){
+    graph.add({
+      id: peers[i].id,
+      me:false,
+      name: peers[i].metadata.nickname
+    })
+    graph.connect('Me', peers[i].id)
+  }
+  
+  modal.on('done', function (e) {
+    graph.destroy()
+  })
 }
 
 Interface.prototype.removeOverlay = function (msg, cb) {

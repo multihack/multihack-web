@@ -34,8 +34,6 @@ FileSystem.prototype.saveProject = function (saveType, cb) {
   // TODO: More save types
   if (saveType === 'zip') {
     try {
-      if (new Blob()) cb(false)
-
       var zip = new JSZip()
       util.zipTree(zip, self._tree[0].nodes)
 

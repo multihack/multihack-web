@@ -1,6 +1,6 @@
 {
   "name": "multihack-web",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "A web-based editor with realtime collaboration and voice calls.",
   "main": "src/index.js",
   "directories": {
@@ -18,14 +18,14 @@
     "tape": "^4.6.3"
   },
   "dependencies": {
-    "event-stream": "^3.3.4",
     "events": "^1.1.1",
     "get-browser-rtc": "^1.0.2",
     "getusermedia": "^2.0.1",
     "inherits": "^2.0.3",
     "multihack-wire": "^1.0.0",
+    "mustache": "^2.3.0",
+    "p2p-graph": "^1.1.1",
     "readable-stream": "^2.2.9",
-    "schemapack": "^1.4.2",
     "simple-signal-client": "^1.2.3",
     "stream-buffers": "^3.0.1"
   }

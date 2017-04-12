@@ -13,6 +13,12 @@ dict['input'] =
     '<button class="go-button">Join</button>' +
     '<button class="no-button">Skip</button>'
 
+dict['force-input'] =
+    '<h1>{{title}}</h1>' +
+    '<p>{{{message}}}</p>' +
+    '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text">' +
+    '<button class="go-button">Join</button>'
+
 dict['alert'] =
     '<h1>{{title}}</h1>' +
     '<p>{{{message}}}</p>' +
@@ -24,5 +30,10 @@ dict['newFile'] =
     '<button class="go-button" data-type="file">File</button>' +
     '<button class="go-button" data-type="dir">Folder</button>' +
     '<button class="no-button">Cancel</button>'
+
+dict['network'] = 
+    '<h1>Room <b>{{room}}</b></h1>' +
+    '<div id="network-graph"></div>'+
+    '<button class="no-button">Close</button>'
 
 module.exports = dict

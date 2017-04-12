@@ -51,7 +51,7 @@ function Multihack (config) {
   })
 
   // Initialize project and room
-  self.roomID = Math.random().toString(36).substr(2, 20)
+  self.roomID = Math.random().toString(36).substr(2)
   self.hostname = config.hostname
 
   Interface.on('saveAs', function (saveType) {
@@ -93,15 +93,22 @@ function Multihack (config) {
 Multihack.prototype._initRemote = function () {
   var self = this
 
-  Interface.getRoom(self.roomID, function (roomID) {
-    self.roomID = roomID
-    self._remote = new Remote(self.hostname, roomID)
+  Interface.getRoom(self.roomID, function (data) {
+    self.roomID = data.room
+    self.nickname = data.nickname
+    self._remote = new Remote(self.hostname, self.roomID, self.nickname)
+    
+    document.getElementById('voice').style.display = ''
+    document.getElementById('network').style.display = ''
 
     Interface.on('voiceToggle', function () {
       self._remote.voice.toggle()
     })
     Interface.on('resync', function () {
       self._remote.requestProject()
+    })
+    Interface.on('showNetwork', function () {
+      Interface.showNetwork(self._remote.peers, self.roomID)
     })
 
     self._remote.on('change', function (data) {
@@ -132,7 +139,10 @@ Multihack.prototype._initRemote = function () {
       FileSystem.getFile(data.filePath).write(data.content)
       Interface.treeview.rerender(FileSystem.getTree())
     })
-
+    self._remote.on('lostPeer', function (peer) {
+      Interface.alert('Connection Lost', 'Your connection to "'+peer.metadata.nickname+'" has been lost.')
+    })
+    
     Editor.on('change', function (data) {
       self._remote.change(data.filePath, data.change)
     })

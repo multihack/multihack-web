@@ -8,10 +8,11 @@ var getBrowserRTC = require('get-browser-rtc')
 var Throttle = require('stream-throttle').Throttle
 var Wire = require('multihack-wire')
 
-function RemoteManager (hostname, room) {
+function RemoteManager (hostname, room, nickname) {
   var self = this
 
   self.room = room
+  self.nickname = nickname
   
   if (!getBrowserRTC()) {
     window.alert('Your browser is ancient or a plugin is blocking WebRTC!')
@@ -35,18 +36,23 @@ function RemoteManager (hostname, room) {
     self.voice.ready = true
     for (var i=0; i<peerIDs.length; i++) {
       if (peerIDs[i] === self._client.id) continue
-      self._client.connect(peerIDs[i], {}, {})
+      self._client.connect(peerIDs[i], {}, {
+        nickname: nickname
+      })
     }
   })
   
   self._client.on('request', function (request) {
     if (request.metadata.voice) return
-    request.accept({}, {})
+    request.accept({}, {
+      nickname: nickname
+    })
   })
   
   self._client.on('peer', function (peer) {
     console.log('got peer')
     if (peer.metadata.voice) return
+    peer.metadata.nickname = peer.metadata.nickname || 'Guest'
     
     // throttle outgoing
     var throttle = new Throttle({rate:300*1000, chunksize: 15*1000})
@@ -93,9 +99,12 @@ RemoteManager.prototype._removePeer = function (peer) {
   for (var i=0; i<self.peers.length; i++) {
     if (self.peers[i].id === peer.id) {
       self.peers.splice(i, 1)
-      return
+      break
     }
   }
+  peer.destroy()
+  
+  self._emit('lostPeer', peer)
 }
 
 RemoteManager.prototype.deleteFile = function (filePath) {
@@ -145,6 +154,8 @@ RemoteManager.prototype.destroy = function () {
   
   for (var i=0; i<self.peers.length; i++) {
     self.peers[i].destroy()
+    self.peers[i].metadata = null
+    self.peers[i].wire = null
   }
 
   self._handlers = null

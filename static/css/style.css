@@ -277,6 +277,16 @@ img ,
     overflow-y: auto;
 }
 
+#network-graph {
+  max-height: 300px;
+  overflow: hidden;
+}
+
+#network-graph .text {
+  fill: white !important;
+  transform: translateX(-15px)
+}
+
 .blocking-overlay {
     background: black;
     background: rgba(0, 0, 0, 0.5);
