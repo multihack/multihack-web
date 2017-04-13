@@ -78,7 +78,7 @@ function Multihack (config) {
     })
     
     HyperHostWrapper.on('ready', function (url) {
-      Interface.alert('Website Deployed', 'Anyone can visit your site at<br><a target="_blank" href="' + url + '">' + url + '</a>')
+      Interface.alertHTML('Website Deployed', 'Anyone can visit your site at<br><a target="_blank" href="' + url + '">' + url + '</a>')
     })
     
     HyperHostWrapper.deploy(FileSystem.getTree())

@@ -6305,8 +6305,8 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
-},{"../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":365}],298:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js")})
+},{"../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js":365}],298:[function(require,module,exports){
 /**
  * cuid.js
  * Collision-resistant UID generator for browsers and node.
@@ -25811,7 +25811,7 @@ function Multihack (config) {
     })
     
     HyperHostWrapper.on('ready', function (url) {
-      Interface.alert('Website Deployed', 'Anyone can visit your site at<br><a target="_blank" href="' + url + '">' + url + '</a>')
+      Interface.alertHTML('Website Deployed', 'Anyone can visit your site at<br><a target="_blank" href="' + url + '">' + url + '</a>')
     })
     
     HyperHostWrapper.deploy(FileSystem.getTree())
@@ -25861,7 +25861,6 @@ Multihack.prototype._initRemote = function () {
       }
     })
     self._remote.on('deleteFile', function (data) {
-      Interface.confirmDelete()
       var parentElement = Interface.treeview.getParentElement(data.filePath)
       Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
       FileSystem.delete(data.filePath)
