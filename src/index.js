@@ -59,6 +59,7 @@ function Multihack (config) {
     })
   })
 
+  self.embed = util.getParameterByName('embed') || null
   self.roomID = util.getParameterByName('room') || null
   self.hostname = config.hostname
 
@@ -85,17 +86,24 @@ function Multihack (config) {
   })
 
   Interface.removeOverlay()
-  Interface.getProject(function (project) {
-    if (!project) {
-      self._initRemote()
-    } else {
-      Interface.showOverlay()
-      FileSystem.loadProject(project, function (tree) {
-        Interface.treeview.render(tree)
+  if (self.embed) {
+    self._initRemote()
+    self._remote.on('gotPeer', function () {
+      self._remote.requestProject()
+    })
+  } else {
+    Interface.getProject(function (project) {
+      if (!project) {
         self._initRemote()
-      })
-    }
-  })
+      } else {
+        Interface.showOverlay()
+        FileSystem.loadProject(project, function (tree) {
+          Interface.treeview.render(tree)
+          self._initRemote()
+        })
+      }
+    })
+  }
 }
 
 Multihack.prototype._initRemote = function () {
@@ -103,7 +111,7 @@ Multihack.prototype._initRemote = function () {
   
   function onRoom(data) {
     self.roomID = data.room
-    window.history.pushState('Multihack', 'Multihack Room '+self.roomID, '?room='+self.roomID);
+    window.history.pushState('Multihack', 'Multihack Room '+self.roomID, '?room='+self.roomID + '&embed='+self.embed);
     self.nickname = data.nickname
     self._remote = new Remote(self.hostname, self.roomID, self.nickname)
     
@@ -155,6 +163,9 @@ Multihack.prototype._initRemote = function () {
     self._remote.on('provideFile', function (data) {
       FileSystem.getFile(data.filePath).write(data.content)
       Interface.treeview.rerender(FileSystem.getTree())
+      if (!Editor.getWorkingFile()) {
+        Editor.open(data.filePath)
+      }
     })
     self._remote.on('lostPeer', function (peer) {
       Interface.alert('Connection Lost', 'Your connection to "'+peer.metadata.nickname+'" has been lost.')
@@ -166,10 +177,16 @@ Multihack.prototype._initRemote = function () {
   }
 
   // Random starting room (to be changed) or from query
-  if (!self.roomID) {
+  if (!self.roomID && !self.embed) {
     Interface.getRoom(Math.random().toString(36).substr(2), onRoom)
-  } else {
+  } else if (!self.embed) {
     Interface.getNickname(self.roomID, onRoom)
+  } else {
+    Interface.embedMode()
+    onRoom({
+      room: self.roomID || Math.random().toString(36).substr(2),
+      nickname: 'Guest'
+    })
   }
 }
 

@@ -40,6 +40,10 @@ body {
     padding-right: 10px;
 }
 
+.embed .nav {
+  display: none;
+}
+
 .nav .logo {
     color: white;
     font-family: SourceCodeLight;
@@ -102,6 +106,10 @@ img ,
     overflow: auto;
 }
 
+.embed .sidebar {
+  top: 0px;
+}
+
 .sidebar.collapsed {
   width: 24px;
   overflow-x: hidden;
@@ -120,6 +128,10 @@ img ,
     left: 0;
     text-align: center;
     padding: 5px;
+}
+
+.embed .panel-topbar {
+  top: 2px;
 }
 
 #root-plus {
@@ -160,6 +172,10 @@ img ,
     left: 150px;
     right: 0;
     bottom: 0px;
+}
+
+.embed .workspace {
+    top: 0px;
 }
 
 .minus {

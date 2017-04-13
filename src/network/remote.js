@@ -39,6 +39,7 @@ function RemoteManager (hostname, room, nickname) {
       nop2p: data.nop2p
     })
     if (data.nop2p) self.mustForward++
+    self._emit('gotPeer', data)
   })
   
   self._socket.on('peer-leave', function (data) {
@@ -113,6 +114,10 @@ RemoteManager.prototype._initP2P = function (room, nickname) {
     peer.wire.on('deleteFile', self._emit.bind(self, 'deleteFile'))
     peer.wire.on('requestProject', function () {
       self._emit('requestProject', peer.id)
+    })
+    
+    peer.on('connect', function () {
+      self._emit('gotPeer', peer)   
     })
     
     peer.on('close', function () {

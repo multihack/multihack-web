@@ -34,10 +34,10 @@ function Interface () {
 
   // Setup sidebar
   var sidebar = document.getElementById('sidebar')
-  var collapsed = false
+  self.collapsed = false
   document.getElementById('collapsesidebar').addEventListener('click', function () {
-    collapsed = !collapsed
-    if (collapsed) {
+    self.collapsed = !self.collapsed
+    if (self.collapsed) {
       sidebar.className = sidebar.className + ' collapsed'
     } else {
       sidebar.className = sidebar.className.replace('collapsed', '')
@@ -207,6 +207,14 @@ Interface.prototype.alertHTML = function (title, message, cb) {
   alertModal.open()
 }
 
+Interface.prototype.embedMode = function () {
+  var self = this
+  
+  self.collapsed = true
+  document.querySelector('body').className+=' embed'
+  document.querySelector('#sidebar').className = 'sidebar theme-light collapsed'
+}
+
 Interface.prototype.showNetwork = function (peers, room, nop2p, mustForward) {
 
   var modal = new Modal('network', {
@@ -260,6 +268,7 @@ Interface.prototype.showNetwork = function (peers, room, nop2p, mustForward) {
 
 Interface.prototype.removeOverlay = function (msg, cb) {
   document.getElementById('overlay').style.display = 'none'
+  document.getElementById('modal').style.display = 'none'
 }
 
 Interface.prototype.showOverlay = function (msg, cb) {
