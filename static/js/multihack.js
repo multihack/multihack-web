@@ -25718,6 +25718,16 @@ util.zipTree = function (zip, nodeList) {
   }
 }
 
+util.getParameterByName = function (name) {
+    var url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
 module.exports = util
 
 },{}],349:[function(require,module,exports){
@@ -25726,6 +25736,7 @@ var Interface = require('./interface/interface')
 var Editor = require('./editor/editor')
 var Remote = require('./network/remote')
 var HyperHostWrapper = require('./network/hyperhostwrapper')
+var util = require('./filesystem/util')
 
 var DEFAULT_HOSTNAME = 'https://quiet-shelf-57463.herokuapp.com'
 var MAX_FORWARDING_SIZE = 5*1000*1000 // 5mb limit for non-p2p connections (validated by server)
@@ -25758,24 +25769,30 @@ function Multihack (config) {
   })
 
   Interface.on('removeFile', function (e) {
-    Interface.treeview.remove(e.parentElement, FileSystem.get(e.path))
-    FileSystem.delete(e.path)
-    if (self._remote) {
-      self._remote.deleteFile(e.path)
-    }
+    var file = FileSystem.get(e.path)
+    Interface.confirmDelete(file.name, function () {
+      Interface.treeview.remove(e.parentElement, file)
+      FileSystem.delete(e.path)
+      if (self._remote) {
+        self._remote.deleteFile(e.path)
+      }
+    })
   })
 
   Interface.on('deleteCurrent', function (e) {
-    var workingPath = Editor.getWorkingFile().path
-    var parentElement = Interface.treeview.getParentElement(workingPath)
-    Interface.treeview.remove(parentElement, FileSystem.get(workingPath))
-    FileSystem.delete(workingPath)
-    Editor.close()
-    self._remote.deleteFile(workingPath)
+    var workingFile = Editor.getWorkingFile()
+    
+    Interface.confirmDelete(workingFile.name, function () {
+      var workingPath = workingFile.path
+      var parentElement = Interface.treeview.getParentElement(workingPath)
+      Interface.treeview.remove(parentElement, FileSystem.get(workingPath))
+      FileSystem.delete(workingPath)
+      Editor.close()
+      self._remote.deleteFile(workingPath)
+    })
   })
 
-  // Initialize project and room
-  self.roomID = Math.random().toString(36).substr(2)
+  self.roomID = util.getParameterByName('room') || null
   self.hostname = config.hostname
 
   Interface.on('saveAs', function (saveType) {
@@ -25816,9 +25833,10 @@ function Multihack (config) {
 
 Multihack.prototype._initRemote = function () {
   var self = this
-
-  Interface.getRoom(self.roomID, function (data) {
+  
+  function onRoom(data) {
     self.roomID = data.room
+    window.history.pushState('Multihack', 'Multihack Room '+self.roomID, '?room='+self.roomID);
     self.nickname = data.nickname
     self._remote = new Remote(self.hostname, self.roomID, self.nickname)
     
@@ -25843,6 +25861,7 @@ Multihack.prototype._initRemote = function () {
       }
     })
     self._remote.on('deleteFile', function (data) {
+      Interface.confirmDelete()
       var parentElement = Interface.treeview.getParentElement(data.filePath)
       Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
       FileSystem.delete(data.filePath)
@@ -25878,12 +25897,19 @@ Multihack.prototype._initRemote = function () {
     Editor.on('change', function (data) {
       self._remote.changeFile(data.filePath, data.change)
     })
-  })
+  }
+
+  // Random starting room (to be changed) or from query
+  if (!self.roomID) {
+    Interface.getRoom(Math.random().toString(36).substr(2), onRoom)
+  } else {
+    Interface.getNickname(self.roomID, onRoom)
+  }
 }
 
 module.exports = Multihack
 
-},{"./editor/editor":344,"./filesystem/filesystem":347,"./interface/interface":350,"./network/hyperhostwrapper":354,"./network/remote":355}],350:[function(require,module,exports){
+},{"./editor/editor":344,"./filesystem/filesystem":347,"./filesystem/util":348,"./interface/interface":350,"./network/hyperhostwrapper":354,"./network/remote":355}],350:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 var Modal = require('./modal')
@@ -25992,6 +26018,21 @@ Interface.prototype.newFileDialog = function (path, cb) {
   modal.open()
 }
 
+Interface.prototype.confirmDelete = function(fileName, cb) {
+  var modal = new Modal('confirm-delete', {
+    fileName: fileName
+  })
+
+  modal.on('done', function (e) {
+    modal.close()
+    if (cb) cb(true)
+  })
+  modal.on('cancel', function () {
+    modal.close()
+  })
+  modal.open()
+}
+
 Interface.prototype.getProject = function (cb) {
   // var self = this
 
@@ -26030,7 +26071,7 @@ Interface.prototype.getRoom = function (roomID, cb) {
   })
   roomModal.on('cancel', function () {
     roomModal.close()
-    self.alert('Offline Mode', 'You are now in offline mode.<br>Save and refresh to join a room.')
+    self.alertHTML('Offline Mode', 'You are now in offline mode.<br>Save and refresh to join a room.')
   })
   roomModal.open()
 }
@@ -26056,6 +26097,18 @@ Interface.prototype.getNickname = function (room, cb) {
 
 Interface.prototype.alert = function (title, message, cb) {
   var alertModal = new Modal('alert', {
+    title: title,
+    message: message
+  })
+  alertModal.on('done', function (e) {
+    alertModal.close()
+    if (cb) cb()
+  })
+  alertModal.open()
+}
+
+Interface.prototype.alertHTML = function (title, message, cb) {
+  var alertModal = new Modal('alert-html', {
     title: title,
     message: message
   })
@@ -26197,26 +26250,37 @@ module.exports = Modal
 var dict = {}
 
 dict['file'] =
-    '<h1>{{title}}</h1><br>' +
-    '<p>{{{message}}}</p>' +
+    '<h1>{{title}}</h1>' +
+    '<p>{{message}}</p>' +
     '<input style="display:none" type="file">' +
     '<button id="file-button" class="go-button">Upload</button>' +
     '<button class="no-button">Skip</button>'
 
 dict['input'] =
     '<h1>{{title}}</h1>' +
-    '<p>{{{message}}}</p>' +
-    '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text">' +
+    '<p>{{message}}</p>' +
+    '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text"><br>' +
     '<button class="go-button">Join</button>' +
     '<button class="no-button">Skip</button>'
 
+dict['confirm-delete'] =
+    '<h1>{{title}}</h1>' +
+    '<p>Are you sure you want to delete "{{fileName}}"?</p>' +
+    '<button class="go-button">Delete</button>' +
+    '<button class="no-button">Cancel</button>'
+
 dict['force-input'] =
     '<h1>{{title}}</h1>' +
-    '<p>{{{message}}}</p>' +
-    '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text">' +
+    '<p>{{message}}</p>' +
+    '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text"><br>' +
     '<button class="go-button">Join</button>'
 
 dict['alert'] =
+    '<h1>{{title}}</h1>' +
+    '<p>{{message}}</p>' +
+    '<button class="go-button">Continue</button>'
+
+dict['alert-html'] =
     '<h1>{{title}}</h1>' +
     '<p>{{{message}}}</p>' +
     '<button class="go-button">Continue</button>'
@@ -26234,7 +26298,6 @@ dict['network'] =
     '<button class="no-button">Close</button>'
 
 module.exports = dict
-
 },{}],353:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')

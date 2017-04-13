@@ -277,6 +277,10 @@ img ,
     overflow-y: auto;
 }
 
+.modal input[type="text"] {
+  margin-bottom: 10px;
+}
+
 #network-graph {
   max-height: 300px;
   overflow: hidden;

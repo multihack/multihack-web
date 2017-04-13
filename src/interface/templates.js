@@ -1,26 +1,37 @@
 var dict = {}
 
 dict['file'] =
-    '<h1>{{title}}</h1><br>' +
-    '<p>{{{message}}}</p>' +
+    '<h1>{{title}}</h1>' +
+    '<p>{{message}}</p>' +
     '<input style="display:none" type="file">' +
     '<button id="file-button" class="go-button">Upload</button>' +
     '<button class="no-button">Skip</button>'
 
 dict['input'] =
     '<h1>{{title}}</h1>' +
-    '<p>{{{message}}}</p>' +
-    '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text">' +
+    '<p>{{message}}</p>' +
+    '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text"><br>' +
     '<button class="go-button">Join</button>' +
     '<button class="no-button">Skip</button>'
 
+dict['confirm-delete'] =
+    '<h1>{{title}}</h1>' +
+    '<p>Are you sure you want to delete "{{fileName}}"?</p>' +
+    '<button class="go-button">Delete</button>' +
+    '<button class="no-button">Cancel</button>'
+
 dict['force-input'] =
     '<h1>{{title}}</h1>' +
-    '<p>{{{message}}}</p>' +
-    '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text">' +
+    '<p>{{message}}</p>' +
+    '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text"><br>' +
     '<button class="go-button">Join</button>'
 
 dict['alert'] =
+    '<h1>{{title}}</h1>' +
+    '<p>{{message}}</p>' +
+    '<button class="go-button">Continue</button>'
+
+dict['alert-html'] =
     '<h1>{{title}}</h1>' +
     '<p>{{{message}}}</p>' +
     '<button class="go-button">Continue</button>'

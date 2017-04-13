@@ -3,6 +3,7 @@ var Interface = require('./interface/interface')
 var Editor = require('./editor/editor')
 var Remote = require('./network/remote')
 var HyperHostWrapper = require('./network/hyperhostwrapper')
+var util = require('./filesystem/util')
 
 var DEFAULT_HOSTNAME = 'https://quiet-shelf-57463.herokuapp.com'
 var MAX_FORWARDING_SIZE = 5*1000*1000 // 5mb limit for non-p2p connections (validated by server)
@@ -35,24 +36,30 @@ function Multihack (config) {
   })
 
   Interface.on('removeFile', function (e) {
-    Interface.treeview.remove(e.parentElement, FileSystem.get(e.path))
-    FileSystem.delete(e.path)
-    if (self._remote) {
-      self._remote.deleteFile(e.path)
-    }
+    var file = FileSystem.get(e.path)
+    Interface.confirmDelete(file.name, function () {
+      Interface.treeview.remove(e.parentElement, file)
+      FileSystem.delete(e.path)
+      if (self._remote) {
+        self._remote.deleteFile(e.path)
+      }
+    })
   })
 
   Interface.on('deleteCurrent', function (e) {
-    var workingPath = Editor.getWorkingFile().path
-    var parentElement = Interface.treeview.getParentElement(workingPath)
-    Interface.treeview.remove(parentElement, FileSystem.get(workingPath))
-    FileSystem.delete(workingPath)
-    Editor.close()
-    self._remote.deleteFile(workingPath)
+    var workingFile = Editor.getWorkingFile()
+    
+    Interface.confirmDelete(workingFile.name, function () {
+      var workingPath = workingFile.path
+      var parentElement = Interface.treeview.getParentElement(workingPath)
+      Interface.treeview.remove(parentElement, FileSystem.get(workingPath))
+      FileSystem.delete(workingPath)
+      Editor.close()
+      self._remote.deleteFile(workingPath)
+    })
   })
 
-  // Initialize project and room
-  self.roomID = Math.random().toString(36).substr(2)
+  self.roomID = util.getParameterByName('room') || null
   self.hostname = config.hostname
 
   Interface.on('saveAs', function (saveType) {
@@ -93,9 +100,10 @@ function Multihack (config) {
 
 Multihack.prototype._initRemote = function () {
   var self = this
-
-  Interface.getRoom(self.roomID, function (data) {
+  
+  function onRoom(data) {
     self.roomID = data.room
+    window.history.pushState('Multihack', 'Multihack Room '+self.roomID, '?room='+self.roomID);
     self.nickname = data.nickname
     self._remote = new Remote(self.hostname, self.roomID, self.nickname)
     
@@ -120,6 +128,7 @@ Multihack.prototype._initRemote = function () {
       }
     })
     self._remote.on('deleteFile', function (data) {
+      Interface.confirmDelete()
       var parentElement = Interface.treeview.getParentElement(data.filePath)
       Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
       FileSystem.delete(data.filePath)
@@ -155,7 +164,14 @@ Multihack.prototype._initRemote = function () {
     Editor.on('change', function (data) {
       self._remote.changeFile(data.filePath, data.change)
     })
-  })
+  }
+
+  // Random starting room (to be changed) or from query
+  if (!self.roomID) {
+    Interface.getRoom(Math.random().toString(36).substr(2), onRoom)
+  } else {
+    Interface.getNickname(self.roomID, onRoom)
+  }
 }
 
 module.exports = Multihack

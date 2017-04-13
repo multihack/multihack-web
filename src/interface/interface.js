@@ -106,6 +106,21 @@ Interface.prototype.newFileDialog = function (path, cb) {
   modal.open()
 }
 
+Interface.prototype.confirmDelete = function(fileName, cb) {
+  var modal = new Modal('confirm-delete', {
+    fileName: fileName
+  })
+
+  modal.on('done', function (e) {
+    modal.close()
+    if (cb) cb(true)
+  })
+  modal.on('cancel', function () {
+    modal.close()
+  })
+  modal.open()
+}
+
 Interface.prototype.getProject = function (cb) {
   // var self = this
 
@@ -144,7 +159,7 @@ Interface.prototype.getRoom = function (roomID, cb) {
   })
   roomModal.on('cancel', function () {
     roomModal.close()
-    self.alert('Offline Mode', 'You are now in offline mode.<br>Save and refresh to join a room.')
+    self.alertHTML('Offline Mode', 'You are now in offline mode.<br>Save and refresh to join a room.')
   })
   roomModal.open()
 }
@@ -170,6 +185,18 @@ Interface.prototype.getNickname = function (room, cb) {
 
 Interface.prototype.alert = function (title, message, cb) {
   var alertModal = new Modal('alert', {
+    title: title,
+    message: message
+  })
+  alertModal.on('done', function (e) {
+    alertModal.close()
+    if (cb) cb()
+  })
+  alertModal.open()
+}
+
+Interface.prototype.alertHTML = function (title, message, cb) {
+  var alertModal = new Modal('alert-html', {
     title: title,
     message: message
   })
