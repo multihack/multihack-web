@@ -175,10 +175,9 @@ Interface.prototype.alert = function (title, message, cb) {
   alertModal.open()
 }
 
-Interface.prototype.showNetwork = function (peers, room) {
+Interface.prototype.showNetwork = function (peers, room, nop2p, mustForward) {
 
   var modal = new Modal('network', {
-    peers: peers,
     room: room
   })
   
@@ -197,16 +196,31 @@ Interface.prototype.showNetwork = function (peers, room) {
     me: true,
     name: 'You'
   })
-  
+
+  var proxyID = nop2p ? 'Server' : 'Me'
+
+  if (mustForward || nop2p) {
+    graph.add({
+      id: 'Server',
+      me: false,
+      name: 'Server'
+    })
+    graph.connect('Server', 'Me')
+  }
+
   for (var i=0; i<peers.length;i++){
     graph.add({
       id: peers[i].id,
-      me:false,
+      me: false,
       name: peers[i].metadata.nickname
     })
-    graph.connect('Me', peers[i].id)
+    if (peers[i].nop2p) {
+      graph.connect('Server', peers[i].id)
+    } else {
+      graph.connect(proxyID, peers[i].id)
+    }
   }
-  
+
   modal.on('done', function (e) {
     graph.destroy()
   })

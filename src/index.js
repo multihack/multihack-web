@@ -5,6 +5,7 @@ var Remote = require('./network/remote')
 var HyperHostWrapper = require('./network/hyperhostwrapper')
 
 var DEFAULT_HOSTNAME = 'https://quiet-shelf-57463.herokuapp.com'
+var MAX_FORWARDING_SIZE = 5*1000*1000 // 5mb limit for non-p2p connections (validated by server)
 
 function Multihack (config) {
   var self = this
@@ -108,10 +109,10 @@ Multihack.prototype._initRemote = function () {
       self._remote.requestProject()
     })
     Interface.on('showNetwork', function () {
-      Interface.showNetwork(self._remote.peers, self.roomID)
+      Interface.showNetwork(self._remote.peers, self.roomID, self._remote.nop2p, self._remote.mustForward)
     })
 
-    self._remote.on('change', function (data) {
+    self._remote.on('changeFile', function (data) {
       var outOfSync = !FileSystem.exists(data.filePath)
       Editor.change(data.filePath, data.change)
       if (outOfSync) {
@@ -131,6 +132,14 @@ Multihack.prototype._initRemote = function () {
         return !a.isDir
       })
       
+      var size = 0
+      for (var i = 0; i < allFiles.length; i++) {
+        size+=allFiles[i].content.length
+        if (size > MAX_FORWARDING_SIZE && remote.hostname === DEFAULT_HOSTNAME) {
+          return alert('Project too large! Use a P2P connection.')
+        }
+      }
+      
       for (var i = 0; i < allFiles.length; i++) {
         self._remote.provideFile(allFiles[i].path, allFiles[i].content, requester)
       }
@@ -144,7 +153,7 @@ Multihack.prototype._initRemote = function () {
     })
     
     Editor.on('change', function (data) {
-      self._remote.change(data.filePath, data.change)
+      self._remote.changeFile(data.filePath, data.change)
     })
   })
 }
