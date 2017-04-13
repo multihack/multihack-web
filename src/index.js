@@ -128,7 +128,6 @@ Multihack.prototype._initRemote = function () {
       }
     })
     self._remote.on('deleteFile', function (data) {
-      Interface.confirmDelete()
       var parentElement = Interface.treeview.getParentElement(data.filePath)
       Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
       FileSystem.delete(data.filePath)
