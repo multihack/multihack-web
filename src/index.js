@@ -168,6 +168,7 @@ Multihack.prototype._initRemote = function () {
       }
     })
     self._remote.on('lostPeer', function (peer) {
+      if (self.embed) return
       Interface.alert('Connection Lost', 'Your connection to "'+peer.metadata.nickname+'" has been lost.')
     })
     
