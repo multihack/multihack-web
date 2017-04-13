@@ -3,7 +3,8 @@ var dict = {}
 dict['file'] =
     '<h1>{{title}}</h1><br>' +
     '<p>{{{message}}}</p>' +
-    '<input class="go-button modal-input" type="file">' +
+    '<input style="display:none" type="file">' +
+    '<button id="file-button" class="go-button">Upload</button>' +
     '<button class="no-button">Skip</button>'
 
 dict['input'] =

@@ -113,15 +113,20 @@ Interface.prototype.getProject = function (cb) {
     title: 'Load Project',
     message: 'Upload a zip file containing a project.'
   })
-  projectModal.on('done', function (e) {
-    projectModal.close()
-    if (cb) cb(e.inputs[0].files[0])
-  })
   projectModal.on('cancel', function () {
     projectModal.close()
     if (cb) cb(null)
   })
   projectModal.open()
+  
+  var input = projectModal.el.querySelector('input[type="file"]')
+  projectModal.el.querySelector('#file-button').addEventListener('click', function () {
+    input.click()
+  })
+  input.addEventListener('change', function () {
+    projectModal.close()
+    cb(input.files[0])
+  })
 }
 
 Interface.prototype.getRoom = function (roomID, cb) {
