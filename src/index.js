@@ -111,7 +111,7 @@ Multihack.prototype._initRemote = function () {
   
   function onRoom(data) {
     self.roomID = data.room
-    window.history.pushState('Multihack', 'Multihack Room '+self.roomID, '?room='+self.roomID + '&embed='+self.embed);
+    window.history.pushState('Multihack', 'Multihack Room '+self.roomID, '?room='+self.roomID + (self.embed ? '&embed=true' : ''));
     self.nickname = data.nickname
     self._remote = new Remote(self.hostname, self.roomID, self.nickname)
     

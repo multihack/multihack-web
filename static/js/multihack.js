@@ -25230,7 +25230,6 @@ function Editor () {
   self._cm = CodeMirror.fromTextArea(textArea, options)
 
   self._cm.on('keyup', function (editor, event) {
-    console.log(editor.mode)
     if (!ExcludedIntelliSenseTriggerKeys[(event.keyCode || event.which).toString()]) {
       CodeMirror.commands.autocomplete(editor, null, { completeSingle: false })
     }
@@ -25845,7 +25844,7 @@ Multihack.prototype._initRemote = function () {
   
   function onRoom(data) {
     self.roomID = data.room
-    window.history.pushState('Multihack', 'Multihack Room '+self.roomID, '?room='+self.roomID + '&embed='+self.embed);
+    window.history.pushState('Multihack', 'Multihack Room '+self.roomID, '?room='+self.roomID + (self.embed ? '&embed=true' : ''));
     self.nickname = data.nickname
     self._remote = new Remote(self.hostname, self.roomID, self.nickname)
     
@@ -25865,34 +25864,6 @@ Multihack.prototype._initRemote = function () {
     self._remote.on('changeFile', function (data) {
       var outOfSync = !FileSystem.exists(data.filePath)
       
-      /*
-      function handleRemoteRename (data) {
-      FileSystem.resolve(data.filePath, function (err, file) {
-        file.read(function (err, contents) {
-          handleRemoteChange({
-            filePath: data.change.newPath,
-            change: {
-              from: {ch:0, line:0},
-              to: {ch:0, line:0},
-              text: contents,
-              origin: 'paste'
-            }
-          })
-          handleRemoteDeleteFile({
-            filePath: data.filePath
-          })
-        })
-      })
-    }
-
-    function handleRemoteChange (data) {
-      console.log(data.change)
-
-      if (data.change.type === 'rename') {
-        handleRemoteRename(data)
-        return
-      }
-      */
       if (data.change.type === 'rename') {
         var contents = FileSystem.getFile(data.filePath).content
         Editor.change(data.change.newPath, {
