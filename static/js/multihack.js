@@ -25230,6 +25230,7 @@ function Editor () {
   self._cm = CodeMirror.fromTextArea(textArea, options)
 
   self._cm.on('keyup', function (editor, event) {
+    console.log(editor.mode)
     if (!ExcludedIntelliSenseTriggerKeys[(event.keyCode || event.which).toString()]) {
       CodeMirror.commands.autocomplete(editor, null, { completeSingle: false })
     }
@@ -25863,7 +25864,51 @@ Multihack.prototype._initRemote = function () {
 
     self._remote.on('changeFile', function (data) {
       var outOfSync = !FileSystem.exists(data.filePath)
-      Editor.change(data.filePath, data.change)
+      
+      /*
+      function handleRemoteRename (data) {
+      FileSystem.resolve(data.filePath, function (err, file) {
+        file.read(function (err, contents) {
+          handleRemoteChange({
+            filePath: data.change.newPath,
+            change: {
+              from: {ch:0, line:0},
+              to: {ch:0, line:0},
+              text: contents,
+              origin: 'paste'
+            }
+          })
+          handleRemoteDeleteFile({
+            filePath: data.filePath
+          })
+        })
+      })
+    }
+
+    function handleRemoteChange (data) {
+      console.log(data.change)
+
+      if (data.change.type === 'rename') {
+        handleRemoteRename(data)
+        return
+      }
+      */
+      if (data.change.type === 'rename') {
+        var contents = FileSystem.getFile(data.filePath).content
+        Editor.change(data.change.newPath, {
+          from: {ch:0, line:0},
+          to: {ch:0, line:0},
+          text: contents,
+          origin: 'paste'
+        })
+        var parentElement = Interface.treeview.getParentElement(data.filePath)
+        Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
+        FileSystem.delete(data.filePath)
+        outOfSync = true
+      } else {
+        Editor.change(data.filePath, data.change)
+      }
+      
       if (outOfSync) {
         Interface.treeview.rerender(FileSystem.getTree())
       }
@@ -25901,6 +25946,7 @@ Multihack.prototype._initRemote = function () {
       }
     })
     self._remote.on('lostPeer', function (peer) {
+      if (self.embed) return
       Interface.alert('Connection Lost', 'Your connection to "'+peer.metadata.nickname+'" has been lost.')
     })
     

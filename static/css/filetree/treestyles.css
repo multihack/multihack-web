@@ -67,9 +67,8 @@ li input:after{
 
 li input ~ ol {
     background: url(toggle-small-expand.png) 40px 0 no-repeat;
-    margin: -0.938em 0 0 -44px;
-    /* 15px */
-    height: 1.12em;
+    margin: -1em 0 0 -44px;
+    height: 1em;
     cursor: pointer;
 }
 

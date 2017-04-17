@@ -130,7 +130,23 @@ Multihack.prototype._initRemote = function () {
 
     self._remote.on('changeFile', function (data) {
       var outOfSync = !FileSystem.exists(data.filePath)
-      Editor.change(data.filePath, data.change)
+      
+      if (data.change.type === 'rename') {
+        var contents = FileSystem.getFile(data.filePath).content
+        Editor.change(data.change.newPath, {
+          from: {ch:0, line:0},
+          to: {ch:0, line:0},
+          text: contents,
+          origin: 'paste'
+        })
+        var parentElement = Interface.treeview.getParentElement(data.filePath)
+        Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
+        FileSystem.delete(data.filePath)
+        outOfSync = true
+      } else {
+        Editor.change(data.filePath, data.change)
+      }
+      
       if (outOfSync) {
         Interface.treeview.rerender(FileSystem.getTree())
       }
