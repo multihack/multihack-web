@@ -196,8 +196,6 @@ RemoteManager.prototype.deleteFile = function (filePath) {
 RemoteManager.prototype.changeFile = function (filePath, change) {
   var self = this
   
-  console.log(change)
-  
   self._sendAllPeers('changeFile', [filePath, change])
 }
 

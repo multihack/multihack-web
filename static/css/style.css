@@ -401,6 +401,10 @@ input[type="text"].long {
     border-radius: 100%;
 }
 
+.remoteSelection {
+  background-color: #3f5d38;
+}
+
 
 /* Custom scrollbars */
 

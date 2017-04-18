@@ -6305,8 +6305,8 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js")})
-},{"../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js":365}],298:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
+},{"../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":365}],298:[function(require,module,exports){
 /**
  * cuid.js
  * Collision-resistant UID generator for browsers and node.
@@ -25238,6 +25238,7 @@ function Editor () {
   self._workingFile = null
   self._mutex = false
   self._cm.on('change', self._onchange.bind(self))
+  self._cm.on('beforeSelectionChange', self._onSelectionChange.bind(self))
 
   self._theme = null
 }
@@ -25249,6 +25250,46 @@ Editor.prototype._onchange = function (cm, change) {
   self.emit('change', {
     filePath: self._workingFile.path,
     change: change
+  })
+}
+
+Editor.prototype._onSelectionChange = function (cm, change) {
+  var self = this
+  
+  var ranges = change.ranges.filter(function (range) {
+    return range.head.ch !== range.anchor.ch || range.head.line !== range.anchor.line
+  }).map(function (range) {
+    if (range.head.line > range.anchor.line || (
+      range.head.line === range.anchor.line && range.head.ch > range.anchor.ch
+    )) {
+      var temp = range.head
+      range.head = range.anchor
+      range.anchor = temp
+    }
+    return range
+  })
+  
+  self.emit('change', {
+    filePath: self._workingFile.path,
+    change: {
+      type: 'selection',
+      ranges: ranges
+    }
+  })
+}
+
+Editor.prototype.highlight = function (filePath, ranges) {
+  var self = this
+  if (!self._workingFile || filePath !== self._workingFile.path) return
+  
+  self._cm.getAllMarks().forEach(function (mark) {
+    mark.clear()
+  })
+  
+  ranges.forEach(function (range) {
+    self._cm.markText(range.head, range.anchor, {
+      className: 'remoteSelection'
+    })
   })
 }
 
@@ -25876,7 +25917,9 @@ Multihack.prototype._initRemote = function () {
         Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
         FileSystem.delete(data.filePath)
         outOfSync = true
-      } else {
+      } else if (data.change.type === 'selection') {
+        Editor.highlight(data.filePath, data.change.ranges)
+      }else {
         Editor.change(data.filePath, data.change)
       }
       
@@ -26732,8 +26775,6 @@ RemoteManager.prototype.deleteFile = function (filePath) {
 
 RemoteManager.prototype.changeFile = function (filePath, change) {
   var self = this
-  
-  console.log(change)
   
   self._sendAllPeers('changeFile', [filePath, change])
 }

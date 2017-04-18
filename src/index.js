@@ -143,7 +143,9 @@ Multihack.prototype._initRemote = function () {
         Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
         FileSystem.delete(data.filePath)
         outOfSync = true
-      } else {
+      } else if (data.change.type === 'selection') {
+        Editor.highlight(data.filePath, data.change.ranges)
+      }else {
         Editor.change(data.filePath, data.change)
       }
       

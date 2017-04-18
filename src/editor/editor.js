@@ -38,6 +38,7 @@ function Editor () {
   self._workingFile = null
   self._mutex = false
   self._cm.on('change', self._onchange.bind(self))
+  self._cm.on('beforeSelectionChange', self._onSelectionChange.bind(self))
 
   self._theme = null
 }
@@ -49,6 +50,46 @@ Editor.prototype._onchange = function (cm, change) {
   self.emit('change', {
     filePath: self._workingFile.path,
     change: change
+  })
+}
+
+Editor.prototype._onSelectionChange = function (cm, change) {
+  var self = this
+  
+  var ranges = change.ranges.filter(function (range) {
+    return range.head.ch !== range.anchor.ch || range.head.line !== range.anchor.line
+  }).map(function (range) {
+    if (range.head.line > range.anchor.line || (
+      range.head.line === range.anchor.line && range.head.ch > range.anchor.ch
+    )) {
+      var temp = range.head
+      range.head = range.anchor
+      range.anchor = temp
+    }
+    return range
+  })
+  
+  self.emit('change', {
+    filePath: self._workingFile.path,
+    change: {
+      type: 'selection',
+      ranges: ranges
+    }
+  })
+}
+
+Editor.prototype.highlight = function (filePath, ranges) {
+  var self = this
+  if (!self._workingFile || filePath !== self._workingFile.path) return
+  
+  self._cm.getAllMarks().forEach(function (mark) {
+    mark.clear()
+  })
+  
+  ranges.forEach(function (range) {
+    self._cm.markText(range.head, range.anchor, {
+      className: 'remoteSelection'
+    })
   })
 }
 
