@@ -12,6 +12,8 @@
 
 Tired of struggling to set up remote collaboration with your team? Try <a href="https://rationalcoding.github.io/multihack-web/">multihack.co</a>
 
+**Still in active development. Fully working, but expect constant updates.**
+
 ## Usage:
 
 1. Make sure all your team members have the same code (or use the **fetch code** feature).  
