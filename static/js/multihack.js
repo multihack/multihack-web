@@ -17224,7 +17224,12 @@ Wire.prototype._parseChangeFile = function (chunk) {
       this._parseState = 3
       break
     case 3: // payload
-      this._parseObj.change = JSON.parse(chunk.toString())
+      // HACK: Why is chunk.toString().length < chunk.length???
+      try {
+        this._parseObj.change = JSON.parse(chunk.toString())
+      } catch (err) {
+        this._parseObj.change = JSON.parse(chunk.toString()+'"}')
+      }
       this.emit('changeFile', this._parseObj)
       this._nextMessage()
       break
