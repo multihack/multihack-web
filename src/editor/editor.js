@@ -59,14 +59,15 @@ Editor.prototype._onSelectionChange = function (cm, change) {
   var ranges = change.ranges.filter(function (range) {
     return range.head.ch !== range.anchor.ch || range.head.line !== range.anchor.line
   }).map(function (range) {
-    if (range.head.line > range.anchor.line || (
-      range.head.line === range.anchor.line && range.head.ch > range.anchor.ch
+    var nr = JSON.parse(JSON.stringify(range))
+    if (nr.head.line > nr.anchor.line || (
+      nr.head.line === nr.anchor.line && nr.head.ch > nr.anchor.ch
     )) {
-      var temp = range.head
-      range.head = range.anchor
-      range.anchor = temp
+      var temp = nr.head
+      nr.head = nr.anchor
+      nr.anchor = temp
     }
-    return range
+    return nr
   })
   
   self.emit('change', {
