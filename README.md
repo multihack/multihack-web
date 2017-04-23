@@ -16,13 +16,11 @@ Tired of struggling to set up remote collaboration with your team? Try <a href="
 
 ## Usage:
 
-1. Make sure all your team members have the same code (or use the **fetch code** feature).  
+1. Upload your project as a ZIP to <a href="https://rationalcoding.github.io/multihack-web/">multihack.co</a>, or use <a href="https://github.com/RationalCoding/multihack-brackets">multihack-brackets</a>.
 
-2. Upload your project as a ZIP to <a href="https://rationalcoding.github.io/multihack-web/">multihack.co</a>, or use <a href="https://github.com/RationalCoding/multihack-brackets">multihack-brackets</a>.
+2. Decide on a secret room ID, and have everyone enter it.
 
-3. Decide on a secret room ID, and have everyone enter it.
-
-4. VOILA! Your project is now being synchronized in real time!
+3. VOILA! Your project is now being synchronized in real time!
 
 ### Collaborate in Real Time  
 
@@ -54,7 +52,7 @@ When your internet connection drops, MultiHack lets you keep working without int
 
 ## Fetch Code
 
-Press the refresh icon next to "Project Files" to fetch your team's code.
+Press the refresh icon next to "Project Files" to force a sync and fetch any unwatched code.
 
 ## Run Your Own Instance
 
