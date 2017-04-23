@@ -40,12 +40,6 @@ Autocompletion for Javscript and CSS!
 
 Save your project as a ZIP archive and use it in your favourite native IDE.  
 
-### Deploy Instantly
-
-Upload a project with a least an **index.html** and your project will be instantly deployed via [HyperHost](https://github.com/RationalCoding/hyperhost).
-
-You can even run Node servers *in your browser*!
-
 ### Works Offline
 
 When your internet connection drops, MultiHack lets you keep working without interruptions.  
