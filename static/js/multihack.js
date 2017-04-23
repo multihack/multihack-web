@@ -25832,7 +25832,9 @@ function Multihack (config) {
     Interface.confirmDelete(workingFile.name, function () {
       var workingPath = workingFile.path
       var parentElement = Interface.treeview.getParentElement(workingPath)
-      Interface.treeview.remove(parentElement, FileSystem.get(workingPath))
+      if (parentElement) {
+        Interface.treeview.remove(parentElement, FileSystem.get(workingPath))
+      }
       FileSystem.delete(workingPath)
       Editor.close()
       self._remote.deleteFile(workingPath)
@@ -25919,7 +25921,9 @@ Multihack.prototype._initRemote = function () {
           origin: 'paste'
         })
         var parentElement = Interface.treeview.getParentElement(data.filePath)
-        Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
+        if (parentElement) {
+          Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
+        }
         FileSystem.delete(data.filePath)
         outOfSync = true
       } else if (data.change.type === 'selection') {
@@ -25934,7 +25938,9 @@ Multihack.prototype._initRemote = function () {
     })
     self._remote.on('deleteFile', function (data) {
       var parentElement = Interface.treeview.getParentElement(data.filePath)
-      Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
+      if (parentElement) {
+        Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
+      }
       FileSystem.delete(data.filePath)
     })
     self._remote.on('requestProject', function (requester) {
@@ -26451,7 +26457,8 @@ TreeView.prototype._handleFolderClick = function (e) {
 // Returns parentElement of node if it already exists
 TreeView.prototype.getParentElement = function (path) {
   // var self = this
-  return document.getElementById(path).parentElement.parentElement
+  var el = document.getElementById(path)
+  return el ? el.parentElement.parentElement : null
 }
 
 TreeView.prototype.remove = function (parentElement, file) {

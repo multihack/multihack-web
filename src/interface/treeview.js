@@ -55,7 +55,8 @@ TreeView.prototype._handleFolderClick = function (e) {
 // Returns parentElement of node if it already exists
 TreeView.prototype.getParentElement = function (path) {
   // var self = this
-  return document.getElementById(path).parentElement.parentElement
+  var el = document.getElementById(path)
+  return el ? el.parentElement.parentElement : null
 }
 
 TreeView.prototype.remove = function (parentElement, file) {
