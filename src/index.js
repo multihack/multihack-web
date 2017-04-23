@@ -62,6 +62,7 @@ function Multihack (config) {
   self.embed = util.getParameterByName('embed') || null
   self.roomID = util.getParameterByName('room') || null
   self.hostname = config.hostname
+  self.providedProject = false
 
   Interface.on('saveAs', function (saveType) {
     FileSystem.saveProject(saveType, function (success) {
@@ -88,14 +89,12 @@ function Multihack (config) {
   Interface.removeOverlay()
   if (self.embed) {
     self._initRemote()
-    self._remote.on('gotPeer', function () {
-      self._remote.requestProject()
-    })
   } else {
     Interface.getProject(function (project) {
       if (!project) {
         self._initRemote()
       } else {
+        self.providedProject = true
         Interface.showOverlay()
         FileSystem.loadProject(project, function (tree) {
           Interface.treeview.render(tree)
@@ -189,6 +188,11 @@ Multihack.prototype._initRemote = function () {
       if (self.embed) return
       Interface.alert('Connection Lost', 'Your connection to "'+peer.metadata.nickname+'" has been lost.')
     })
+    if (!self.providedProject) {
+      self._remote.once('gotPeer', function () {
+        self._remote.requestProject()
+      })
+    }
     
     Editor.on('change', function (data) {
       self._remote.changeFile(data.filePath, data.change)

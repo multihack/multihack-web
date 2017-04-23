@@ -8,6 +8,11 @@ var getBrowserRTC = require('get-browser-rtc')
 var Throttle = require('stream-throttle').Throttle
 var Wire = require('multihack-wire')
 
+var EventEmitter = require('events').EventEmitter
+var inherits = require('inherits')
+
+inherits(RemoteManager, EventEmitter)
+
 function RemoteManager (hostname, room, nickname) {
   var self = this
   
@@ -23,7 +28,7 @@ function RemoteManager (hostname, room, nickname) {
   
   self._socket.on('forward', function (data) {
     if (!data || !data.event || !data.payload) return
-    self._emit(data.event, assemblePayload(data))
+    self.emit(data.event, assemblePayload(data))
   })
   
   // p2p 
@@ -39,7 +44,7 @@ function RemoteManager (hostname, room, nickname) {
       nop2p: data.nop2p
     })
     if (data.nop2p) self.mustForward++
-    self._emit('gotPeer', data)
+    self.emit('gotPeer', data)
   })
   
   self._socket.on('peer-leave', function (data) {
@@ -48,7 +53,7 @@ function RemoteManager (hostname, room, nickname) {
 
     for (var i=0; i<self.peers.length; i++) {
       if (self.peers[i].id === data.id) {
-        self._emit('lostPeer', self.peers[i])
+        self.emit('lostPeer', self.peers[i])
         self.peers.splice(i, 1)
         break
       }
@@ -109,15 +114,15 @@ RemoteManager.prototype._initP2P = function (room, nickname) {
     
     self.peers.push(peer)
 
-    peer.wire.on('provideFile', self._emit.bind(self, 'provideFile'))
-    peer.wire.on('changeFile', self._emit.bind(self, 'changeFile'))
-    peer.wire.on('deleteFile', self._emit.bind(self, 'deleteFile'))
+    peer.wire.on('provideFile', self.emit.bind(self, 'provideFile'))
+    peer.wire.on('changeFile', self.emit.bind(self, 'changeFile'))
+    peer.wire.on('deleteFile', self.emit.bind(self, 'deleteFile'))
     peer.wire.on('requestProject', function () {
-      self._emit('requestProject', peer.id)
+      self.emit('requestProject', peer.id)
     })
     
     peer.on('connect', function () {
-      self._emit('gotPeer', peer)   
+      self.emit('gotPeer', peer)   
     })
     
     peer.on('close', function () {
@@ -184,7 +189,7 @@ RemoteManager.prototype._removePeer = function (peer) {
   }
   peer.destroy()
   
-  self._emit('lostPeer', peer)
+  self.emit('lostPeer', peer)
 }
 
 RemoteManager.prototype.deleteFile = function (filePath) {
@@ -242,30 +247,6 @@ RemoteManager.prototype.destroy = function () {
   self._handlers = null
   self._socket.disconnect()
   self._socket = null
-}
-
-RemoteManager.prototype._emit = function (event, data) {
-  var self = this
-  var fns = self._handlers[event] || []
-  var fn
-  var i
-
-  for (i = 0; i < fns.length; i++) {
-    fn = fns[i]
-    if (fn && typeof (fn) === 'function') {
-      fn(data)
-    }
-  }
-}
-
-RemoteManager.prototype.on = function (event, handler) {
-  var self = this
-
-  if (!self._handlers[event]) {
-    self._handlers[event] = []
-  }
-
-  self._handlers[event].push(handler)
 }
 
 // turns array back into structured object
