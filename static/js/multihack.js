@@ -25804,6 +25804,12 @@ function Multihack (config) {
     if (created) {
       Interface.treeview.addFile(e.parentElement, FileSystem.get(e.path))
       Editor.open(e.path)
+      self._remote.changeFile(e.path, {
+        from: {line: 0, ch: 0},
+        to: { line: 0, ch: 0},
+        text: '',
+        origin: 'paste'
+      })
     }
   })
 
