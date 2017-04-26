@@ -1,9 +1,10 @@
 var FileSystem = require('./filesystem/filesystem')
 var Interface = require('./interface/interface')
 var Editor = require('./editor/editor')
-var Remote = require('./network/remote')
+var Remote = require('multihack-core')
 var HyperHostWrapper = require('./network/hyperhostwrapper')
 var util = require('./filesystem/util')
+var Voice = require('./network/voice')
 
 var DEFAULT_HOSTNAME = 'https://quiet-shelf-57463.herokuapp.com'
 var MAX_FORWARDING_SIZE = 5*1000*1000 // 5mb limit for non-p2p connections (validated by server)
@@ -43,16 +44,18 @@ function Multihack (config) {
 
   Interface.on('removeDir', function (e) {
     var dir = FileSystem.get(e.path)
+    var workingFile = Editor.getWorkingFile()
+    
     Interface.confirmDelete(dir.name, function () {
       Interface.treeview.remove(e.parentElement, dir)
-      
-      self._remote.deleteFile(e.path)
+
       FileSystem.getContained(e.path).forEach(function (file) {
-        if (file.path === Editor.getWorkingFile().path) {
+        if (workingFile && file.path === workingFile.path) {
           Editor.close()
         }
         self._remote.deleteFile(file.path)
       })
+      self._remote.deleteFile(e.path)
     })
   })
 
@@ -122,7 +125,13 @@ Multihack.prototype._initRemote = function (cb) {
     self.roomID = data.room
     window.history.pushState('Multihack', 'Multihack Room '+self.roomID, '?room='+self.roomID + (self.embed ? '&embed=true' : ''));
     self.nickname = data.nickname
-    self._remote = new Remote(self.hostname, self.roomID, self.nickname)
+    self._remote = new Remote({
+      hostname: self.hostname, 
+      room: self.roomID, 
+      nickname: self.nickname,
+      voice: Voice,
+      wrtc: null
+    })
     self._remote.posFromIndex = function (filePath, index, cb) {
       cb(FileSystem.getFile(filePath).doc.posFromIndex(index))
     }
@@ -162,14 +171,14 @@ Multihack.prototype._initRemote = function (cb) {
       var parentElement = Interface.treeview.getParentElement(data.filePath)
       var workingFile = Editor.getWorkingFile()
       
+      if (workingFile && data.filePath === workingFile.path) {
+        Editor.close()
+      }
+      
       if (parentElement) {
         Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
       }
       FileSystem.delete(data.filePath)
-      
-      if (workingFile && data.filePath === workingFile.path) {
-        Editor.close()
-      }
     })
     self._remote.on('createFile', function (data) {
       FileSystem.getFile(data.filePath).write(data.content)

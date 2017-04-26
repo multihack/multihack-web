@@ -21,15 +21,8 @@
     "events": "^1.1.1",
     "getusermedia": "^2.0.1",
     "inherits": "^2.0.3",
+    "multihack-core": "^1.0.1",
     "mustache": "^2.3.0",
-    "p2p-graph": "^1.1.1",
-    "readable-stream": "^2.2.9",
-    "stream-buffers": "^3.0.1",
-    "y-array": "^10.0.6",
-    "y-map": "^10.0.5",
-    "y-memory": "^8.0.8",
-    "y-multihack": "0.0.2",
-    "y-text": "^9.4.0",
-    "yjs": "^12.1.7"
+    "p2p-graph": "^1.1.1"
   }
 }

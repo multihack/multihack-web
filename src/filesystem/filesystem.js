@@ -56,6 +56,7 @@ FileSystem.prototype.saveProject = function (saveType, cb) {
 // Makes a directory, building paths
 FileSystem.prototype.mkdir = function (path) {
   var self = this
+  
   var parentPath = path.split('/')
   parentPath.splice(-1, 1)
   parentPath = parentPath.join('/')
@@ -63,6 +64,7 @@ FileSystem.prototype.mkdir = function (path) {
   self._buildPath(parentPath)
   if (self._getNode(path, self._getNode(parentPath).nodes)) return false
   self._getNode(parentPath).nodes.push(new Directory(path))
+  
   return true
 }
 
@@ -84,12 +86,12 @@ FileSystem.prototype.getContained = function (path) {
   var self = this
   
   var dir = self.getFile(path)
-  if (!path.isDir) return [dir]
+  if (!dir.isDir) return [dir]
   
   var contained = []
   
   dir.nodes.forEach(function (node) {
-    node.getContained().forEach(function (c) {
+    self.getContained(node.path).forEach(function (c) {
       contained.push(c)
     })
   })
