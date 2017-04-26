@@ -1,4 +1,4 @@
-/* globals window, io */
+/* globals window */
 
 var Y = require('yjs')
 var YText = require('y-text')(Y)
