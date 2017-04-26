@@ -4,6 +4,11 @@ var File = require('./file')
 var Directory = require('./directory')
 var util = require('./util')
 
+var EventEmitter = require('events').EventEmitter
+var inherits = require('inherits')
+
+inherits(FileSystem, EventEmitter)
+
 var ignoredFilenames = ['__MACOSX', '.DS_Store']
 
 function FileSystem () {
@@ -71,6 +76,7 @@ FileSystem.prototype.mkfile = function (path) {
   self._buildPath(parentPath)
   if (self._getNode(path, self._getNode(parentPath).nodes)) return false
   self._getNode(parentPath).nodes.push(new File(path))
+  
   return true
 }
 
@@ -217,22 +223,11 @@ FileSystem.prototype.unzip = function (file, cb) {
         if (--awaiting <= 0) cb()
       } else {
         self.mkfile(relativePath)
-        var viewMapping = util.getViewMapping(relativePath)
-        switch (viewMapping) {
-          case 'image':
-            zipEntry.async('base64').then(function (content) {
-              self.get(relativePath).doc = content
-              if (--awaiting <= 0) cb()
-            })
-            break
-          default:
-            // Load as text
-            zipEntry.async('string').then(function (content) {
-              self.get(relativePath).doc = new CodeMirror.Doc(content, util.pathToMode(relativePath))
-              if (--awaiting <= 0) cb()
-            })
-            break
-        }
+        zipEntry.async('string').then(function (content) {
+          self.get(relativePath).doc = new CodeMirror.Doc(content, util.pathToMode(relativePath))
+          self.emit('unzipFile', self.get(relativePath))
+          if (--awaiting <= 0) cb()
+        })
       }
     })
   })

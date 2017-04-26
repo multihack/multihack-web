@@ -24,13 +24,12 @@ function Multihack (config) {
     if (created) {
       Interface.treeview.addFile(e.parentElement, FileSystem.get(e.path))
       Editor.open(e.path)
-      self._remote.changeFile(e.path, {
-        from: {line: 0, ch: 0},
-        to: { line: 0, ch: 0},
-        text: '',
-        origin: 'paste'
-      })
     }
+    self._remote.createFile(e.path)
+  })
+  
+  FileSystem.on('unzipFile', function (e) {
+    self._remote.createFile(e.path, e.content)
   })
 
   Interface.on('addDir', function (e) {
@@ -70,7 +69,6 @@ function Multihack (config) {
   self.embed = util.getParameterByName('embed') || null
   self.roomID = util.getParameterByName('room') || null
   self.hostname = config.hostname
-  self.providedProject = false
 
   Interface.on('saveAs', function (saveType) {
     FileSystem.saveProject(saveType, function (success) {
@@ -94,26 +92,25 @@ function Multihack (config) {
     HyperHostWrapper.deploy(FileSystem.getTree())
   })
 
-  Interface.removeOverlay()
+  Interface.hideOverlay()
   if (self.embed) {
     self._initRemote()
   } else {
-    Interface.getProject(function (project) {
-      if (!project) {
-        self._initRemote()
-      } else {
-        self.providedProject = true
-        Interface.showOverlay()
-        FileSystem.loadProject(project, function (tree) {
-          Interface.treeview.render(tree)
-          self._initRemote()
-        })
-      }
+    self._initRemote(function () {
+      Interface.getProject(function (project) {
+        if (project) {
+          Interface.showOverlay()
+          FileSystem.loadProject(project, function (tree) {
+            Interface.treeview.render(tree)
+            Interface.hideOverlay()
+          })
+        }
+      })
     })
   }
 }
 
-Multihack.prototype._initRemote = function () {
+Multihack.prototype._initRemote = function (cb) {
   var self = this
   
   function onRoom(data) {
@@ -121,6 +118,9 @@ Multihack.prototype._initRemote = function () {
     window.history.pushState('Multihack', 'Multihack Room '+self.roomID, '?room='+self.roomID + (self.embed ? '&embed=true' : ''));
     self.nickname = data.nickname
     self._remote = new Remote(self.hostname, self.roomID, self.nickname)
+    self._remote.posFromIndex = function (filePath, index, cb) {
+      cb(FileSystem.getFile(filePath).doc.posFromIndex(index))
+    }
     
     document.getElementById('voice').style.display = ''
     document.getElementById('network').style.display = ''
@@ -135,32 +135,26 @@ Multihack.prototype._initRemote = function () {
       Interface.showNetwork(self._remote.peers, self.roomID, self._remote.nop2p, self._remote.mustForward)
     })
 
+    self._remote.on('selection', function (data) {
+      Editor.highlight(data.filePath, data.change.ranges)
+    })
     self._remote.on('changeFile', function (data) {
-      var outOfSync = !FileSystem.exists(data.filePath)
-      
-      if (data.change.type === 'rename') {
-        var contents = FileSystem.getFile(data.filePath).content
-        Editor.change(data.change.newPath, {
-          from: {ch:0, line:0},
-          to: {ch:0, line:0},
-          text: contents,
-          origin: 'paste'
-        })
-        var parentElement = Interface.treeview.getParentElement(data.filePath)
-        if (parentElement) {
-          Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
-        }
-        FileSystem.delete(data.filePath)
-        outOfSync = true
-      } else if (data.change.type === 'selection') {
-        Editor.highlight(data.filePath, data.change.ranges)
-      }else {
-        Editor.change(data.filePath, data.change)
+      Editor.change(data.filePath, data.change)
+    })
+    self._remote.on('renameFile', function (data) {
+      var contents = FileSystem.getFile(data.filePath).content
+      Editor.change(data.change.newPath, {
+        from: {ch:0, line:0},
+        to: {ch:0, line:0},
+        text: contents,
+        origin: 'paste'
+      })
+      var parentElement = Interface.treeview.getParentElement(data.filePath)
+      if (parentElement) {
+        Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
       }
-      
-      if (outOfSync) {
-        Interface.treeview.rerender(FileSystem.getTree())
-      }
+      FileSystem.delete(data.filePath)
+      Interface.treeview.rerender(FileSystem.getTree()) 
     })
     self._remote.on('deleteFile', function (data) {
       var parentElement = Interface.treeview.getParentElement(data.filePath)
@@ -169,27 +163,7 @@ Multihack.prototype._initRemote = function () {
       }
       FileSystem.delete(data.filePath)
     })
-    self._remote.on('requestProject', function (requester) {
-      // Get a list of all non-directory files, sorted by ascending path length
-      var allFiles = FileSystem.getAllFiles().sort(function (a, b) {
-        return a.path.length - b.path.length
-      }).filter(function (a) {
-        return !a.isDir
-      })
-      
-      var size = 0
-      for (var i = 0; i < allFiles.length; i++) {
-        size+=allFiles[i].content.length
-        if (size > MAX_FORWARDING_SIZE && remote.hostname === DEFAULT_HOSTNAME) {
-          return alert('Project too large! Use a P2P connection.')
-        }
-      }
-      
-      for (var i = 0; i < allFiles.length; i++) {
-        self._remote.provideFile(allFiles[i].path, allFiles[i].content, requester)
-      }
-    })
-    self._remote.on('provideFile', function (data) {
+    self._remote.on('createFile', function (data) {
       FileSystem.getFile(data.filePath).write(data.content)
       Interface.treeview.rerender(FileSystem.getTree())
       if (!Editor.getWorkingFile()) {
@@ -200,15 +174,12 @@ Multihack.prototype._initRemote = function () {
       if (self.embed) return
       Interface.alert('Connection Lost', 'Your connection to "'+peer.metadata.nickname+'" has been lost.')
     })
-    if (!self.providedProject) {
-      self._remote.once('gotPeer', function () {
-        self._remote.requestProject()
-      })
-    }
     
     Editor.on('change', function (data) {
       self._remote.changeFile(data.filePath, data.change)
     })
+    
+    cb()
   }
 
   // Random starting room (to be changed) or from query

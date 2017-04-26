@@ -266,7 +266,7 @@ Interface.prototype.showNetwork = function (peers, room, nop2p, mustForward) {
   })
 }
 
-Interface.prototype.removeOverlay = function (msg, cb) {
+Interface.prototype.hideOverlay = function (msg, cb) {
   document.getElementById('overlay').style.display = 'none'
   document.getElementById('modal').style.display = 'none'
 }
