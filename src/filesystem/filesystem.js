@@ -80,6 +80,23 @@ FileSystem.prototype.mkfile = function (path) {
   return true
 }
 
+FileSystem.prototype.getContained = function (path) {
+  var self = this
+  
+  var dir = self.getFile(path)
+  if (!path.isDir) return [dir]
+  
+  var contained = []
+  
+  dir.nodes.forEach(function (node) {
+    node.getContained().forEach(function (c) {
+      contained.push(c)
+    })
+  })
+  
+  return contained
+}
+
 // Ensures all directories have been built along a path
 FileSystem.prototype._buildPath = function (path) {
   var self = this

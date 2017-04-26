@@ -17,7 +17,7 @@ function Interface () {
   })
 
   self.treeview.on('remove', function (e) {
-    self.emit('removeFile', e)
+    self.emit('removeDir', e)
   })
 
   self.addCounter = 1
@@ -75,11 +75,6 @@ function Interface () {
   // Setup delete button
   document.getElementById('delete').addEventListener('click', function () {
     self.emit('deleteCurrent')
-  })
-
-  // Resync button
-  document.getElementById('resync').addEventListener('click', function () {
-    self.emit('resync')
   })
 }
 

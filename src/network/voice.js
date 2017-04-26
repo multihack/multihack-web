@@ -5,7 +5,6 @@ function VoiceCall (socket, client, room) {
   if (!(self instanceof VoiceCall)) return new VoiceCall()
 
   self.room = room
-  self.ready = false
   self.stream = null
   self.peers = []
   self.socket = socket
@@ -84,7 +83,7 @@ VoiceCall.prototype._removePeer = function (peer) {
 
 VoiceCall.prototype.leave = function () {
   var self = this
-  if (!self.ready || !self.stream) return
+  if (!self.stream) return
   
   console.log('voice leave')
 
@@ -102,7 +101,7 @@ VoiceCall.prototype.leave = function () {
 
 VoiceCall.prototype.join = function () {
   var self = this
-  if (!self.ready || self.stream) return
+  if (self.stream) return
   
   console.log('voice join')
 
@@ -115,7 +114,10 @@ VoiceCall.prototype.join = function () {
 
 VoiceCall.prototype.toggle = function () {
   var self = this
+  
+  console.log('voice toggle')
 
+  console.log(self.stream)
   if (!self.stream) {
     self.join()
   } else {

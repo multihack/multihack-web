@@ -49,14 +49,12 @@ Editor.prototype._onchange = function (cm, change) {
   var self = this
   
   if (self._muteEvent) {
-    console.log('muted event')
     self._muteEvent = false
     return
   }
   if (!self._workingFile) return
   
   self._ignoreNextChange = true
-  console.log('local change', change)
   
   change.start = self._cm.indexFromPos(change.from)
   self.emit('change', {
@@ -111,13 +109,10 @@ Editor.prototype.change = function (filePath, change) {
   var self = this
   
   if (self._ignoreNextChange) {
-    console.log('ignored change')
     self._ignoreNextChange = false
     return
   }
   self._muteEvent = true
-
-  console.log('remote change', change)
   
   if (!self._workingFile || filePath !== self._workingFile.path) {
     FileSystem.getFile(filePath).doc.replaceRange(change.text, change.to, change.from)

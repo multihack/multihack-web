@@ -38,21 +38,27 @@ function Multihack (config) {
     if (created) {
       Interface.treeview.addDir(e.parentElement, FileSystem.get(e.path))
     }
+    self._remote.createDir(e.path)
   })
 
-  Interface.on('removeFile', function (e) {
-    var file = FileSystem.get(e.path)
-    Interface.confirmDelete(file.name, function () {
-      Interface.treeview.remove(e.parentElement, file)
-      FileSystem.delete(e.path)
-      if (self._remote) {
-        self._remote.deleteFile(e.path)
-      }
+  Interface.on('removeDir', function (e) {
+    var dir = FileSystem.get(e.path)
+    Interface.confirmDelete(dir.name, function () {
+      Interface.treeview.remove(e.parentElement, dir)
+      
+      self._remote.deleteFile(e.path)
+      FileSystem.getContained(e.path).forEach(function (file) {
+        if (file.path === Editor.getWorkingFile().path) {
+          Editor.close()
+        }
+        self._remote.deleteFile(file.path)
+      })
     })
   })
 
   Interface.on('deleteCurrent', function (e) {
     var workingFile = Editor.getWorkingFile()
+    Editor.close()
     
     Interface.confirmDelete(workingFile.name, function () {
       var workingPath = workingFile.path
@@ -61,7 +67,6 @@ function Multihack (config) {
         Interface.treeview.remove(parentElement, FileSystem.get(workingPath))
       }
       FileSystem.delete(workingPath)
-      Editor.close()
       self._remote.deleteFile(workingPath)
     })
   })
@@ -128,14 +133,11 @@ Multihack.prototype._initRemote = function (cb) {
     Interface.on('voiceToggle', function () {
       self._remote.voice.toggle()
     })
-    Interface.on('resync', function () {
-      self._remote.requestProject()
-    })
     Interface.on('showNetwork', function () {
       Interface.showNetwork(self._remote.peers, self.roomID, self._remote.nop2p, self._remote.mustForward)
     })
 
-    self._remote.on('selection', function (data) {
+    self._remote.on('changeSelection', function (data) {
       Editor.highlight(data.filePath, data.change.ranges)
     })
     self._remote.on('changeFile', function (data) {
@@ -158,10 +160,16 @@ Multihack.prototype._initRemote = function (cb) {
     })
     self._remote.on('deleteFile', function (data) {
       var parentElement = Interface.treeview.getParentElement(data.filePath)
+      var workingFile = Editor.getWorkingFile()
+      
       if (parentElement) {
         Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
       }
       FileSystem.delete(data.filePath)
+      
+      if (workingFile && data.filePath === workingFile.path) {
+        Editor.close()
+      }
     })
     self._remote.on('createFile', function (data) {
       FileSystem.getFile(data.filePath).write(data.content)
@@ -170,6 +178,10 @@ Multihack.prototype._initRemote = function (cb) {
         Editor.open(data.filePath)
       }
     })
+    self._remote.on('createDir', function (data) {
+      FileSystem.mkdir(data.path)
+      Interface.treeview.rerender(FileSystem.getTree())
+    })
     self._remote.on('lostPeer', function (peer) {
       if (self.embed) return
       Interface.alert('Connection Lost', 'Your connection to "'+peer.metadata.nickname+'" has been lost.')
@@ -177,6 +189,9 @@ Multihack.prototype._initRemote = function (cb) {
     
     Editor.on('change', function (data) {
       self._remote.changeFile(data.filePath, data.change)
+    })
+    Editor.on('selection', function (data) {
+      self._remote.changeSelection(data)
     })
     
     cb()
