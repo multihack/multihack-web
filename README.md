@@ -7,7 +7,7 @@
 <h3 align="center">Real-Time Editor and Voice Chat.</h3>  
 
 [![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
-[![Gitter chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/gitterHQ/gitter)
+[![Gitter chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/multihack/multihack)
 
 <b>Compatible with <a href="https://github.com/RationalCoding/multihack-brackets">multihack-brackets</a> and <a href="https://github.com/RationalCoding/multihack-vscode">multihack-vscode</a>!</b>
 
