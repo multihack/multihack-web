@@ -116,7 +116,7 @@ function Multihack (config) {
         if (project) {
           Interface.showOverlay()
           FileSystem.loadProject(project, function (tree) {
-            Interface.treeview.render(tree)
+            Interface.treeview.rerender(tree)
             Interface.hideOverlay()
           })
         }
