@@ -36,9 +36,8 @@ function Editor () {
   })
 
   self._workingFile = null
-  self._muteEvent = false
-  self._ignoreNextChange = false
-   
+  self._mutex = false
+
   self._cm.on('change', self._onchange.bind(self))
   self._cm.on('beforeSelectionChange', self._onSelectionChange.bind(self))
 
@@ -48,13 +47,7 @@ function Editor () {
 Editor.prototype._onchange = function (cm, change) {
   var self = this
   
-  if (self._muteEvent) {
-    self._muteEvent = false
-    return
-  }
-  if (!self._workingFile) return
-  
-  self._ignoreNextChange = true
+  if (self._mutex) return
   
   change.start = self._cm.indexFromPos(change.from)
   self.emit('change', {
@@ -108,16 +101,12 @@ Editor.prototype.highlight = function (filePath, ranges) {
 Editor.prototype.change = function (filePath, change) {
   var self = this
   
-  if (self._ignoreNextChange) {
-    self._ignoreNextChange = false
-    return
-  }
-  self._muteEvent = true
-  
   if (!self._workingFile || filePath !== self._workingFile.path) {
     FileSystem.getFile(filePath).doc.replaceRange(change.text, change.to, change.from)
   } else {
+    self._mutex = true
     self._cm.replaceRange(change.text, change.to, change.from)
+    self._mutex = false
   }
 }
 

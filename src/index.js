@@ -1,7 +1,7 @@
 var FileSystem = require('./filesystem/filesystem')
 var Interface = require('./interface/interface')
 var Editor = require('./editor/editor')
-var Remote = require('multihack-core')
+var Remote = require('./../../multihack-core')
 var HyperHostWrapper = require('./network/hyperhostwrapper')
 var util = require('./filesystem/util')
 var Voice = require('./network/voice')
@@ -29,8 +29,10 @@ function Multihack (config) {
     self._remote.createFile(e.path)
   })
   
-  FileSystem.on('unzipFile', function (e) {
-    self._remote.createFile(e.path, e.content)
+  FileSystem.on('unzipFile', function (file) {
+    file.read(function (content) {
+      self._remote.createFile(file.path, content)
+    })
   })
 
   Interface.on('addDir', function (e) {
@@ -79,6 +81,11 @@ function Multihack (config) {
   self.hostname = config.hostname
 
   Interface.on('saveAs', function (saveType) {
+    FileSystem.getContained('').forEach(function (file) {
+      file.write(self._remote.getContent(file.path))
+      console.log(file)
+    })
+    console.log('saving')
     FileSystem.saveProject(saveType, function (success) {
       if (success) {
         Interface.alert('Save Completed', 'Your project has been successfully saved.')
@@ -153,21 +160,11 @@ Multihack.prototype._initRemote = function (cb) {
       Editor.change(data.filePath, data.change)
     })
     self._remote.on('renameFile', function (data) {
-      var contents = FileSystem.getFile(data.filePath).content
-      Editor.change(data.change.newPath, {
-        from: {ch:0, line:0},
-        to: {ch:0, line:0},
-        text: contents,
-        origin: 'paste'
-      })
-      var parentElement = Interface.treeview.getParentElement(data.filePath)
-      if (parentElement) {
-        Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
-      }
-      FileSystem.delete(data.filePath)
-      Interface.treeview.rerender(FileSystem.getTree()) 
+      // TODO
+      console.warn('got unhandled rename')
     })
     self._remote.on('deleteFile', function (data) {
+      console.log(data)
       var parentElement = Interface.treeview.getParentElement(data.filePath)
       var workingFile = Editor.getWorkingFile()
       
@@ -181,6 +178,7 @@ Multihack.prototype._initRemote = function (cb) {
       FileSystem.delete(data.filePath)
     })
     self._remote.on('createFile', function (data) {
+      console.log(data)
       FileSystem.getFile(data.filePath).write(data.content)
       Interface.treeview.rerender(FileSystem.getTree())
       if (!Editor.getWorkingFile()) {
