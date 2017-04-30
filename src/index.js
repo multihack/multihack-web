@@ -63,6 +63,7 @@ function Multihack (config) {
 
   Interface.on('deleteCurrent', function (e) {
     var workingFile = Editor.getWorkingFile()
+    if (!workingFile) return
     Editor.close()
     
     Interface.confirmDelete(workingFile.name, function () {
@@ -83,7 +84,6 @@ function Multihack (config) {
   Interface.on('saveAs', function (saveType) {
     FileSystem.getContained('').forEach(function (file) {
       file.write(self._remote.getContent(file.path))
-      console.log(file)
     })
     console.log('saving')
     FileSystem.saveProject(saveType, function (success) {
@@ -164,7 +164,6 @@ Multihack.prototype._initRemote = function (cb) {
       console.warn('got unhandled rename')
     })
     self._remote.on('deleteFile', function (data) {
-      console.log(data)
       var parentElement = Interface.treeview.getParentElement(data.filePath)
       var workingFile = Editor.getWorkingFile()
       
@@ -178,7 +177,6 @@ Multihack.prototype._initRemote = function (cb) {
       FileSystem.delete(data.filePath)
     })
     self._remote.on('createFile', function (data) {
-      console.log(data)
       FileSystem.getFile(data.filePath).write(data.content)
       Interface.treeview.rerender(FileSystem.getTree())
       if (!Editor.getWorkingFile()) {

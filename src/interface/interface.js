@@ -3,6 +3,7 @@ var inherits = require('inherits')
 var Modal = require('./modal')
 var TreeView = require('./treeview')
 var PeerGraph = require('p2p-graph')
+var cuid = require('cuid')
 
 inherits(Interface, EventEmitter)
 
@@ -91,7 +92,7 @@ Interface.prototype.newFileDialog = function (path, cb) {
     var name = e.inputs[0].value
     var type = e.target.dataset['type']
     if (!name) {
-      name = (type === 'dir' ? 'New Folder' : 'New File') + self.addCounter++
+      name = (type === 'dir' ? 'New Folder' : 'New File') + '-' + cuid().slice(-7,-1)
     }
     if (cb) cb(name, type)
   })
