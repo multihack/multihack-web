@@ -11,8 +11,7 @@ dict['input'] =
     '<h1>{{title}}</h1>' +
     '<p>{{message}}</p>' +
     '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text"><br>' +
-    '<button class="go-button">Join</button>' +
-    '<button class="no-button">Skip</button>'
+    '<button class="go-button">Join</button>' 
 
 dict['confirm-delete'] =
     '<h1>{{title}}</h1>' +

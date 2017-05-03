@@ -1,9 +1,10 @@
 var FileSystem = require('./filesystem/filesystem')
 var Interface = require('./interface/interface')
 var Editor = require('./editor/editor')
-var Remote = require('./network/remote')
+var Remote = require('./../../multihack-core')
 var HyperHostWrapper = require('./network/hyperhostwrapper')
 var util = require('./filesystem/util')
+var Voice = require('./network/voice')
 
 var DEFAULT_HOSTNAME = 'https://quiet-shelf-57463.herokuapp.com'
 var MAX_FORWARDING_SIZE = 5*1000*1000 // 5mb limit for non-p2p connections (validated by server)
@@ -24,13 +25,14 @@ function Multihack (config) {
     if (created) {
       Interface.treeview.addFile(e.parentElement, FileSystem.get(e.path))
       Editor.open(e.path)
-      self._remote.changeFile(e.path, {
-        from: {line: 0, ch: 0},
-        to: { line: 0, ch: 0},
-        text: '',
-        origin: 'paste'
-      })
     }
+    self._remote.createFile(e.path)
+  })
+  
+  FileSystem.on('unzipFile', function (file) {
+    file.read(function (content) {
+      self._remote.createFile(file.path, content)
+    })
   })
 
   Interface.on('addDir', function (e) {
@@ -39,21 +41,30 @@ function Multihack (config) {
     if (created) {
       Interface.treeview.addDir(e.parentElement, FileSystem.get(e.path))
     }
+    self._remote.createDir(e.path)
   })
 
-  Interface.on('removeFile', function (e) {
-    var file = FileSystem.get(e.path)
-    Interface.confirmDelete(file.name, function () {
-      Interface.treeview.remove(e.parentElement, file)
-      FileSystem.delete(e.path)
-      if (self._remote) {
-        self._remote.deleteFile(e.path)
-      }
+  Interface.on('removeDir', function (e) {
+    var dir = FileSystem.get(e.path)
+    var workingFile = Editor.getWorkingFile()
+    
+    Interface.confirmDelete(dir.name, function () {
+      Interface.treeview.remove(e.parentElement, dir)
+
+      FileSystem.getContained(e.path).forEach(function (file) {
+        if (workingFile && file.path === workingFile.path) {
+          Editor.close()
+        }
+        self._remote.deleteFile(file.path)
+      })
+      self._remote.deleteFile(e.path)
     })
   })
 
   Interface.on('deleteCurrent', function (e) {
     var workingFile = Editor.getWorkingFile()
+    if (!workingFile) return
+    Editor.close()
     
     Interface.confirmDelete(workingFile.name, function () {
       var workingPath = workingFile.path
@@ -62,7 +73,6 @@ function Multihack (config) {
         Interface.treeview.remove(parentElement, FileSystem.get(workingPath))
       }
       FileSystem.delete(workingPath)
-      Editor.close()
       self._remote.deleteFile(workingPath)
     })
   })
@@ -70,9 +80,12 @@ function Multihack (config) {
   self.embed = util.getParameterByName('embed') || null
   self.roomID = util.getParameterByName('room') || null
   self.hostname = config.hostname
-  self.providedProject = false
 
   Interface.on('saveAs', function (saveType) {
+    FileSystem.getContained('').forEach(function (file) {
+      file.write(self._remote.getContent(file.path))
+    })
+    console.log('saving')
     FileSystem.saveProject(saveType, function (success) {
       if (success) {
         Interface.alert('Save Completed', 'Your project has been successfully saved.')
@@ -94,33 +107,41 @@ function Multihack (config) {
     HyperHostWrapper.deploy(FileSystem.getTree())
   })
 
-  Interface.removeOverlay()
+  Interface.hideOverlay()
   if (self.embed) {
     self._initRemote()
   } else {
-    Interface.getProject(function (project) {
-      if (!project) {
-        self._initRemote()
-      } else {
-        self.providedProject = true
-        Interface.showOverlay()
-        FileSystem.loadProject(project, function (tree) {
-          Interface.treeview.render(tree)
-          self._initRemote()
-        })
-      }
+    self._initRemote(function () {
+      Interface.getProject(function (project) {
+        if (project) {
+          Interface.showOverlay()
+          FileSystem.loadProject(project, function (tree) {
+            Interface.treeview.rerender(tree)
+            Interface.hideOverlay()
+          })
+        }
+      })
     })
   }
 }
 
-Multihack.prototype._initRemote = function () {
+Multihack.prototype._initRemote = function (cb) {
   var self = this
   
   function onRoom(data) {
     self.roomID = data.room
     window.history.pushState('Multihack', 'Multihack Room '+self.roomID, '?room='+self.roomID + (self.embed ? '&embed=true' : ''));
     self.nickname = data.nickname
-    self._remote = new Remote(self.hostname, self.roomID, self.nickname)
+    self._remote = new Remote({
+      hostname: self.hostname, 
+      room: self.roomID, 
+      nickname: self.nickname,
+      voice: Voice,
+      wrtc: null
+    })
+    self._remote.posFromIndex = function (filePath, index, cb) {
+      cb(FileSystem.getFile(filePath).doc.posFromIndex(index))
+    }
     
     document.getElementById('voice').style.display = ''
     document.getElementById('network').style.display = ''
@@ -128,87 +149,57 @@ Multihack.prototype._initRemote = function () {
     Interface.on('voiceToggle', function () {
       self._remote.voice.toggle()
     })
-    Interface.on('resync', function () {
-      self._remote.requestProject()
-    })
     Interface.on('showNetwork', function () {
       Interface.showNetwork(self._remote.peers, self.roomID, self._remote.nop2p, self._remote.mustForward)
     })
 
+    self._remote.on('changeSelection', function (selections) {
+      console.log('remote change selection')
+      Editor.highlight(selections)
+    })
     self._remote.on('changeFile', function (data) {
-      var outOfSync = !FileSystem.exists(data.filePath)
-      
-      if (data.change.type === 'rename') {
-        var contents = FileSystem.getFile(data.filePath).content
-        Editor.change(data.change.newPath, {
-          from: {ch:0, line:0},
-          to: {ch:0, line:0},
-          text: contents,
-          origin: 'paste'
-        })
-        var parentElement = Interface.treeview.getParentElement(data.filePath)
-        if (parentElement) {
-          Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
-        }
-        FileSystem.delete(data.filePath)
-        outOfSync = true
-      } else if (data.change.type === 'selection') {
-        Editor.highlight(data.filePath, data.change.ranges)
-      }else {
-        Editor.change(data.filePath, data.change)
-      }
-      
-      if (outOfSync) {
-        Interface.treeview.rerender(FileSystem.getTree())
-      }
+      console.log('remote change file')
+      Editor.change(data.filePath, data.change)
     })
     self._remote.on('deleteFile', function (data) {
+      console.log('remote delete file')
       var parentElement = Interface.treeview.getParentElement(data.filePath)
+      var workingFile = Editor.getWorkingFile()
+      
+      if (workingFile && data.filePath === workingFile.path) {
+        Editor.close()
+      }
+      
       if (parentElement) {
         Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
       }
       FileSystem.delete(data.filePath)
     })
-    self._remote.on('requestProject', function (requester) {
-      // Get a list of all non-directory files, sorted by ascending path length
-      var allFiles = FileSystem.getAllFiles().sort(function (a, b) {
-        return a.path.length - b.path.length
-      }).filter(function (a) {
-        return !a.isDir
-      })
-      
-      var size = 0
-      for (var i = 0; i < allFiles.length; i++) {
-        size+=allFiles[i].content.length
-        if (size > MAX_FORWARDING_SIZE && remote.hostname === DEFAULT_HOSTNAME) {
-          return alert('Project too large! Use a P2P connection.')
-        }
-      }
-      
-      for (var i = 0; i < allFiles.length; i++) {
-        self._remote.provideFile(allFiles[i].path, allFiles[i].content, requester)
-      }
-    })
-    self._remote.on('provideFile', function (data) {
+    self._remote.on('createFile', function (data) {
+      console.log('remote create file')
       FileSystem.getFile(data.filePath).write(data.content)
       Interface.treeview.rerender(FileSystem.getTree())
       if (!Editor.getWorkingFile()) {
         Editor.open(data.filePath)
       }
     })
+    self._remote.on('createDir', function (data) {
+      FileSystem.mkdir(data.path)
+      Interface.treeview.rerender(FileSystem.getTree())
+    })
     self._remote.on('lostPeer', function (peer) {
       if (self.embed) return
       Interface.alert('Connection Lost', 'Your connection to "'+peer.metadata.nickname+'" has been lost.')
     })
-    if (!self.providedProject) {
-      self._remote.once('gotPeer', function () {
-        self._remote.requestProject()
-      })
-    }
     
     Editor.on('change', function (data) {
       self._remote.changeFile(data.filePath, data.change)
     })
+    Editor.on('selection', function (data) {
+      self._remote.changeSelection(data)
+    })
+    
+    cb()
   }
 
   // Random starting room (to be changed) or from query

@@ -3,6 +3,7 @@ var inherits = require('inherits')
 var Modal = require('./modal')
 var TreeView = require('./treeview')
 var PeerGraph = require('p2p-graph')
+var cuid = require('cuid')
 
 inherits(Interface, EventEmitter)
 
@@ -17,7 +18,7 @@ function Interface () {
   })
 
   self.treeview.on('remove', function (e) {
-    self.emit('removeFile', e)
+    self.emit('removeDir', e)
   })
 
   self.addCounter = 1
@@ -76,11 +77,6 @@ function Interface () {
   document.getElementById('delete').addEventListener('click', function () {
     self.emit('deleteCurrent')
   })
-
-  // Resync button
-  document.getElementById('resync').addEventListener('click', function () {
-    self.emit('resync')
-  })
 }
 
 Interface.prototype.newFileDialog = function (path, cb) {
@@ -96,7 +92,7 @@ Interface.prototype.newFileDialog = function (path, cb) {
     var name = e.inputs[0].value
     var type = e.target.dataset['type']
     if (!name) {
-      name = (type === 'dir' ? 'New Folder' : 'New File') + self.addCounter++
+      name = (type === 'dir' ? 'New Folder' : 'New File') + '-' + cuid().slice(-7,-1)
     }
     if (cb) cb(name, type)
   })
@@ -266,7 +262,7 @@ Interface.prototype.showNetwork = function (peers, room, nop2p, mustForward) {
   })
 }
 
-Interface.prototype.removeOverlay = function (msg, cb) {
+Interface.prototype.hideOverlay = function (msg, cb) {
   document.getElementById('overlay').style.display = 'none'
   document.getElementById('modal').style.display = 'none'
 }
