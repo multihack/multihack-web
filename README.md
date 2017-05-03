@@ -45,10 +45,6 @@ Save your project as a ZIP archive and use it in your favourite native IDE.
 
 When your internet connection drops, MultiHack lets you keep working without interruptions.  
 
-## Fetch Code
-
-Press the refresh icon next to "Project Files" to force a sync and fetch any unwatched code.
-
 ## Run Your Own Instance
 
 To run your own instance, see [multihack-server](https://github.com/RationalCoding/multihack-server).  
