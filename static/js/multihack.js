@@ -6820,8 +6820,8 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js")})
-},{"../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js":441}],306:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
+},{"../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":441}],306:[function(require,module,exports){
 /**
  * cuid.js
  * Collision-resistant UID generator for browsers and node.
@@ -22808,6 +22808,7 @@ Connector.prototype._setupP2P = function (room, nickname) {
   self._client = new SimpleSignalClient(self._socket, {
     room: self.room
   })
+  self.events('client', self._client)
   
   self._client.on('ready', function (peerIDs) {   
 
@@ -22976,7 +22977,8 @@ Connector.prototype.disconnect = function () {
   self.voice = null
   self._client = null
   self.nop2p = null
-  self.peers = null
+  self.peers = []
+  self.events('peers', self.peers)
   self._handlers = null
   self._socket.disconnect()
   self._socket = null
@@ -22987,6 +22989,7 @@ Connector.prototype.reconnect = function () {
   
   self._socket = new Io(self.hostname)
   self.peers = []
+  self.events('peers', self.peers)
   self.mustForward = 0 // num of peers that are nop2p
 
   self._setupSocket()
@@ -27937,11 +27940,11 @@ function RemoteManager (opts) {
   self.nickname = opts.nickname || 'Guest'
   self.id = null
   self.yfs = null
-  self.ytext = null
   self.ySelections = null
   self.posFromIndex = function (filePath, index, cb) {
     console.warn('No "remote.posFromIndex" provided. Unable to apply change!')
   }
+  self.client = null
   self.voice = null
   self.peers = []
   self.lastSelection = null
@@ -27973,7 +27976,9 @@ function RemoteManager (opts) {
       events: function (event, value) {
         if (event === 'id') {
           self.id = value
-        }else if (event === 'voice') {
+        } else if (event === 'client') {
+          self.client = value
+        } else if (event === 'voice') {
           if (Voice) {
             self.voice = new Voice(value.socket, value.client, self.roomID)
           }
@@ -27988,6 +27993,7 @@ function RemoteManager (opts) {
       dir_tree: 'Map'
     }
   }).then(function (y) {
+    self.y = y
     self.yfs = y.share.dir_tree
     self.ySelections = y.share.selections
     
@@ -27995,7 +28001,7 @@ function RemoteManager (opts) {
       if (event.type === 'insert') {
         event.values.forEach(function (sel) {
           if (sel.id !== self.id || !self.id) {
-            self.emit('changeSelection', sel)
+            self.emit('changeSelection', self.ySelections.toArray())
           }
         })
       }
@@ -28030,7 +28036,7 @@ function RemoteManager (opts) {
             content: event.value.toString()
           })
         } else {
-          self.emit('createDIR', {
+          self.emit('createDir', {
             filePath: filePath
           })
         }
@@ -28174,6 +28180,18 @@ RemoteManager.prototype._onYTextAdd = function (filePath, event) {
 RemoteManager.prototype.destroy = function () {
   var self = this
   
+  // TODO: Add a proper destroy function in simple-signal
+  self.peers.forEach(function (peer) {
+    peer.destroy()
+  })
+  self.peers = []
+  self.client = null
+  self.voice = null
+  self.id = null
+  self.yfs = null
+  self.ySelections = null
+  self.posFromIndex = null
+  self.lastSelection = null
 }
 
 module.exports = RemoteManager
@@ -41820,6 +41838,7 @@ function Editor () {
   self._cm.on('beforeSelectionChange', self._onSelectionChange.bind(self))
 
   self._theme = null
+  self._remoteCarets = []
 }
 
 Editor.prototype._onchange = function (cm, change) {
@@ -41837,19 +41856,7 @@ Editor.prototype._onchange = function (cm, change) {
 Editor.prototype._onSelectionChange = function (cm, change) {
   var self = this
   
-  var ranges = change.ranges.filter(function (range) {
-    return range.head.ch !== range.anchor.ch || range.head.line !== range.anchor.line
-  }).map(function (range) {
-    var nr = JSON.parse(JSON.stringify(range))
-    if (nr.head.line > nr.anchor.line || (
-      nr.head.line === nr.anchor.line && nr.head.ch > nr.anchor.ch
-    )) {
-      var temp = nr.head
-      nr.head = nr.anchor
-      nr.anchor = temp
-    }
-    return nr
-  })
+  var ranges = change.ranges.map(self._putHeadBeforeAnchor)
   
   self.emit('selection', {
     filePath: self._workingFile.path,
@@ -41860,19 +41867,50 @@ Editor.prototype._onSelectionChange = function (cm, change) {
   })
 }
 
-Editor.prototype.highlight = function (filePath, ranges) {
+Editor.prototype.highlight = function (selections) {
   var self = this
-  if (!self._workingFile || filePath !== self._workingFile.path) return
   
+  if (!self._workingFile) return
+    
+  self._remoteCarets.forEach(self._removeRemoteCaret)
+  self._remoteCarets = []
+
   self._cm.getAllMarks().forEach(function (mark) {
     mark.clear()
   })
-  
-  ranges.forEach(function (range) {
-    self._cm.markText(range.head, range.anchor, {
-      className: 'remoteSelection'
+
+  selections.forEach(function (sel) {
+    if (sel.filePath !== self._workingFile.path) return
+
+    sel.change.ranges.forEach(function (range) {
+      if (self._isNonEmptyRange(range)) {
+        self._cm.markText(range.head, range.anchor, {
+          className: 'remoteSelection'
+        })
+      } else {
+        self._insertRemoteCaret(range)
+      }
     })
   })
+}
+
+Editor.prototype._insertRemoteCaret = function (range) {
+  var self = this
+
+  var caretEl = document.createElement('div')
+
+  caretEl.classList.add('remoteCaret')
+  caretEl.style.height = self._cm.defaultTextHeight() + "px"
+  caretEl.style.marginTop = "-" + self._cm.defaultTextHeight() + "px"
+
+  self._remoteCarets.push(caretEl)
+
+  self._cm.addWidget(range.anchor, caretEl, false)
+}
+
+Editor.prototype._removeRemoteCaret = function (caret) {
+  var self = this
+  caret.parentNode.removeChild(caret)
 }
 
 // Handle an external change
@@ -41924,6 +41962,22 @@ Editor.prototype.close = function () {
 Editor.prototype.getWorkingFile = function () {
   var self = this
   return self._workingFile
+}
+
+Editor.prototype._isNonEmptyRange = function (range) {
+  return range.head.ch !== range.anchor.ch || range.head.line !== range.anchor.line
+}
+
+Editor.prototype._putHeadBeforeAnchor = function (range) {
+  var nr = JSON.parse(JSON.stringify(range))
+  if (nr.head.line > nr.anchor.line || (
+    nr.head.line === nr.anchor.line && nr.head.ch > nr.anchor.ch
+  )) {
+    var temp = nr.head
+    nr.head = nr.anchor
+    nr.anchor = temp
+  }
+  return nr
 }
 
 module.exports = new Editor()
@@ -42525,17 +42579,16 @@ Multihack.prototype._initRemote = function (cb) {
       Interface.showNetwork(self._remote.peers, self.roomID, self._remote.nop2p, self._remote.mustForward)
     })
 
-    self._remote.on('changeSelection', function (data) {
-      Editor.highlight(data.filePath, data.change.ranges)
+    self._remote.on('changeSelection', function (selections) {
+      console.log('remote change selection')
+      Editor.highlight(selections)
     })
     self._remote.on('changeFile', function (data) {
+      console.log('remote change file')
       Editor.change(data.filePath, data.change)
     })
-    self._remote.on('renameFile', function (data) {
-      // TODO
-      console.warn('got unhandled rename')
-    })
     self._remote.on('deleteFile', function (data) {
+      console.log('remote delete file')
       var parentElement = Interface.treeview.getParentElement(data.filePath)
       var workingFile = Editor.getWorkingFile()
       
@@ -42549,6 +42602,7 @@ Multihack.prototype._initRemote = function (cb) {
       FileSystem.delete(data.filePath)
     })
     self._remote.on('createFile', function (data) {
+      console.log('remote create file')
       FileSystem.getFile(data.filePath).write(data.content)
       Interface.treeview.rerender(FileSystem.getTree())
       if (!Editor.getWorkingFile()) {

@@ -153,17 +153,16 @@ Multihack.prototype._initRemote = function (cb) {
       Interface.showNetwork(self._remote.peers, self.roomID, self._remote.nop2p, self._remote.mustForward)
     })
 
-    self._remote.on('changeSelection', function (data) {
-      Editor.highlight(data.filePath, data.change.ranges)
+    self._remote.on('changeSelection', function (selections) {
+      console.log('remote change selection')
+      Editor.highlight(selections)
     })
     self._remote.on('changeFile', function (data) {
+      console.log('remote change file')
       Editor.change(data.filePath, data.change)
     })
-    self._remote.on('renameFile', function (data) {
-      // TODO
-      console.warn('got unhandled rename')
-    })
     self._remote.on('deleteFile', function (data) {
+      console.log('remote delete file')
       var parentElement = Interface.treeview.getParentElement(data.filePath)
       var workingFile = Editor.getWorkingFile()
       
@@ -177,6 +176,7 @@ Multihack.prototype._initRemote = function (cb) {
       FileSystem.delete(data.filePath)
     })
     self._remote.on('createFile', function (data) {
+      console.log('remote create file')
       FileSystem.getFile(data.filePath).write(data.content)
       Interface.treeview.rerender(FileSystem.getTree())
       if (!Editor.getWorkingFile()) {

@@ -405,6 +405,11 @@ input[type="text"].long {
   background-color: #3f5d38;
 }
 
+.remoteCaret {
+  background-color: #7fb971;
+  width: 1px;
+  z-index: 2;
+}
 
 /* Custom scrollbars */
 

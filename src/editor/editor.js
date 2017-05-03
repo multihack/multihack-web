@@ -42,6 +42,7 @@ function Editor () {
   self._cm.on('beforeSelectionChange', self._onSelectionChange.bind(self))
 
   self._theme = null
+  self._remoteCarets = []
 }
 
 Editor.prototype._onchange = function (cm, change) {
@@ -59,19 +60,7 @@ Editor.prototype._onchange = function (cm, change) {
 Editor.prototype._onSelectionChange = function (cm, change) {
   var self = this
   
-  var ranges = change.ranges.filter(function (range) {
-    return range.head.ch !== range.anchor.ch || range.head.line !== range.anchor.line
-  }).map(function (range) {
-    var nr = JSON.parse(JSON.stringify(range))
-    if (nr.head.line > nr.anchor.line || (
-      nr.head.line === nr.anchor.line && nr.head.ch > nr.anchor.ch
-    )) {
-      var temp = nr.head
-      nr.head = nr.anchor
-      nr.anchor = temp
-    }
-    return nr
-  })
+  var ranges = change.ranges.map(self._putHeadBeforeAnchor)
   
   self.emit('selection', {
     filePath: self._workingFile.path,
@@ -82,19 +71,50 @@ Editor.prototype._onSelectionChange = function (cm, change) {
   })
 }
 
-Editor.prototype.highlight = function (filePath, ranges) {
+Editor.prototype.highlight = function (selections) {
   var self = this
-  if (!self._workingFile || filePath !== self._workingFile.path) return
   
+  if (!self._workingFile) return
+    
+  self._remoteCarets.forEach(self._removeRemoteCaret)
+  self._remoteCarets = []
+
   self._cm.getAllMarks().forEach(function (mark) {
     mark.clear()
   })
-  
-  ranges.forEach(function (range) {
-    self._cm.markText(range.head, range.anchor, {
-      className: 'remoteSelection'
+
+  selections.forEach(function (sel) {
+    if (sel.filePath !== self._workingFile.path) return
+
+    sel.change.ranges.forEach(function (range) {
+      if (self._isNonEmptyRange(range)) {
+        self._cm.markText(range.head, range.anchor, {
+          className: 'remoteSelection'
+        })
+      } else {
+        self._insertRemoteCaret(range)
+      }
     })
   })
+}
+
+Editor.prototype._insertRemoteCaret = function (range) {
+  var self = this
+
+  var caretEl = document.createElement('div')
+
+  caretEl.classList.add('remoteCaret')
+  caretEl.style.height = self._cm.defaultTextHeight() + "px"
+  caretEl.style.marginTop = "-" + self._cm.defaultTextHeight() + "px"
+
+  self._remoteCarets.push(caretEl)
+
+  self._cm.addWidget(range.anchor, caretEl, false)
+}
+
+Editor.prototype._removeRemoteCaret = function (caret) {
+  var self = this
+  caret.parentNode.removeChild(caret)
 }
 
 // Handle an external change
@@ -146,6 +166,22 @@ Editor.prototype.close = function () {
 Editor.prototype.getWorkingFile = function () {
   var self = this
   return self._workingFile
+}
+
+Editor.prototype._isNonEmptyRange = function (range) {
+  return range.head.ch !== range.anchor.ch || range.head.line !== range.anchor.line
+}
+
+Editor.prototype._putHeadBeforeAnchor = function (range) {
+  var nr = JSON.parse(JSON.stringify(range))
+  if (nr.head.line > nr.anchor.line || (
+    nr.head.line === nr.anchor.line && nr.head.ch > nr.anchor.ch
+  )) {
+    var temp = nr.head
+    nr.head = nr.anchor
+    nr.anchor = temp
+  }
+  return nr
 }
 
 module.exports = new Editor()
