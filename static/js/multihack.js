@@ -22743,6 +22743,7 @@ class Connector extends Y.AbstractConnector {
     self.events = opts.events || function (event, value) {}
     self.id = null
     self.queue = []
+    self.peers = []
 
     self.reconnect()
   }
@@ -22943,6 +22944,7 @@ Connector.prototype._sendOnePeer = function (id, event, message) {
     if (self.peers[i].id !== id) continue
     if (self.peers[i].nop2p) {
       self._socket.emit('forward', {
+        target: id,
         event: event,
         message: message
       })
@@ -22990,7 +22992,10 @@ Connector.prototype.disconnect = function () {
   self._client = null
   self.nop2p = null
   self.peers = []
-  self.events('peers', self.peers)
+  self.events('peers', {
+    peers: self.peers,
+    mustForward: self.mustForward
+  })
   self._handlers = null
   self._socket.disconnect()
   self._socket = null
@@ -23001,7 +23006,10 @@ Connector.prototype.reconnect = function () {
   
   self._socket = new Io(self.hostname)
   self.peers = []
-  self.events('peers', self.peers)
+  self.events('peers', {
+    peers: self.peers,
+    mustForward: self.mustForward
+  })
   self.mustForward = 0 // num of peers that are nop2p
 
   self._setupSocket()
@@ -28015,7 +28023,9 @@ function RemoteManager (opts) {
       if (event.type === 'insert') {
         event.values.forEach(function (sel) {
           if (sel.id !== self.id || !self.id) {
-            self.emit('changeSelection', self.ySelections.toArray())
+            self.emit('changeSelection', self.ySelections.toArray().filter(function (sel) {
+              return sel.id !== self.id
+            }))
           }
         })
       }
@@ -28165,7 +28175,6 @@ RemoteManager.prototype._onYTextAdd = function (filePath, event) {
   self.mutualExcluse(filePath, function () { 
     self.posFromIndex(filePath, event.index, function (from) {
       if (event.type === 'insert') {
-        console.log('got insert')
         self.emit('changeFile', {
           filePath, filePath,
           change: {
@@ -28175,7 +28184,6 @@ RemoteManager.prototype._onYTextAdd = function (filePath, event) {
           }
         })
       } else if (event.type === 'delete') {
-        console.log('got delete')
         self.posFromIndex(filePath, event.index + event.length, function (to) {
           self.emit('changeFile', {
             filePath, filePath,
@@ -41853,6 +41861,7 @@ function Editor () {
 
   self._theme = null
   self._remoteCarets = []
+  self._lastSelections = []
 }
 
 Editor.prototype._onchange = function (cm, change) {
@@ -41884,28 +41893,34 @@ Editor.prototype._onSelectionChange = function (cm, change) {
 Editor.prototype.highlight = function (selections) {
   var self = this
   
-  if (!self._workingFile) return
-    
-  self._remoteCarets.forEach(self._removeRemoteCaret)
-  self._remoteCarets = []
+  self._lastSelections = selections
+  
+  // Timeout so selections are always applied after changes
+  window.setTimeout(function () {
+    if (!self._workingFile) return
 
-  self._cm.getAllMarks().forEach(function (mark) {
-    mark.clear()
-  })
+    self._remoteCarets.forEach(self._removeRemoteCaret)
+    self._remoteCarets = []
 
-  selections.forEach(function (sel) {
-    if (sel.filePath !== self._workingFile.path) return
-
-    sel.change.ranges.forEach(function (range) {
-      if (self._isNonEmptyRange(range)) {
-        self._cm.markText(range.head, range.anchor, {
-          className: 'remoteSelection'
-        })
-      } else {
-        self._insertRemoteCaret(range)
-      }
+    self._cm.getAllMarks().forEach(function (mark) {
+      mark.clear()
     })
-  })
+
+    selections.forEach(function (sel) {
+      if (sel.filePath !== self._workingFile.path) return
+      console.log(sel)
+
+      sel.change.ranges.forEach(function (range) {
+        if (self._isNonEmptyRange(range)) {
+          self._cm.markText(range.head, range.anchor, {
+            className: 'remoteSelection'
+          })
+        } else {
+          self._insertRemoteCaret(range)
+        }
+      })
+    })
+  }, 10)
 }
 
 Editor.prototype._insertRemoteCaret = function (range) {
@@ -41963,6 +41978,8 @@ Editor.prototype.open = function (filePath) {
       self._cm.swapDoc(self._workingFile.doc)
       break
   }
+  
+  self.highlight(self._lastSelections)
 }
 
 Editor.prototype.close = function () {

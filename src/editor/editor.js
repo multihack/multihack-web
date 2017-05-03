@@ -43,6 +43,7 @@ function Editor () {
 
   self._theme = null
   self._remoteCarets = []
+  self._lastSelections = []
 }
 
 Editor.prototype._onchange = function (cm, change) {
@@ -74,28 +75,34 @@ Editor.prototype._onSelectionChange = function (cm, change) {
 Editor.prototype.highlight = function (selections) {
   var self = this
   
-  if (!self._workingFile) return
-    
-  self._remoteCarets.forEach(self._removeRemoteCaret)
-  self._remoteCarets = []
+  self._lastSelections = selections
+  
+  // Timeout so selections are always applied after changes
+  window.setTimeout(function () {
+    if (!self._workingFile) return
 
-  self._cm.getAllMarks().forEach(function (mark) {
-    mark.clear()
-  })
+    self._remoteCarets.forEach(self._removeRemoteCaret)
+    self._remoteCarets = []
 
-  selections.forEach(function (sel) {
-    if (sel.filePath !== self._workingFile.path) return
-
-    sel.change.ranges.forEach(function (range) {
-      if (self._isNonEmptyRange(range)) {
-        self._cm.markText(range.head, range.anchor, {
-          className: 'remoteSelection'
-        })
-      } else {
-        self._insertRemoteCaret(range)
-      }
+    self._cm.getAllMarks().forEach(function (mark) {
+      mark.clear()
     })
-  })
+
+    selections.forEach(function (sel) {
+      if (sel.filePath !== self._workingFile.path) return
+      console.log(sel)
+
+      sel.change.ranges.forEach(function (range) {
+        if (self._isNonEmptyRange(range)) {
+          self._cm.markText(range.head, range.anchor, {
+            className: 'remoteSelection'
+          })
+        } else {
+          self._insertRemoteCaret(range)
+        }
+      })
+    })
+  }, 10)
 }
 
 Editor.prototype._insertRemoteCaret = function (range) {
@@ -153,6 +160,8 @@ Editor.prototype.open = function (filePath) {
       self._cm.swapDoc(self._workingFile.doc)
       break
   }
+  
+  self.highlight(self._lastSelections)
 }
 
 Editor.prototype.close = function () {
