@@ -48,3 +48,9 @@ When your internet connection drops, MultiHack lets you keep working without int
 ## Run Your Own Instance
 
 To run your own instance, see [multihack-server](https://github.com/RationalCoding/multihack-server).  
+
+## Introducting Version 4.0!
+
+- Multihack now uses a [Conflict-Free Replicated Data Type](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type) to merge conflicts and ensure everyone is always looking at the same code. Thanks @kifhan for assistance with this!
+
+- You can now see your team's carets, and the notifications are less instrusive. Thanks to @Worie!
