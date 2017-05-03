@@ -9,7 +9,7 @@
 [![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![Gitter chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/multihack/multihack)
 
-<b>Compatible with <a href="https://github.com/RationalCoding/multihack-brackets">multihack-brackets</a>!
+<b>Compatible with <a href="https://github.com/RationalCoding/multihack-brackets">multihack-brackets</a>!</b>
 
 Tired of struggling to set up remote collaboration with your team? Try <a href="https://rationalcoding.github.io/multihack-web/">multihack.co</a>
 
