@@ -21,12 +21,13 @@
     "save": "Save",
     "name": "Name",
     "upload": "Upload",
+    "room": "Room",
     "file": "File",
     "folder": "Folder",
     "delete": "Delete",
     "talk": "Talk",
-    'new_file': "New File",
-    'new_folder': "New Folder",
+    "new_file": "New File",
+    "new_folder": "New Folder",
     "nickname_prompt_title": "Choose Nickname",
     "nickname_prompt": "Enter a nickname so your team knows who you are.",
     "nickname_placeholder": "Nickname",
@@ -37,7 +38,11 @@
     "create_title": "Create File/Folder",
     "load_title": "Load Project",
     "load_prompt": "Upload a ZIP file.",
-    "offline_title": 'Offline Mode',
-    "offline_alert": "You are now in offline mode.<br>Save and refresh to join a room."
+    "offline_title": "Offline Mode",
+    "offline_alert": "You are now in offline mode.<br>Save and refresh to join a room.",
+    "leave_call": "Leave Call",
+    "join_call": "Join Call",
+    "join_leave_call": "Join/Leave Call",
+    "leave_room": "Leave Room"
   }
 }
