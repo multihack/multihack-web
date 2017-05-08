@@ -4,6 +4,7 @@ var Modal = require('./modal')
 var TreeView = require('./treeview')
 var PeerGraph = require('p2p-graph')
 var cuid = require('cuid')
+var mustache = require('mustache')
 
 inherits(Interface, EventEmitter)
 
@@ -189,6 +190,23 @@ Interface.prototype.alert = function (title, message, cb) {
     if (cb) cb()
   })
   alertModal.open()
+}
+
+Interface.prototype.flashTooltip = function (id, message) {
+  var sanitized = mustache.render('{{message}}', {message: message})
+  var tooltip = document.getElementById(id)
+  var span = tooltip.querySelector('span')
+  
+  span.innerHTML = sanitized
+  tooltip.style.opacity = 1
+  tooltip.style.display = ''
+  
+  setTimeout(function () {
+    tooltip.style.opacity = 0
+    setTimeout(function () {
+      tooltip.style.display = ''
+    }, 300)
+  }, 3000)
 }
 
 Interface.prototype.alertHTML = function (title, message, cb) {

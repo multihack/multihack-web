@@ -189,7 +189,7 @@ Multihack.prototype._initRemote = function (cb) {
     })
     self._remote.on('lostPeer', function (peer) {
       if (self.embed) return
-      Interface.alert('Connection Lost', 'Your connection to "'+peer.metadata.nickname+'" has been lost.')
+      Interface.flashTooltip('tooltip-lostpeer', 'Your connection to "'+peer.metadata.nickname+'" has been lost.')
     })
     
     Editor.on('change', function (data) {

@@ -90,7 +90,6 @@ Editor.prototype.highlight = function (selections) {
 
     selections.forEach(function (sel) {
       if (sel.filePath !== self._workingFile.path) return
-      console.log(sel)
 
       sel.change.ranges.forEach(function (range) {
         if (self._isNonEmptyRange(range)) {
