@@ -6512,7 +6512,7 @@ exports.allocUnsafeSlow = function allocUnsafeSlow(size) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"buffer":422}],302:[function(require,module,exports){
+},{"buffer":424}],302:[function(require,module,exports){
 /**
  * Slice reference.
  */
@@ -6821,7 +6821,7 @@ function objectToString(o) {
 }
 
 }).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
-},{"../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":427}],306:[function(require,module,exports){
+},{"../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":429}],306:[function(require,module,exports){
 /**
  * cuid.js
  * Collision-resistant UID generator for browsers and node.
@@ -16677,7 +16677,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":309,"_process":430}],309:[function(require,module,exports){
+},{"./debug":309,"_process":432}],309:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -19054,7 +19054,7 @@ WS.prototype.check = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":313,"component-inherit":304,"debug":320,"engine.io-parser":323,"parseqs":344,"ws":420,"yeast":399}],319:[function(require,module,exports){
+},{"../transport":313,"component-inherit":304,"debug":320,"engine.io-parser":323,"parseqs":344,"ws":422,"yeast":399}],319:[function(require,module,exports){
 (function (global){
 // browser shim for xmlhttprequest module
 
@@ -19276,7 +19276,7 @@ function localstorage(){
 }
 
 }).call(this,require('_process'))
-},{"./debug":321,"_process":430}],321:[function(require,module,exports){
+},{"./debug":321,"_process":432}],321:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -22232,7 +22232,7 @@ RateLimiter.prototype = {
 module.exports = RateLimiter;
 
 }).call(this,require('_process'))
-},{"./tokenBucket":337,"_process":430}],337:[function(require,module,exports){
+},{"./tokenBucket":337,"_process":432}],337:[function(require,module,exports){
 (function (process){
 
 /**
@@ -22401,7 +22401,7 @@ TokenBucket.prototype = {
 module.exports = TokenBucket;
 
 }).call(this,require('_process'))
-},{"_process":430}],338:[function(require,module,exports){
+},{"_process":432}],338:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -22846,7 +22846,7 @@ RemoteManager.prototype.destroy = function () {
 }
 
 module.exports = RemoteManager
-},{"events":424,"inherits":332,"y-array":393,"y-map":394,"y-memory":395,"y-multihack":397,"y-text":398,"yjs":406}],340:[function(require,module,exports){
+},{"events":426,"inherits":332,"y-array":393,"y-map":394,"y-memory":395,"y-multihack":397,"y-text":398,"yjs":406}],340:[function(require,module,exports){
 // The streaming binary wire protocol for Multihack
 // Why? Because JSON/msgpack/schemapack/protobuf/anything weren't fast enough with chunking.
 // For large and/or rapid sequential file transfer over ws/webrtc
@@ -24122,7 +24122,7 @@ P2PGraph.prototype.getLinkIndex = function (source, target) {
   return -1
 }
 
-},{"d3":307,"debug":308,"events":424,"inherits":332,"throttleit":380}],343:[function(require,module,exports){
+},{"d3":307,"debug":308,"events":426,"inherits":332,"throttleit":380}],343:[function(require,module,exports){
 (function (global){
 /**
  * JSON parse.
@@ -24284,7 +24284,7 @@ function nextTick(fn, arg1, arg2, arg3) {
 }
 
 }).call(this,require('_process'))
-},{"_process":430}],347:[function(require,module,exports){
+},{"_process":432}],347:[function(require,module,exports){
 (function (process,global,Buffer){
 'use strict'
 
@@ -24324,7 +24324,7 @@ function randomBytes (size, cb) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"_process":430,"buffer":422}],348:[function(require,module,exports){
+},{"_process":432,"buffer":424}],348:[function(require,module,exports){
 // a duplex stream is just a stream that is both readable and writable.
 // Since JS doesn't have multiple prototypal inheritance, this class
 // prototypally inherits from Readable, and then parasitically from
@@ -25365,7 +25365,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'))
-},{"./_stream_duplex":348,"./internal/streams/BufferList":353,"./internal/streams/stream":354,"_process":430,"buffer":422,"buffer-shims":301,"core-util-is":305,"events":424,"inherits":332,"isarray":333,"process-nextick-args":346,"string_decoder/":379,"util":420}],351:[function(require,module,exports){
+},{"./_stream_duplex":348,"./internal/streams/BufferList":353,"./internal/streams/stream":354,"_process":432,"buffer":424,"buffer-shims":301,"core-util-is":305,"events":426,"inherits":332,"isarray":333,"process-nextick-args":346,"string_decoder/":379,"util":422}],351:[function(require,module,exports){
 // a transform stream is a readable/writable stream where you do
 // something with the data.  Sometimes it's called a "filter",
 // but that's not a great name for it, since that implies a thing where
@@ -26095,7 +26095,7 @@ function CorkedRequest(state) {
   };
 }
 }).call(this,require('_process'))
-},{"./_stream_duplex":348,"./internal/streams/stream":354,"_process":430,"buffer":422,"buffer-shims":301,"core-util-is":305,"inherits":332,"process-nextick-args":346,"util-deprecate":382}],353:[function(require,module,exports){
+},{"./_stream_duplex":348,"./internal/streams/stream":354,"_process":432,"buffer":424,"buffer-shims":301,"core-util-is":305,"inherits":332,"process-nextick-args":346,"util-deprecate":382}],353:[function(require,module,exports){
 'use strict';
 
 var Buffer = require('buffer').Buffer;
@@ -26160,10 +26160,10 @@ BufferList.prototype.concat = function (n) {
   }
   return ret;
 };
-},{"buffer":422,"buffer-shims":301}],354:[function(require,module,exports){
+},{"buffer":424,"buffer-shims":301}],354:[function(require,module,exports){
 module.exports = require('events').EventEmitter;
 
-},{"events":424}],355:[function(require,module,exports){
+},{"events":426}],355:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = exports;
 exports.Readable = exports;
@@ -26915,7 +26915,7 @@ exports.PassThrough = require('./lib/_stream_passthrough.js');
 },{}],357:[function(require,module,exports){
 module.exports = require('buffer')
 
-},{"buffer":422}],358:[function(require,module,exports){
+},{"buffer":424}],358:[function(require,module,exports){
  /* eslint-env node */
 'use strict';
 
@@ -28277,7 +28277,7 @@ Peer.prototype._transformConstraints = function (constraints) {
 function noop () {}
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":422,"debug":308,"get-browser-rtc":326,"inherits":332,"randombytes":347,"readable-stream":355}],360:[function(require,module,exports){
+},{"buffer":424,"debug":308,"get-browser-rtc":326,"inherits":332,"randombytes":347,"readable-stream":355}],360:[function(require,module,exports){
 module.exports = SimpleSignalClient
 
 var SimplePeer = require('simple-peer')
@@ -29629,7 +29629,7 @@ function url (uri, loc) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"debug":366,"parseuri":345}],366:[function(require,module,exports){
 arguments[4][320][0].apply(exports,arguments)
-},{"./debug":367,"_process":430,"dup":320}],367:[function(require,module,exports){
+},{"./debug":367,"_process":432,"dup":320}],367:[function(require,module,exports){
 arguments[4][321][0].apply(exports,arguments)
 },{"dup":321,"ms":368}],368:[function(require,module,exports){
 arguments[4][322][0].apply(exports,arguments)
@@ -30944,7 +30944,7 @@ module.exports = {
     Throttle: Throttle,
     ThrottleGroup: ThrottleGroup
 };
-},{"limiter":335,"stream":442,"util":447}],379:[function(require,module,exports){
+},{"limiter":335,"stream":444,"util":449}],379:[function(require,module,exports){
 'use strict';
 
 var Buffer = require('buffer').Buffer;
@@ -31218,7 +31218,7 @@ function simpleWrite(buf) {
 function simpleEnd(buf) {
   return buf && buf.length ? this.write(buf) : '';
 }
-},{"buffer":422,"buffer-shims":301}],380:[function(require,module,exports){
+},{"buffer":424,"buffer-shims":301}],380:[function(require,module,exports){
 module.exports = throttle;
 
 /**
@@ -40019,7 +40019,7 @@ var ExcludedIntelliSenseTriggerKeys = {
   '220': 'backslash',
   '222': 'quote'
 }
-},{"./../filesystem/filesystem":410,"events":424,"inherits":332}],408:[function(require,module,exports){
+},{"./../filesystem/filesystem":410,"events":426,"inherits":332}],408:[function(require,module,exports){
 var util = require('./util')
 
 function Directory (path) {
@@ -40334,7 +40334,7 @@ FileSystem.prototype.unzip = function (file, cb) {
 
 module.exports = new FileSystem()
 
-},{"./directory":408,"./file":409,"./util":411,"events":424,"inherits":332}],411:[function(require,module,exports){
+},{"./directory":408,"./file":409,"./util":411,"events":426,"inherits":332}],411:[function(require,module,exports){
 var util = {}
 
 util.getFilename = function (path) {
@@ -40416,6 +40416,8 @@ var Remote = require('multihack-core')
 var HyperHostWrapper = require('./network/hyperhostwrapper')
 var util = require('./filesystem/util')
 var Voice = require('./network/voice')
+var lang = require('./interface/lang/lang')
+var lg = lang.get.bind(lang)
 
 var DEFAULT_HOSTNAME = 'https://quiet-shelf-57463.herokuapp.com'
 var MAX_FORWARDING_SIZE = 5*1000*1000 // 5mb limit for non-p2p connections (validated by server)
@@ -40496,23 +40498,22 @@ function Multihack (config) {
     FileSystem.getContained('').forEach(function (file) {
       file.write(self._remote.getContent(file.path))
     })
-    console.log('saving')
     FileSystem.saveProject(saveType, function (success) {
       if (success) {
-        Interface.alert('Save Completed', 'Your project has been successfully saved.')
+        Interface.alert(lg('save_success_title'), lg('save_success'))
       } else {
-        Interface.alert('Save Failed', 'An error occured while trying to save your project.<br>Please select a different method.')
+        Interface.alert(lg('save_fail_title'), lg('save_fail'))
       }
     })
   })
 
   Interface.on('deploy', function () {
     HyperHostWrapper.on('error', function (err) {
-      Interface.alert('Deploy Failed', err)
+      Interface.alert(lg('deploy_fail_title'), err)
     })
     
     HyperHostWrapper.on('ready', function (url) {
-      Interface.alertHTML('Website Deployed', 'Anyone can visit your site at<br><a target="_blank" href="' + url + '">' + url + '</a>')
+      Interface.alertHTML(lg('deploy_title'), lg('deploy_success', {url: url}))
     })
     
     HyperHostWrapper.deploy(FileSystem.getTree())
@@ -40541,7 +40542,8 @@ Multihack.prototype._initRemote = function (cb) {
   
   function onRoom(data) {
     self.roomID = data.room
-    window.history.pushState('Multihack', 'Multihack Room '+self.roomID, '?room='+self.roomID + (self.embed ? '&embed=true' : ''));
+    Interface.setRoom(self.roomID)
+    window.history.pushState('Multihack', lg('history_item', {room: self.roomID}), '?room='+self.roomID + (self.embed ? '&embed=true' : ''));
     self.nickname = data.nickname
     self._remote = new Remote({
       hostname: self.hostname, 
@@ -40565,15 +40567,12 @@ Multihack.prototype._initRemote = function (cb) {
     })
 
     self._remote.on('changeSelection', function (selections) {
-      console.log('remote change selection')
       Editor.highlight(selections)
     })
     self._remote.on('changeFile', function (data) {
-      console.log('remote change file')
       Editor.change(data.filePath, data.change)
     })
     self._remote.on('deleteFile', function (data) {
-      console.log('remote delete file')
       var parentElement = Interface.treeview.getParentElement(data.filePath)
       var workingFile = Editor.getWorkingFile()
       
@@ -40587,7 +40586,6 @@ Multihack.prototype._initRemote = function (cb) {
       FileSystem.delete(data.filePath)
     })
     self._remote.on('createFile', function (data) {
-      console.log('remote create file')
       FileSystem.getFile(data.filePath).write(data.content)
       Interface.treeview.rerender(FileSystem.getTree())
       if (!Editor.getWorkingFile()) {
@@ -40600,7 +40598,7 @@ Multihack.prototype._initRemote = function (cb) {
     })
     self._remote.on('lostPeer', function (peer) {
       if (self.embed) return
-      Interface.flashTooltip('tooltip-lostpeer', 'Your connection to "'+peer.metadata.nickname+'" has been lost.')
+      Interface.flashTooltip('tooltip-lostpeer', lg('lost_connection', {nickname: peer.metadata.nickname}))
     })
     
     Editor.on('change', function (data) {
@@ -40622,21 +40620,22 @@ Multihack.prototype._initRemote = function (cb) {
     Interface.embedMode()
     onRoom({
       room: self.roomID || Math.random().toString(36).substr(2),
-      nickname: 'Guest'
+      nickname: lg('default_nickname')
     })
   }
 }
 
 module.exports = Multihack
 
-},{"./editor/editor":407,"./filesystem/filesystem":410,"./filesystem/util":411,"./interface/interface":413,"./network/hyperhostwrapper":417,"./network/voice":418,"multihack-core":339}],413:[function(require,module,exports){
+},{"./editor/editor":407,"./filesystem/filesystem":410,"./filesystem/util":411,"./interface/interface":413,"./interface/lang/lang":414,"./network/hyperhostwrapper":419,"./network/voice":420,"multihack-core":339}],413:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 var Modal = require('./modal')
 var TreeView = require('./treeview')
 var PeerGraph = require('p2p-graph')
 var cuid = require('cuid')
-var mustache = require('mustache')
+var lang = require('./lang/lang')
+var lg = lang.get.bind(lang)
 
 inherits(Interface, EventEmitter)
 
@@ -40716,7 +40715,7 @@ Interface.prototype.newFileDialog = function (path, cb) {
   var self = this
 
   var modal = new Modal('newFile', {
-    title: 'Create File/Folder',
+    title: lg('create_title'),
     path: path
   })
 
@@ -40725,7 +40724,7 @@ Interface.prototype.newFileDialog = function (path, cb) {
     var name = e.inputs[0].value
     var type = e.target.dataset['type']
     if (!name) {
-      name = (type === 'dir' ? 'New Folder' : 'New File') + '-' + cuid().slice(-7,-1)
+      name = (type === 'dir' ? lg('new_folder') : lg('new_file')) + '-' + cuid().slice(-7,-1)
     }
     if (cb) cb(name, type)
   })
@@ -40754,8 +40753,8 @@ Interface.prototype.getProject = function (cb) {
   // var self = this
 
   var projectModal = new Modal('file', {
-    title: 'Load Project',
-    message: 'Upload a zip file containing a project.'
+    title: lg('load_title'),
+    message: lg('load_prompt')
   })
   projectModal.on('cancel', function () {
     projectModal.close()
@@ -40777,9 +40776,9 @@ Interface.prototype.getRoom = function (roomID, cb) {
   var self = this
 
   var roomModal = new Modal('input', {
-    title: 'Join Room',
-    message: 'Enter the ID of the room you want to join.',
-    placeholder: 'RoomID',
+    title: lg('choose_room_title'),
+    message: lg('choose_room_prompt'),
+    placeholder: lg('room_placeholder'),
     default: roomID
   })
   roomModal.on('done', function (e) {
@@ -40788,7 +40787,7 @@ Interface.prototype.getRoom = function (roomID, cb) {
   })
   roomModal.on('cancel', function () {
     roomModal.close()
-    self.alertHTML('Offline Mode', 'You are now in offline mode.<br>Save and refresh to join a room.')
+    self.alertHTML(lg('offline_title'), lg('offline_alert'))
   })
   roomModal.open()
 }
@@ -40797,9 +40796,9 @@ Interface.prototype.getNickname = function (room, cb) {
   var self = this
 
   var modal = new Modal('force-input', {
-    title: 'Choose Nickname',
-    message: 'Enter any nickname so that your team can identify you.',
-    placeholder: 'Nickname',
+    title: lg('nickname_prompt_title'),
+    message: lg('nickname_prompt'),
+    placeholder: lg('nickname_placeholder'),
     default: ''
   })
   modal.on('done', function (e) {
@@ -40825,11 +40824,10 @@ Interface.prototype.alert = function (title, message, cb) {
 }
 
 Interface.prototype.flashTooltip = function (id, message) {
-  var sanitized = mustache.render('{{message}}', {message: message})
   var tooltip = document.getElementById(id)
   var span = tooltip.querySelector('span')
   
-  span.innerHTML = sanitized
+  span.innerHTML = message
   tooltip.style.opacity = 1
   tooltip.style.display = ''
   
@@ -40861,6 +40859,10 @@ Interface.prototype.embedMode = function () {
   document.querySelector('#sidebar').className = 'sidebar theme-light collapsed'
 }
 
+Interface.prototype.setRoom = function (roomID) {
+  document.querySelector('#room').innerHTML = roomID
+}
+
 Interface.prototype.showNetwork = function (peers, room, nop2p, mustForward) {
 
   var modal = new Modal('network', {
@@ -40880,7 +40882,7 @@ Interface.prototype.showNetwork = function (peers, room, nop2p, mustForward) {
   graph.add({
     id: 'Me',
     me: true,
-    name: 'You'
+    name: lg('you')
   })
 
   var proxyID = nop2p ? 'Server' : 'Me'
@@ -40889,7 +40891,7 @@ Interface.prototype.showNetwork = function (peers, room, nop2p, mustForward) {
     graph.add({
       id: 'Server',
       me: false,
-      name: 'Server'
+      name: lg('server')
     })
     graph.connect('Server', 'Me')
   }
@@ -40923,7 +40925,90 @@ Interface.prototype.showOverlay = function (msg, cb) {
 
 module.exports = new Interface()
 
-},{"./modal":414,"./treeview":416,"cuid":306,"events":424,"inherits":332,"mustache":341,"p2p-graph":342}],414:[function(require,module,exports){
+},{"./lang/lang":414,"./modal":416,"./treeview":418,"cuid":306,"events":426,"inherits":332,"p2p-graph":342}],414:[function(require,module,exports){
+var translations = require('./translations')
+
+var mustache = require('mustache')
+var EventEmitter = require('events').EventEmitter
+var inherits = require('inherits')
+
+inherits(Lang, EventEmitter)
+
+function Lang () {
+  var self = this
+  if (!(self instanceof Lang)) return new Lang()
+
+  var langLocale = navigator.languages
+    ? navigator.languages[0]
+    : (navigator.language || navigator.userLanguage)
+  
+  self.lang = langLocale.split('-')[0]
+  self.locale = langLocale.split('-')[1] // TODO: locale support
+  
+  
+  // translate the DOM
+  document.querySelector('#save > span').innerHTML = self.get('save')
+  document.querySelector('#deploy > span').innerHTML = self.get('deploy')
+  document.querySelector('#voice > span').innerHTML = self.get('talk')
+  document.querySelector('#save > span').innerHTML = self.get('save')
+}
+
+Lang.prototype.get = function (key, data) {
+  var self = this
+  
+  data = data || {}
+  
+  console.log(key)
+  
+  return mustache.render(translations[self.lang][key], data) || mustache.render(translations['en'][key], data)
+}
+  
+module.exports = new Lang()
+},{"./translations":415,"events":426,"inherits":332,"mustache":341}],415:[function(require,module,exports){
+module.exports={
+  "en": {
+    "save_success_title": "Save Completed",
+    "save_fail_title": "",
+    "save_success": "Your project has been successfully saved.",
+    "save_fail": "An error occured while trying to save your project.<br>Please select a different method.",
+    "deploy_title": "Website Deployed",
+    "deploy_fail_title": "Deploy Failed",
+    "deploy_success": "Anyone can visit your site at<br><a target=\"_blank\" href=\"{{{url}}}\">{{{url}}}</a>",
+    "lost_connection": "Your connection to \"{{nickname}}\" has been lost.",
+    "history_item": "Multihack Room {{room}}",
+    "server": "Server",
+    "you": "You",
+    "optional": "Optional",
+    "cancel": "Cancel",
+    "skip": "Skip",
+    "join": "Join",
+    "close": "Close",
+    "deploy": "Deploy",
+    "continue": "Continue",
+    "save": "Save",
+    "name": "Name",
+    "upload": "Upload",
+    "file": "File",
+    "folder": "Folder",
+    "delete": "Delete",
+    "talk": "Talk",
+    'new_file': "New File",
+    'new_folder': "New Folder",
+    "nickname_prompt_title": "Choose Nickname",
+    "nickname_prompt": "Enter a nickname so your team knows who you are.",
+    "nickname_placeholder": "Nickname",
+    "default_nickname": "Guest",
+    "choose_room_title": "Join Room",
+    "choose_room_prompt": "Enter the ID of the room you want to join.",
+    "room_placeholder": "Room ID",
+    "create_title": "Create File/Folder",
+    "load_title": "Load Project",
+    "load_prompt": "Upload a ZIP file.",
+    "offline_title": 'Offline Mode',
+    "offline_alert": "You are now in offline mode.<br>Save and refresh to join a room."
+  }
+}
+},{}],416:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 var mustache = require('mustache')
@@ -40989,58 +41074,60 @@ Modal.prototype.close = function () {
 
 module.exports = Modal
 
-},{"./templates":415,"events":424,"inherits":332,"mustache":341}],415:[function(require,module,exports){
+},{"./templates":417,"events":426,"inherits":332,"mustache":341}],417:[function(require,module,exports){
 var dict = {}
+var lang = require('./lang/lang')
+var lg = lang.get.bind(lang)
 
 dict['file'] =
     '<h1>{{title}}</h1>' +
     '<p>{{message}}</p>' +
     '<input style="display:none" type="file">' +
-    '<button id="file-button" class="go-button">Upload</button>' +
-    '<button class="no-button">Skip</button>'
+    '<button id="file-button" class="go-button">'+lg('upload')+'</button>' +
+    '<button class="no-button">'+lg('skip')+'</button>'
 
 dict['input'] =
     '<h1>{{title}}</h1>' +
     '<p>{{message}}</p>' +
     '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text"><br>' +
-    '<button class="go-button">Join</button>' 
+    '<button class="go-button">'+lg('join')+'</button>' 
 
 dict['confirm-delete'] =
     '<h1>{{title}}</h1>' +
     '<p>Are you sure you want to delete "{{fileName}}"?</p>' +
-    '<button class="go-button">Delete</button>' +
-    '<button class="no-button">Cancel</button>'
+    '<button class="go-button">'+lg('delete')+'</button>' +
+    '<button class="no-button">'+lg('cancel')+'</button>'
 
 dict['force-input'] =
     '<h1>{{title}}</h1>' +
     '<p>{{message}}</p>' +
     '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text"><br>' +
-    '<button class="go-button">Join</button>'
+    '<button class="go-button">'+lg('join')+'</button>'
 
 dict['alert'] =
     '<h1>{{title}}</h1>' +
     '<p>{{message}}</p>' +
-    '<button class="go-button">Continue</button>'
+    '<button class="go-button">'+lg('continue')+'</button>'
 
 dict['alert-html'] =
     '<h1>{{title}}</h1>' +
     '<p>{{{message}}}</p>' +
-    '<button class="go-button">Continue</button>'
+    '<button class="go-button">'+lg('continue')+'</button>'
 
 dict['newFile'] =
     '<h1>{{title}}</h1>' +
-    '<input type="text" placeholder="Name"></input><br>' +
-    '<button class="go-button" data-type="file">File</button>' +
-    '<button class="go-button" data-type="dir">Folder</button>' +
-    '<button class="no-button">Cancel</button>'
+    '<input type="text" placeholder="'+lg('name')+'"></input><br>' +
+    '<button class="go-button" data-type="file">'+lg('file')+'</button>' +
+    '<button class="go-button" data-type="dir">'+lg('folder')+'</button>' +
+    '<button class="no-button">'+lg('cancel')+'</button>'
 
 dict['network'] = 
     '<h1>Room <b>{{room}}</b></h1>' +
     '<div id="network-graph"></div>'+
-    '<button class="no-button">Close</button>'
+    '<button class="no-button">'+lg('close')+'</button>'
 
 module.exports = dict
-},{}],416:[function(require,module,exports){
+},{"./lang/lang":414}],418:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 
@@ -41192,7 +41279,7 @@ TreeView.prototype.addDir = function (parentElement, file) {
 
 module.exports = TreeView
 
-},{"events":424,"inherits":332}],417:[function(require,module,exports){
+},{"events":426,"inherits":332}],419:[function(require,module,exports){
 /* globals HyperHost */
 
 // Wraps the HyperHost instance
@@ -41235,7 +41322,7 @@ HyperHostWrapper.prototype.deploy = function (tree) {
 
 module.exports = new HyperHostWrapper()
 
-},{"events":424,"inherits":332}],418:[function(require,module,exports){
+},{"events":426,"inherits":332}],420:[function(require,module,exports){
 var getusermedia = require('getusermedia')
 
 function VoiceCall (socket, client, room) {
@@ -41365,7 +41452,7 @@ VoiceCall.prototype.toggle = function () {
 
 module.exports = VoiceCall
 
-},{"getusermedia":327}],419:[function(require,module,exports){
+},{"getusermedia":327}],421:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -41481,11 +41568,11 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],420:[function(require,module,exports){
+},{}],422:[function(require,module,exports){
 
-},{}],421:[function(require,module,exports){
+},{}],423:[function(require,module,exports){
 arguments[4][301][0].apply(exports,arguments)
-},{"buffer":422,"dup":301}],422:[function(require,module,exports){
+},{"buffer":424,"dup":301}],424:[function(require,module,exports){
 (function (global){
 /*!
  * The buffer module from node.js, for the browser.
@@ -43278,7 +43365,7 @@ function isnan (val) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"base64-js":419,"ieee754":425,"isarray":428}],423:[function(require,module,exports){
+},{"base64-js":421,"ieee754":427,"isarray":430}],425:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -43389,7 +43476,7 @@ function objectToString(o) {
 }
 
 }).call(this,{"isBuffer":require("../../is-buffer/index.js")})
-},{"../../is-buffer/index.js":427}],424:[function(require,module,exports){
+},{"../../is-buffer/index.js":429}],426:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -43693,7 +43780,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],425:[function(require,module,exports){
+},{}],427:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -43779,9 +43866,9 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],426:[function(require,module,exports){
+},{}],428:[function(require,module,exports){
 arguments[4][332][0].apply(exports,arguments)
-},{"dup":332}],427:[function(require,module,exports){
+},{"dup":332}],429:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -43804,11 +43891,11 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
-},{}],428:[function(require,module,exports){
+},{}],430:[function(require,module,exports){
 arguments[4][333][0].apply(exports,arguments)
-},{"dup":333}],429:[function(require,module,exports){
+},{"dup":333}],431:[function(require,module,exports){
 arguments[4][346][0].apply(exports,arguments)
-},{"_process":430,"dup":346}],430:[function(require,module,exports){
+},{"_process":432,"dup":346}],432:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -43990,14 +44077,14 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],431:[function(require,module,exports){
+},{}],433:[function(require,module,exports){
 module.exports = require("./lib/_stream_duplex.js")
 
-},{"./lib/_stream_duplex.js":432}],432:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":434}],434:[function(require,module,exports){
 arguments[4][348][0].apply(exports,arguments)
-},{"./_stream_readable":434,"./_stream_writable":436,"core-util-is":423,"dup":348,"inherits":426,"process-nextick-args":429}],433:[function(require,module,exports){
+},{"./_stream_readable":436,"./_stream_writable":438,"core-util-is":425,"dup":348,"inherits":428,"process-nextick-args":431}],435:[function(require,module,exports){
 arguments[4][349][0].apply(exports,arguments)
-},{"./_stream_transform":435,"core-util-is":423,"dup":349,"inherits":426}],434:[function(require,module,exports){
+},{"./_stream_transform":437,"core-util-is":425,"dup":349,"inherits":428}],436:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -44937,7 +45024,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'))
-},{"./_stream_duplex":432,"./internal/streams/BufferList":437,"_process":430,"buffer":422,"buffer-shims":421,"core-util-is":423,"events":424,"inherits":426,"isarray":428,"process-nextick-args":429,"string_decoder/":443,"util":420}],435:[function(require,module,exports){
+},{"./_stream_duplex":434,"./internal/streams/BufferList":439,"_process":432,"buffer":424,"buffer-shims":423,"core-util-is":425,"events":426,"inherits":428,"isarray":430,"process-nextick-args":431,"string_decoder/":445,"util":422}],437:[function(require,module,exports){
 // a transform stream is a readable/writable stream where you do
 // something with the data.  Sometimes it's called a "filter",
 // but that's not a great name for it, since that implies a thing where
@@ -45118,7 +45205,7 @@ function done(stream, er) {
 
   return stream.push(null);
 }
-},{"./_stream_duplex":432,"core-util-is":423,"inherits":426}],436:[function(require,module,exports){
+},{"./_stream_duplex":434,"core-util-is":425,"inherits":428}],438:[function(require,module,exports){
 (function (process){
 // A bit simpler than readable streams.
 // Implement an async ._write(chunk, encoding, cb), and it'll handle all
@@ -45647,12 +45734,12 @@ function CorkedRequest(state) {
   };
 }
 }).call(this,require('_process'))
-},{"./_stream_duplex":432,"_process":430,"buffer":422,"buffer-shims":421,"core-util-is":423,"events":424,"inherits":426,"process-nextick-args":429,"util-deprecate":444}],437:[function(require,module,exports){
+},{"./_stream_duplex":434,"_process":432,"buffer":424,"buffer-shims":423,"core-util-is":425,"events":426,"inherits":428,"process-nextick-args":431,"util-deprecate":446}],439:[function(require,module,exports){
 arguments[4][353][0].apply(exports,arguments)
-},{"buffer":422,"buffer-shims":421,"dup":353}],438:[function(require,module,exports){
+},{"buffer":424,"buffer-shims":423,"dup":353}],440:[function(require,module,exports){
 module.exports = require("./lib/_stream_passthrough.js")
 
-},{"./lib/_stream_passthrough.js":433}],439:[function(require,module,exports){
+},{"./lib/_stream_passthrough.js":435}],441:[function(require,module,exports){
 (function (process){
 var Stream = (function (){
   try {
@@ -45672,13 +45759,13 @@ if (!process.browser && process.env.READABLE_STREAM === 'disable' && Stream) {
 }
 
 }).call(this,require('_process'))
-},{"./lib/_stream_duplex.js":432,"./lib/_stream_passthrough.js":433,"./lib/_stream_readable.js":434,"./lib/_stream_transform.js":435,"./lib/_stream_writable.js":436,"_process":430}],440:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":434,"./lib/_stream_passthrough.js":435,"./lib/_stream_readable.js":436,"./lib/_stream_transform.js":437,"./lib/_stream_writable.js":438,"_process":432}],442:[function(require,module,exports){
 module.exports = require("./lib/_stream_transform.js")
 
-},{"./lib/_stream_transform.js":435}],441:[function(require,module,exports){
+},{"./lib/_stream_transform.js":437}],443:[function(require,module,exports){
 module.exports = require("./lib/_stream_writable.js")
 
-},{"./lib/_stream_writable.js":436}],442:[function(require,module,exports){
+},{"./lib/_stream_writable.js":438}],444:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -45807,7 +45894,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":424,"inherits":426,"readable-stream/duplex.js":431,"readable-stream/passthrough.js":438,"readable-stream/readable.js":439,"readable-stream/transform.js":440,"readable-stream/writable.js":441}],443:[function(require,module,exports){
+},{"events":426,"inherits":428,"readable-stream/duplex.js":433,"readable-stream/passthrough.js":440,"readable-stream/readable.js":441,"readable-stream/transform.js":442,"readable-stream/writable.js":443}],445:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -46030,18 +46117,18 @@ function base64DetectIncompleteChar(buffer) {
   this.charLength = this.charReceived ? 3 : 0;
 }
 
-},{"buffer":422}],444:[function(require,module,exports){
+},{"buffer":424}],446:[function(require,module,exports){
 arguments[4][382][0].apply(exports,arguments)
-},{"dup":382}],445:[function(require,module,exports){
+},{"dup":382}],447:[function(require,module,exports){
 arguments[4][332][0].apply(exports,arguments)
-},{"dup":332}],446:[function(require,module,exports){
+},{"dup":332}],448:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],447:[function(require,module,exports){
+},{}],449:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -46631,5 +46718,5 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":446,"_process":430,"inherits":445}]},{},[412])(412)
+},{"./support/isBuffer":448,"_process":432,"inherits":447}]},{},[412])(412)
 });

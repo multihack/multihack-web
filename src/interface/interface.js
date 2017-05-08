@@ -4,7 +4,8 @@ var Modal = require('./modal')
 var TreeView = require('./treeview')
 var PeerGraph = require('p2p-graph')
 var cuid = require('cuid')
-var mustache = require('mustache')
+var lang = require('./lang/lang')
+var lg = lang.get.bind(lang)
 
 inherits(Interface, EventEmitter)
 
@@ -84,7 +85,7 @@ Interface.prototype.newFileDialog = function (path, cb) {
   var self = this
 
   var modal = new Modal('newFile', {
-    title: 'Create File/Folder',
+    title: lg('create_title'),
     path: path
   })
 
@@ -93,7 +94,7 @@ Interface.prototype.newFileDialog = function (path, cb) {
     var name = e.inputs[0].value
     var type = e.target.dataset['type']
     if (!name) {
-      name = (type === 'dir' ? 'New Folder' : 'New File') + '-' + cuid().slice(-7,-1)
+      name = (type === 'dir' ? lg('new_folder') : lg('new_file')) + '-' + cuid().slice(-7,-1)
     }
     if (cb) cb(name, type)
   })
@@ -122,8 +123,8 @@ Interface.prototype.getProject = function (cb) {
   // var self = this
 
   var projectModal = new Modal('file', {
-    title: 'Load Project',
-    message: 'Upload a zip file containing a project.'
+    title: lg('load_title'),
+    message: lg('load_prompt')
   })
   projectModal.on('cancel', function () {
     projectModal.close()
@@ -145,9 +146,9 @@ Interface.prototype.getRoom = function (roomID, cb) {
   var self = this
 
   var roomModal = new Modal('input', {
-    title: 'Join Room',
-    message: 'Enter the ID of the room you want to join.',
-    placeholder: 'RoomID',
+    title: lg('choose_room_title'),
+    message: lg('choose_room_prompt'),
+    placeholder: lg('room_placeholder'),
     default: roomID
   })
   roomModal.on('done', function (e) {
@@ -156,7 +157,7 @@ Interface.prototype.getRoom = function (roomID, cb) {
   })
   roomModal.on('cancel', function () {
     roomModal.close()
-    self.alertHTML('Offline Mode', 'You are now in offline mode.<br>Save and refresh to join a room.')
+    self.alertHTML(lg('offline_title'), lg('offline_alert'))
   })
   roomModal.open()
 }
@@ -165,9 +166,9 @@ Interface.prototype.getNickname = function (room, cb) {
   var self = this
 
   var modal = new Modal('force-input', {
-    title: 'Choose Nickname',
-    message: 'Enter any nickname so that your team can identify you.',
-    placeholder: 'Nickname',
+    title: lg('nickname_prompt_title'),
+    message: lg('nickname_prompt'),
+    placeholder: lg('nickname_placeholder'),
     default: ''
   })
   modal.on('done', function (e) {
@@ -193,11 +194,10 @@ Interface.prototype.alert = function (title, message, cb) {
 }
 
 Interface.prototype.flashTooltip = function (id, message) {
-  var sanitized = mustache.render('{{message}}', {message: message})
   var tooltip = document.getElementById(id)
   var span = tooltip.querySelector('span')
   
-  span.innerHTML = sanitized
+  span.innerHTML = message
   tooltip.style.opacity = 1
   tooltip.style.display = ''
   
@@ -229,6 +229,10 @@ Interface.prototype.embedMode = function () {
   document.querySelector('#sidebar').className = 'sidebar theme-light collapsed'
 }
 
+Interface.prototype.setRoom = function (roomID) {
+  document.querySelector('#room').innerHTML = roomID
+}
+
 Interface.prototype.showNetwork = function (peers, room, nop2p, mustForward) {
 
   var modal = new Modal('network', {
@@ -248,7 +252,7 @@ Interface.prototype.showNetwork = function (peers, room, nop2p, mustForward) {
   graph.add({
     id: 'Me',
     me: true,
-    name: 'You'
+    name: lg('you')
   })
 
   var proxyID = nop2p ? 'Server' : 'Me'
@@ -257,7 +261,7 @@ Interface.prototype.showNetwork = function (peers, room, nop2p, mustForward) {
     graph.add({
       id: 'Server',
       me: false,
-      name: 'Server'
+      name: lg('server')
     })
     graph.connect('Server', 'Me')
   }

@@ -5,6 +5,8 @@ var Remote = require('multihack-core')
 var HyperHostWrapper = require('./network/hyperhostwrapper')
 var util = require('./filesystem/util')
 var Voice = require('./network/voice')
+var lang = require('./interface/lang/lang')
+var lg = lang.get.bind(lang)
 
 var DEFAULT_HOSTNAME = 'https://quiet-shelf-57463.herokuapp.com'
 var MAX_FORWARDING_SIZE = 5*1000*1000 // 5mb limit for non-p2p connections (validated by server)
@@ -85,23 +87,22 @@ function Multihack (config) {
     FileSystem.getContained('').forEach(function (file) {
       file.write(self._remote.getContent(file.path))
     })
-    console.log('saving')
     FileSystem.saveProject(saveType, function (success) {
       if (success) {
-        Interface.alert('Save Completed', 'Your project has been successfully saved.')
+        Interface.alert(lg('save_success_title'), lg('save_success'))
       } else {
-        Interface.alert('Save Failed', 'An error occured while trying to save your project.<br>Please select a different method.')
+        Interface.alert(lg('save_fail_title'), lg('save_fail'))
       }
     })
   })
 
   Interface.on('deploy', function () {
     HyperHostWrapper.on('error', function (err) {
-      Interface.alert('Deploy Failed', err)
+      Interface.alert(lg('deploy_fail_title'), err)
     })
     
     HyperHostWrapper.on('ready', function (url) {
-      Interface.alertHTML('Website Deployed', 'Anyone can visit your site at<br><a target="_blank" href="' + url + '">' + url + '</a>')
+      Interface.alertHTML(lg('deploy_title'), lg('deploy_success', {url: url}))
     })
     
     HyperHostWrapper.deploy(FileSystem.getTree())
@@ -130,7 +131,8 @@ Multihack.prototype._initRemote = function (cb) {
   
   function onRoom(data) {
     self.roomID = data.room
-    window.history.pushState('Multihack', 'Multihack Room '+self.roomID, '?room='+self.roomID + (self.embed ? '&embed=true' : ''));
+    Interface.setRoom(self.roomID)
+    window.history.pushState('Multihack', lg('history_item', {room: self.roomID}), '?room='+self.roomID + (self.embed ? '&embed=true' : ''));
     self.nickname = data.nickname
     self._remote = new Remote({
       hostname: self.hostname, 
@@ -154,15 +156,12 @@ Multihack.prototype._initRemote = function (cb) {
     })
 
     self._remote.on('changeSelection', function (selections) {
-      console.log('remote change selection')
       Editor.highlight(selections)
     })
     self._remote.on('changeFile', function (data) {
-      console.log('remote change file')
       Editor.change(data.filePath, data.change)
     })
     self._remote.on('deleteFile', function (data) {
-      console.log('remote delete file')
       var parentElement = Interface.treeview.getParentElement(data.filePath)
       var workingFile = Editor.getWorkingFile()
       
@@ -176,7 +175,6 @@ Multihack.prototype._initRemote = function (cb) {
       FileSystem.delete(data.filePath)
     })
     self._remote.on('createFile', function (data) {
-      console.log('remote create file')
       FileSystem.getFile(data.filePath).write(data.content)
       Interface.treeview.rerender(FileSystem.getTree())
       if (!Editor.getWorkingFile()) {
@@ -189,7 +187,7 @@ Multihack.prototype._initRemote = function (cb) {
     })
     self._remote.on('lostPeer', function (peer) {
       if (self.embed) return
-      Interface.flashTooltip('tooltip-lostpeer', 'Your connection to "'+peer.metadata.nickname+'" has been lost.')
+      Interface.flashTooltip('tooltip-lostpeer', lg('lost_connection', {nickname: peer.metadata.nickname}))
     })
     
     Editor.on('change', function (data) {
@@ -211,7 +209,7 @@ Multihack.prototype._initRemote = function (cb) {
     Interface.embedMode()
     onRoom({
       room: self.roomID || Math.random().toString(36).substr(2),
-      nickname: 'Guest'
+      nickname: lg('default_nickname')
     })
   }
 }
