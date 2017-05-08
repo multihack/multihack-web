@@ -1,7 +1,7 @@
 {
   "en": {
     "save_success_title": "Save Completed",
-    "save_fail_title": "",
+    "save_fail_title": "Save Failed",
     "save_success": "Your project has been successfully saved.",
     "save_fail": "An error occured while trying to save your project.<br>Please select a different method.",
     "deploy_title": "Website Deployed",
