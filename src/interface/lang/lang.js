@@ -32,7 +32,7 @@ Lang.prototype.get = function (key, data) {
   
   console.log(key)
   
-  return mustache.render(translations[self.lang][key], data) || mustache.render(translations['en'][key], data)
+  return (typeof translations[self.lang] != 'undefined') ? mustache.render(translations[self.lang][key], data) : mustache.render(translations['en'][key], data)
 }
   
 module.exports = new Lang()
