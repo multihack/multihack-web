@@ -32,7 +32,8 @@ Lang.prototype.get = function (key, data) {
   
   console.log(key)
   
-  return mustache.render(translations[self.lang][key], data) || mustache.render(translations['en'][key], data)
+  var lookup = translations[self.lang] || translations['en']
+  return mustache.render(lookup[key] || translations['en'][key], data)
 }
   
 module.exports = new Lang()
