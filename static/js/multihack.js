@@ -40960,15 +40960,17 @@ Lang.prototype.get = function (key, data) {
   
   console.log(key)
   
-  return mustache.render(translations[self.lang][key], data) || mustache.render(translations['en'][key], data)
+  var lookup = translations[self.lang] || translations['en']
+  return mustache.render(lookup[key] || translations['en'][key], data)
 }
   
 module.exports = new Lang()
+
 },{"./translations":415,"events":426,"inherits":332,"mustache":341}],415:[function(require,module,exports){
 module.exports={
   "en": {
     "save_success_title": "Save Completed",
-    "save_fail_title": "",
+    "save_fail_title": "Save Failed",
     "save_success": "Your project has been successfully saved.",
     "save_fail": "An error occured while trying to save your project.<br>Please select a different method.",
     "deploy_title": "Website Deployed",
@@ -40988,12 +40990,13 @@ module.exports={
     "save": "Save",
     "name": "Name",
     "upload": "Upload",
+    "room": "Room",
     "file": "File",
     "folder": "Folder",
     "delete": "Delete",
     "talk": "Talk",
-    'new_file': "New File",
-    'new_folder': "New Folder",
+    "new_file": "New File",
+    "new_folder": "New Folder",
     "nickname_prompt_title": "Choose Nickname",
     "nickname_prompt": "Enter a nickname so your team knows who you are.",
     "nickname_placeholder": "Nickname",
@@ -41004,10 +41007,61 @@ module.exports={
     "create_title": "Create File/Folder",
     "load_title": "Load Project",
     "load_prompt": "Upload a ZIP file.",
-    "offline_title": 'Offline Mode',
-    "offline_alert": "You are now in offline mode.<br>Save and refresh to join a room."
+    "offline_title": "Offline Mode",
+    "offline_alert": "You are now in offline mode.<br>Save and refresh to join a room.",
+    "leave_call": "Leave Call",
+    "join_call": "Join Call",
+    "join_leave_call": "Join/Leave Call",
+    "leave_room": "Leave Room"
+  },
+  "ko": {
+    "save_success_title": "저장 완료",
+    "save_fail_title": "저장 실패",
+    "save_success": "프로젝트가 성공적으로 저장되었습니다.",
+    "save_fail": "프로젝트를 저장하는 중 오류가 발생했습니다.<br>다른 방법을 선택하세요.",
+    "deploy_title": "웹사이트가 배포되었습니다.",
+    "deploy_fail_title": "배포가 실패하였습니다.",
+    "deploy_success": "누구든지 다음 주소로 당신의 웹사이트를 방문할 수 있습니다. <br><a target=\"_blank\" href=\"{{{url}}}\">{{{url}}}</a>",
+    "lost_connection": "\"{{nickname}}\"님이 접속을 해제하였습니다.",
+    "history_item": "멀티핵 룸 {{room}}",
+    "server": "서버",
+    "you": "당신",
+    "optional": "선택사항",
+    "cancel": "취소",
+    "skip": "Skip",
+    "join": "접속",
+    "close": "닫기",
+    "deploy": "배포",
+    "continue": "계속",
+    "save": "저장",
+    "name": "이름",
+    "upload": "업로드",
+    "room": "룸",
+    "file": "파일",
+    "folder": "폴더",
+    "delete": "삭제",
+    "talk": "음성대화",
+    "new_file": "새 파일",
+    "new_folder": "새 폴더",
+    "nickname_prompt_title": "이름 선택",
+    "nickname_prompt": "룸의 구성원이 당신을 알아볼 수 있게 이름을 입력하세요.",
+    "nickname_placeholder": "별명",
+    "default_nickname": "방문객",
+    "choose_room_title": "룸 접속",
+    "choose_room_prompt": "접속하려고 하는 룸의 ID를 입력하세요.",
+    "room_placeholder": "룸 ID",
+    "create_title": "파일/폴더 만들기",
+    "load_title": "프로젝트 로드",
+    "load_prompt": "ZIP 파일을 업로드할 수 있습니다.",
+    "offline_title": "오프라인 모드",
+    "offline_alert": "오프라인 모드로 접속하셨습니다.<br>저장한 후 새로고침하여 룸으로 접속하세요.",
+    "leave_call": "통화 종료",
+    "join_call": "통화 시작",
+    "join_leave_call": "통화 시작/종료",
+    "leave_room": "룸 나가기"
   }
 }
+
 },{}],416:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
