@@ -40960,7 +40960,8 @@ Lang.prototype.get = function (key, data) {
   
   console.log(key)
   
-  return mustache.render(translations[self.lang][key], data) || mustache.render(translations['en'][key], data)
+  var lookup = translations[self.lang] || translations['en']
+  return mustache.render(lookup[key] || translations['en'][key], data)
 }
   
 module.exports = new Lang()
@@ -40968,7 +40969,7 @@ module.exports = new Lang()
 module.exports={
   "en": {
     "save_success_title": "Save Completed",
-    "save_fail_title": "",
+    "save_fail_title": "Save Failed",
     "save_success": "Your project has been successfully saved.",
     "save_fail": "An error occured while trying to save your project.<br>Please select a different method.",
     "deploy_title": "Website Deployed",
@@ -40988,12 +40989,13 @@ module.exports={
     "save": "Save",
     "name": "Name",
     "upload": "Upload",
+    "room": "Room",
     "file": "File",
     "folder": "Folder",
     "delete": "Delete",
     "talk": "Talk",
-    'new_file': "New File",
-    'new_folder': "New Folder",
+    "new_file": "New File",
+    "new_folder": "New Folder",
     "nickname_prompt_title": "Choose Nickname",
     "nickname_prompt": "Enter a nickname so your team knows who you are.",
     "nickname_placeholder": "Nickname",
@@ -41004,8 +41006,12 @@ module.exports={
     "create_title": "Create File/Folder",
     "load_title": "Load Project",
     "load_prompt": "Upload a ZIP file.",
-    "offline_title": 'Offline Mode',
-    "offline_alert": "You are now in offline mode.<br>Save and refresh to join a room."
+    "offline_title": "Offline Mode",
+    "offline_alert": "You are now in offline mode.<br>Save and refresh to join a room.",
+    "leave_call": "Leave Call",
+    "join_call": "Join Call",
+    "join_leave_call": "Join/Leave Call",
+    "leave_room": "Leave Room"
   }
 }
 },{}],416:[function(require,module,exports){
