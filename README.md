@@ -41,10 +41,6 @@ Autocompletion for Javscript and CSS!
 
 Save your project as a ZIP archive and use it in your favourite native IDE.  
 
-### Works Offline
-
-When your internet connection drops, MultiHack lets you keep working without interruptions.  
-
 ## Run Your Own Instance
 
 To run your own instance, see [multihack-server](https://github.com/RationalCoding/multihack-server).  
