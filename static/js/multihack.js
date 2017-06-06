@@ -22555,6 +22555,8 @@ function plural(ms, n, name) {
 },{}],339:[function(require,module,exports){
 /* globals window */
 
+require('babel-polyfill')
+
 var Y = require('yjs')
 require('y-memory')(Y)
 require('y-array')(Y)
@@ -22749,7 +22751,7 @@ RemoteManager.prototype.changeFile = function (filePath, delta) {
   
   self.mutualExcluse(filePath, function () {
     var ytext = self.yfs.get(filePath)
-    if (!ytext) return
+    if (!ytext) self.createFile(filePath, '')
 
     // apply the delta to the ytext instance
     var start = delta.start
@@ -22831,14 +22833,11 @@ RemoteManager.prototype._onLostPeer = function (peer) {
 RemoteManager.prototype.destroy = function () {
   var self = this
   
-  // TODO: Add a proper destroy function in simple-signal
-  self.peers.forEach(function (peer) {
-    peer.destroy()
-  })
-  self.peers = []
+  self.y.connector.disconnect()
   self.client = null
   self.voice = null
   self.id = null
+  self.y = null
   self.yfs = null
   self.ySelections = null
   self.posFromIndex = null
@@ -22846,7 +22845,7 @@ RemoteManager.prototype.destroy = function () {
 }
 
 module.exports = RemoteManager
-},{"events":426,"inherits":332,"y-array":393,"y-map":394,"y-memory":395,"y-multihack":397,"y-text":398,"yjs":406}],340:[function(require,module,exports){
+},{"babel-polyfill":3,"events":426,"inherits":332,"y-array":393,"y-map":394,"y-memory":395,"y-multihack":397,"y-text":398,"yjs":406}],340:[function(require,module,exports){
 // The streaming binary wire protocol for Multihack
 // Why? Because JSON/msgpack/schemapack/protobuf/anything weren't fast enough with chunking.
 // For large and/or rapid sequential file transfer over ws/webrtc
@@ -24285,13 +24284,14 @@ function nextTick(fn, arg1, arg2, arg3) {
 
 }).call(this,require('_process'))
 },{"_process":432}],347:[function(require,module,exports){
-(function (process,global,Buffer){
+(function (process,global){
 'use strict'
 
 function oldBrowser () {
   throw new Error('secure random number generation not supported by this browser\nuse chrome, FireFox or Internet Explorer 11')
 }
 
+var Buffer = require('safe-buffer').Buffer
 var crypto = global.crypto || global.msCrypto
 
 if (crypto && crypto.getRandomValues) {
@@ -24311,8 +24311,9 @@ function randomBytes (size, cb) {
   if (size > 0) {  // getRandomValues fails on IE if size == 0
     crypto.getRandomValues(rawBytes)
   }
-  // phantomjs doesn't like a buffer being passed here
-  var bytes = new Buffer(rawBytes.buffer)
+
+  // XXX: phantomjs doesn't like a buffer being passed here
+  var bytes = Buffer.from(rawBytes.buffer)
 
   if (typeof cb === 'function') {
     return process.nextTick(function () {
@@ -24323,8 +24324,8 @@ function randomBytes (size, cb) {
   return bytes
 }
 
-}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"_process":432,"buffer":424}],348:[function(require,module,exports){
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"_process":432,"safe-buffer":357}],348:[function(require,module,exports){
 // a duplex stream is just a stream that is both readable and writable.
 // Since JS doesn't have multiple prototypal inheritance, this class
 // prototypally inherits from Readable, and then parasitically from
@@ -26913,7 +26914,66 @@ exports.PassThrough = require('./lib/_stream_passthrough.js');
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],357:[function(require,module,exports){
-module.exports = require('buffer')
+/* eslint-disable node/no-deprecated-api */
+var buffer = require('buffer')
+var Buffer = buffer.Buffer
+
+if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
+  module.exports = buffer
+} else {
+  // Copy properties from require('buffer')
+  Object.keys(buffer).forEach(function (prop) {
+    exports[prop] = buffer[prop]
+  })
+  exports.Buffer = SafeBuffer
+}
+
+function SafeBuffer (arg, encodingOrOffset, length) {
+  return Buffer(arg, encodingOrOffset, length)
+}
+
+// Copy static methods from Buffer
+Object.keys(Buffer).forEach(function (prop) {
+  SafeBuffer[prop] = Buffer[prop]
+})
+
+SafeBuffer.from = function (arg, encodingOrOffset, length) {
+  if (typeof arg === 'number') {
+    throw new TypeError('Argument must not be a number')
+  }
+  return Buffer(arg, encodingOrOffset, length)
+}
+
+SafeBuffer.alloc = function (size, fill, encoding) {
+  if (typeof size !== 'number') {
+    throw new TypeError('Argument must be a number')
+  }
+  var buf = Buffer(size)
+  if (fill !== undefined) {
+    if (typeof encoding === 'string') {
+      buf.fill(fill, encoding)
+    } else {
+      buf.fill(fill)
+    }
+  } else {
+    buf.fill(0)
+  }
+  return buf
+}
+
+SafeBuffer.allocUnsafe = function (size) {
+  if (typeof size !== 'number') {
+    throw new TypeError('Argument must be a number')
+  }
+  return Buffer(size)
+}
+
+SafeBuffer.allocUnsafeSlow = function (size) {
+  if (typeof size !== 'number') {
+    throw new TypeError('Argument must be a number')
+  }
+  return buffer.SlowBuffer(size)
+}
 
 },{"buffer":424}],358:[function(require,module,exports){
  /* eslint-env node */
@@ -33803,6 +33863,12 @@ function extend (Y) {
       // Array of all the neccessary content
       this._content = _content
 
+      // the parent of this type
+      this._parent = null
+      // how the parent accesses this type. E.g. parent.get(parentSub) = this
+      this._parentSub
+      this._deepEventHandler = new Y.utils.EventListenerHandler()
+
       // this._debugEvents = [] // TODO: remove!!
       this.eventHandler = new Y.utils.EventHandler((op) => {
         // this._debugEvents.push(JSON.parse(JSON.stringify(op)))
@@ -33841,7 +33907,10 @@ function extend (Y) {
               type: op.opContent
             })
             length = 1
-            values = [this.os.getType(op.opContent)]
+            let type = this.os.getType(op.opContent)
+            type._parent = this._model
+            type._parentSub = pos
+            values = [type]
           } else {
             var contents = op.content.map(function (c, i) {
               return {
@@ -33859,7 +33928,7 @@ function extend (Y) {
             values = op.content
             length = op.content.length
           }
-          this.eventHandler.callEventListeners({
+          Y.utils.bubbleEvent(this, {
             type: 'insert',
             object: this,
             index: pos,
@@ -33891,7 +33960,7 @@ function extend (Y) {
                   return this.os.getType(c.type)
                 }
               })
-              this.eventHandler.callEventListeners({
+              Y.utils.bubbleEvent(this, {
                 type: 'delete',
                 object: this,
                 index: i,
@@ -33915,6 +33984,8 @@ function extend (Y) {
       this.eventHandler = null
       this._content = null
       this._model = null
+      this._parent = null
+      this._parentSub = null
       this.os = null
     }
     get length () {
@@ -33949,7 +34020,7 @@ function extend (Y) {
       if (typeof pos !== 'number') {
         throw new Error('pos must be a number!')
       }
-      if (!(contents instanceof Array)) {
+      if (!Array.isArray(contents)) {
         throw new Error('contents must be an Array of objects!')
       }
       if (contents.length === 0) {
@@ -34062,8 +34133,14 @@ function extend (Y) {
     observe (f) {
       this.eventHandler.addEventListener(f)
     }
+    observeDeep (f) {
+      this._deepEventHandler.addEventListener(f)
+    }
     unobserve (f) {
       this.eventHandler.removeEventListener(f)
+    }
+    unobserveDeep (f) {
+      this._deepEventHandler.addEventListener(f)
     }
     * _changed (transaction, op) {
       if (!op.deleted) {
@@ -34145,6 +34222,9 @@ function extend (Y /* :any */) {
     constructor (os, model, contents, opContents) {
       super()
       this._model = model.id
+      this._parent = null
+      this._parentSub = null
+      this._deepEventHandler = new Y.utils.EventListenerHandler()
       this.os = os
       this.map = Y.utils.copyObject(model.map)
       this.contents = contents
@@ -34167,6 +34247,8 @@ function extend (Y /* :any */) {
             // TODO: what if op.deleted??? I partially handles this case here.. but need to send delete event instead. somehow related to #4
             if (op.opContent != null) {
               value = this.os.getType(op.opContent)
+              value._parent = this._model
+              value._parentSub = key
               delete this.contents[key]
               if (op.deleted) {
                 delete this.opContents[key]
@@ -34184,14 +34266,14 @@ function extend (Y /* :any */) {
             }
             this.map[key] = op.id
             if (oldValue === undefined) {
-              this.eventHandler.callEventListeners({
+              Y.utils.bubbleEvent(this, {
                 name: key,
                 object: this,
                 type: 'add',
                 value: value
               })
             } else {
-              this.eventHandler.callEventListeners({
+              Y.utils.bubbleEvent(this, {
                 name: key,
                 object: this,
                 oldValue: oldValue,
@@ -34204,7 +34286,7 @@ function extend (Y /* :any */) {
           if (Y.utils.compareIds(this.map[key], op.target)) {
             delete this.opContents[key]
             delete this.contents[key]
-            this.eventHandler.callEventListeners({
+            Y.utils.bubbleEvent(this, {
               name: key,
               object: this,
               oldValue: oldValue,
@@ -34222,6 +34304,8 @@ function extend (Y /* :any */) {
       this.contents = null
       this.opContents = null
       this._model = null
+      this._parent = null
+      this._parentSub = null
       this.os = null
       this.map = null
     }
@@ -34331,8 +34415,14 @@ function extend (Y /* :any */) {
     observe (f) {
       this.eventHandler.addEventListener(f)
     }
+    observeDeep (f) {
+      this._deepEventHandler.addEventListener(f)
+    }
     unobserve (f) {
       this.eventHandler.removeEventListener(f)
+    }
+    unobserveDeep (f) {
+      this._deepEventHandler.addEventListener(f)
     }
     /*
       Observe a path.
@@ -35138,7 +35228,10 @@ Connector.prototype._setupP2P = function (room, nickname) {
     
     for (var i=0; i<peerIDs.length; i++) {
       if (peerIDs[i] === self._client.id) continue
-      self._client.connect(peerIDs[i], {wrtc:self.wrtc}, {
+      self._client.connect(peerIDs[i], {
+        wrtc:self.wrtc,
+        reconnectTimer: 100
+      }, {
         nickname: self.nickname
       })
     }
@@ -35146,7 +35239,10 @@ Connector.prototype._setupP2P = function (room, nickname) {
   
   self._client.on('request', function (request) {
     if (request.metadata.voice) return
-    request.accept({wrtc:self.wrtc}, {
+    request.accept({
+      wrtc:self.wrtc,
+      reconnectTimer: 100
+    }, {
       nickname: self.nickname
     })
   })
@@ -38798,6 +38894,20 @@ module.exports = function (Y/* :any */) {
 module.exports = function (Y /* : any*/) {
   Y.utils = {}
 
+  Y.utils.bubbleEvent = function (type, event) {
+    type.eventHandler.callEventListeners(event)
+    event.path = []
+    while (type != null && type._deepEventHandler != null) {
+      type._deepEventHandler.callEventListeners(event)
+      if (type._parent != null && type._parentSub != null) {
+        event.path = [type._parentSub].concat(event.path)
+        type = type.os.getType(type._parent)
+      } else {
+        type = null
+      }
+    }
+  }
+
   class EventListenerHandler {
     constructor () {
       this.eventListeners = []
@@ -38822,7 +38932,11 @@ module.exports = function (Y /* : any*/) {
     callEventListeners (event) {
       for (var i = 0; i < this.eventListeners.length; i++) {
         try {
-          this.eventListeners[i](event)
+          var _event = {}
+          for (var name in event) {
+            _event[name] = event[name]
+          }
+          this.eventListeners[i](_event)
         } catch (e) {
           console.error('Your observer threw an error. This error was caught so that Yjs still can ensure data consistency! In order to debug this error you have to check "Pause On Caught Exceptions"', e)
         }
