@@ -44,6 +44,15 @@ var VIEW_MAPPINGS = {
 util.getViewMapping = function (path) {
   return VIEW_MAPPINGS[util.getExtension(path)] || 'text'
 }
+util.getLoadMode = function (path) {
+  switch (util.getViewMapping(path)) {
+    case 'image':
+      return 'base64';
+      break;
+    default:
+      return 'string'
+  }
+}
 
 // Creates a zip archive from a file tree
 util.zipTree = function (zip, nodeList) {
