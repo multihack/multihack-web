@@ -6820,8 +6820,8 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
-},{"../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":429}],306:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js")})
+},{"../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js":429}],306:[function(require,module,exports){
 /**
  * cuid.js
  * Collision-resistant UID generator for browsers and node.
@@ -40039,7 +40039,7 @@ Editor.prototype.open = function (filePath) {
     case 'image':
       document.querySelector('.editor-wrapper').style.display = 'none'
       document.querySelector('.image-wrapper').style.display = ''
-      document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,' + self._workingFile.doc
+      document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,' + self._workingFile.doc.getValue()
       break
     default:
       document.querySelector('.editor-wrapper').style.display = ''
@@ -40437,7 +40437,7 @@ FileSystem.prototype.unzip = function (file, cb) {
         if (--awaiting <= 0) cb()
       } else {
         self.mkfile(relativePath)
-        zipEntry.async('string').then(function (content) {
+        zipEntry.async(util.getLoadMode(relativePath)).then(function (content) {
           self.get(relativePath).doc = new CodeMirror.Doc(content, util.pathToMode(relativePath))
           self.emit('unzipFile', self.get(relativePath))
           if (--awaiting <= 0) cb()
@@ -40495,6 +40495,15 @@ var VIEW_MAPPINGS = {
 }
 util.getViewMapping = function (path) {
   return VIEW_MAPPINGS[util.getExtension(path)] || 'text'
+}
+util.getLoadMode = function (path) {
+  switch (util.getViewMapping(path)) {
+    case 'image':
+      return 'base64';
+      break;
+    default:
+      return 'string'
+  }
 }
 
 // Creates a zip archive from a file tree

@@ -152,7 +152,7 @@ Editor.prototype.open = function (filePath) {
     case 'image':
       document.querySelector('.editor-wrapper').style.display = 'none'
       document.querySelector('.image-wrapper').style.display = ''
-      document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,' + self._workingFile.doc
+      document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,' + self._workingFile.doc.getValue()
       break
     default:
       document.querySelector('.editor-wrapper').style.display = ''
