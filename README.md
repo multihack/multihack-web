@@ -9,7 +9,7 @@
 [![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![Gitter chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/multihack/multihack)
 
-<b>Compatible with <a href="https://github.com/RationalCoding/multihack-brackets">multihack-brackets</a> and <a href="https://github.com/RationalCoding/multihack-vscode">multihack-vscode</a>!</b>
+<b>Compatible with <a href="https://github.com/RationalCoding/multihack-brackets">multihack-brackets</a>!</b>
 
 Tired of struggling to set up remote collaboration with your team? Try <a href="https://rationalcoding.github.io/multihack-web/">multihack.co</a>
 
@@ -41,14 +41,12 @@ Autocompletion for Javscript and CSS!
 
 Save your project as a ZIP archive and use it in your favourite native IDE.  
 
-### Works Offline
-
-When your internet connection drops, MultiHack lets you keep working without interruptions.  
-
-## Fetch Code
-
-Press the refresh icon next to "Project Files" to force a sync and fetch any unwatched code.
-
 ## Run Your Own Instance
 
 To run your own instance, see [multihack-server](https://github.com/RationalCoding/multihack-server).  
+
+## Introducting Version 4.0!
+
+- Multihack now uses a [Conflict-Free Replicated Data Type](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type) to merge conflicts and ensure everyone is always looking at the same code. Thanks @kifhan for assistance with this!
+
+- You can now see your team's carets, and the notifications are less instrusive. Thanks to @Worie!
