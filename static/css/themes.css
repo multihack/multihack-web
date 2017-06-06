@@ -48,6 +48,17 @@
 .theme-atom a{
     color: #9a9a9a;
 }
+.theme-atom .cm-tab {
+    position: relative;
+}
+.theme-atom .cm-tab::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-left: 1px solid #535353;
+}
 
 
 .theme-atom *::-webkit-scrollbar-track {

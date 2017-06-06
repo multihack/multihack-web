@@ -18,6 +18,7 @@ function Editor () {
     lineNumbers: true,
     theme: self._theme || 'atom',
     tabSize: 4,
+    indentWithTabs: true,
     indentUnit: 4,
     lineWrapping: !!(window.innerWidth < 480), // No wrap on mobile
     styleActiveLine: true,
