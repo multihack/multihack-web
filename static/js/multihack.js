@@ -6820,8 +6820,8 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js")})
-},{"../../../../../../../../../../usr/local/lib/node_modules/watchify/node_modules/is-buffer/index.js":431}],306:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
+},{"../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":431}],306:[function(require,module,exports){
 /**
  * cuid.js
  * Collision-resistant UID generator for browsers and node.
@@ -39936,9 +39936,9 @@ function Editor () {
 
 Editor.prototype._onchange = function (cm, change) {
   var self = this
-  
+
   if (self._mutex) return
-  
+
   change.start = self._cm.indexFromPos(change.from)
   self.emit('change', {
     filePath: self._workingFile.path,
@@ -39948,9 +39948,9 @@ Editor.prototype._onchange = function (cm, change) {
 
 Editor.prototype._onSelectionChange = function (cm, change) {
   var self = this
-  
+
   var ranges = change.ranges.map(self._putHeadBeforeAnchor)
-  
+
   self.emit('selection', {
     filePath: self._workingFile.path,
     change: {
@@ -39962,9 +39962,9 @@ Editor.prototype._onSelectionChange = function (cm, change) {
 
 Editor.prototype.highlight = function (selections) {
   var self = this
-  
+
   self._lastSelections = selections
-  
+
   // Timeout so selections are always applied after changes
   window.setTimeout(function () {
     if (!self._workingFile) return
@@ -39998,8 +39998,8 @@ Editor.prototype._insertRemoteCaret = function (range) {
   var caretEl = document.createElement('div')
 
   caretEl.classList.add('remoteCaret')
-  caretEl.style.height = self._cm.defaultTextHeight() + "px"
-  caretEl.style.marginTop = "-" + self._cm.defaultTextHeight() + "px"
+  caretEl.style.height = self._cm.defaultTextHeight() + 'px'
+  caretEl.style.marginTop = '-' + self._cm.defaultTextHeight() + 'px'
 
   self._remoteCarets.push(caretEl)
 
@@ -40007,14 +40007,13 @@ Editor.prototype._insertRemoteCaret = function (range) {
 }
 
 Editor.prototype._removeRemoteCaret = function (caret) {
-  var self = this
   caret.parentNode.removeChild(caret)
 }
 
 // Handle an external change
 Editor.prototype.change = function (filePath, change) {
   var self = this
-  
+
   if (!self._workingFile || filePath !== self._workingFile.path) {
     FileSystem.getFile(filePath).doc.replaceRange(change.text, change.to, change.from)
   } else {
@@ -40026,7 +40025,7 @@ Editor.prototype.change = function (filePath, change) {
 
 Editor.prototype.posFromIndex = function (index) {
   var self = this
-  
+
   return self._cm.posFromIndex(index)
 }
 
@@ -40047,7 +40046,7 @@ Editor.prototype.open = function (filePath) {
       self._cm.swapDoc(self._workingFile.doc)
       break
   }
-  
+
   self.highlight(self._lastSelections)
 }
 
@@ -40134,6 +40133,7 @@ var ExcludedIntelliSenseTriggerKeys = {
   '220': 'backslash',
   '222': 'quote'
 }
+
 },{"./../filesystem/filesystem":410,"events":428,"inherits":332}],408:[function(require,module,exports){
 var util = require('./util')
 
@@ -40150,6 +40150,8 @@ function Directory (path) {
 module.exports = Directory
 
 },{"./util":411}],409:[function(require,module,exports){
+/* globals CodeMirror */
+
 var util = require('./util')
 
 function File (path) {
@@ -40161,15 +40163,15 @@ function File (path) {
   self.isDir = false
   self.viewMapping = util.getViewMapping(path)
   self.alreadyLink = false
-  
+
   self.doc = new CodeMirror.Doc('', util.pathToMode(path))
-  
+
   Object.defineProperty(self, 'content', {
     get: function () {
       return self.doc.getValue()
     }
   })
-  
+
   Object.defineProperty(self, 'size', {
     get: function () {
       return self.doc.getValue().length
@@ -40193,7 +40195,7 @@ File.prototype.read = function (cb) {
 module.exports = File
 
 },{"./util":411}],410:[function(require,module,exports){
-/* globals JSZip, Blob, CodeMirror */
+/* globals JSZip, CodeMirror */
 
 var File = require('./file')
 var Directory = require('./directory')
@@ -40251,7 +40253,7 @@ FileSystem.prototype.saveProject = function (saveType, cb) {
 // Makes a directory, building paths
 FileSystem.prototype.mkdir = function (path) {
   var self = this
-  
+
   var parentPath = path.split('/')
   parentPath.splice(-1, 1)
   parentPath = parentPath.join('/')
@@ -40259,7 +40261,7 @@ FileSystem.prototype.mkdir = function (path) {
   self._buildPath(parentPath)
   if (self._getNode(path, self._getNode(parentPath).nodes)) return false
   self._getNode(parentPath).nodes.push(new Directory(path))
-  
+
   return true
 }
 
@@ -40273,24 +40275,24 @@ FileSystem.prototype.mkfile = function (path) {
   self._buildPath(parentPath)
   if (self._getNode(path, self._getNode(parentPath).nodes)) return false
   self._getNode(parentPath).nodes.push(new File(path))
-  
+
   return true
 }
 
 FileSystem.prototype.getContained = function (path) {
   var self = this
-  
+
   var dir = self.getFile(path)
   if (!dir.isDir) return [dir]
-  
+
   var contained = []
-  
+
   dir.nodes.forEach(function (node) {
     self.getContained(node.path).forEach(function (c) {
       contained.push(c)
     })
   })
-  
+
   return contained
 }
 
@@ -40310,7 +40312,7 @@ FileSystem.prototype._buildPath = function (path) {
 // Recursive node search
 FileSystem.prototype._getNode = function (path, nodeList) {
   var self = this
-  
+
   nodeList = nodeList || self._tree
   for (var i = 0; i < nodeList.length; i++) {
     if (nodeList[i].path === path) {
@@ -40349,11 +40351,11 @@ FileSystem.prototype.get = function (path) {
 // Gets an existing file, or creates one if none exists
 FileSystem.prototype.getFile = function (path) {
   var self = this
-  
+
   var parentPath = path.split('/')
-  parentPath.splice(-1,1)
+  parentPath.splice(-1, 1)
   parentPath = parentPath.join('/')
-  
+
   self._buildPath(parentPath)
   return self._getNode(path) || (function () {
     self.mkfile(path)
@@ -40405,11 +40407,11 @@ FileSystem.prototype.getAllFiles = function () {
 // Loads a project from a zip file
 FileSystem.prototype.unzip = function (file, cb) {
   var self = this
-  
+
   JSZip.loadAsync(file).then(function (zip) {
     var awaiting = Object.keys(zip.files).length
-    zip.forEach(function (relativePath, zipEntry) {    
-      if (relativePath[0] !== '/') relativePath = '/'+relativePath
+    zip.forEach(function (relativePath, zipEntry) {
+      if (relativePath[0] !== '/') relativePath = '/' + relativePath
 
       // Filter out ignored files
       for (var i = 0; i < ignoredFilenames.length; i++) {
@@ -40499,8 +40501,7 @@ util.getViewMapping = function (path) {
 util.getLoadMode = function (path) {
   switch (util.getViewMapping(path)) {
     case 'image':
-      return 'base64';
-      break;
+      return 'base64'
     default:
       return 'string'
   }
@@ -40521,13 +40522,13 @@ util.zipTree = function (zip, nodeList) {
 }
 
 util.getParameterByName = function (name) {
-    var url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
+  var url = window.location.href
+  name = name.replace(/[[\]]/g, '\\$&')
+  var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)')
+  var results = regex.exec(url)
+  if (!results) return null
+  if (!results[2]) return ''
+  return decodeURIComponent(results[2].replace(/\+/g, ' '))
 }
 
 module.exports = util
@@ -40543,9 +40544,6 @@ var Voice = require('./network/voice')
 var lang = require('./interface/lang/lang')
 var lg = lang.get.bind(lang)
 
-var DEFAULT_HOSTNAME = 'https://quiet-shelf-57463.herokuapp.com'
-var MAX_FORWARDING_SIZE = 5*1000*1000 // 5mb limit for non-p2p connections (validated by server)
-
 function Multihack (config) {
   var self = this
   if (!(self instanceof Multihack)) return new Multihack(config)
@@ -40559,7 +40557,7 @@ function Multihack (config) {
 
   Interface.on('addFile', function (e) {
     var created = FileSystem.mkfile(e.path)
-    
+
     if (created) {
       Interface.treeview.addFile(e.parentElement, FileSystem.get(e.path))
       Editor.open(e.path)
@@ -40567,7 +40565,7 @@ function Multihack (config) {
     }
     self._remote.createFile(e.path)
   })
-  
+
   FileSystem.on('unzipFile', function (file) {
     file.read(function (content) {
       self._remote.createFile(file.path, content)
@@ -40576,7 +40574,7 @@ function Multihack (config) {
 
   Interface.on('addDir', function (e) {
     var created = FileSystem.mkdir(e.path)
-    
+
     if (created) {
       Interface.treeview.addDir(e.parentElement, FileSystem.get(e.path))
     }
@@ -40586,7 +40584,7 @@ function Multihack (config) {
   Interface.on('removeDir', function (e) {
     var dir = FileSystem.get(e.path)
     var workingFile = Editor.getWorkingFile()
-    
+
     Interface.confirmDelete(dir.name, function () {
       Interface.treeview.remove(e.parentElement, dir)
 
@@ -40606,7 +40604,7 @@ function Multihack (config) {
     var workingFile = Editor.getWorkingFile()
     if (!workingFile) return
     Editor.close()
-    
+
     Interface.confirmDelete(workingFile.name, function () {
       var workingPath = workingFile.path
       var parentElement = Interface.treeview.getParentElement(workingPath)
@@ -40640,11 +40638,11 @@ function Multihack (config) {
     HyperHostWrapper.on('error', function (err) {
       Interface.alert(lg('deploy_fail_title'), err)
     })
-    
+
     HyperHostWrapper.on('ready', function (url) {
       Interface.alertHTML(lg('deploy_title'), lg('deploy_success', {url: url}))
     })
-    
+
     HyperHostWrapper.deploy(FileSystem.getTree())
   })
 
@@ -40668,15 +40666,15 @@ function Multihack (config) {
 
 Multihack.prototype._initRemote = function (cb) {
   var self = this
-  
-  function onRoom(data) {
+
+  function onRoom (data) {
     self.roomID = data.room
     Interface.setRoom(self.roomID)
-    window.history.pushState('Multihack', lg('history_item', {room: self.roomID}), '?room='+self.roomID + (self.embed ? '&embed=true' : ''));
+    window.history.pushState('Multihack', lg('history_item', {room: self.roomID}), '?room=' + self.roomID + (self.embed ? '&embed=true' : ''))
     self.nickname = data.nickname
     self._remote = new Remote({
-      hostname: self.hostname, 
-      room: self.roomID, 
+      hostname: self.hostname,
+      room: self.roomID,
       nickname: self.nickname,
       voice: Voice,
       wrtc: null
@@ -40684,7 +40682,7 @@ Multihack.prototype._initRemote = function (cb) {
     self._remote.posFromIndex = function (filePath, index, cb) {
       cb(FileSystem.getFile(filePath).doc.posFromIndex(index))
     }
-    
+
     document.getElementById('voice').style.display = ''
     document.getElementById('network').style.display = ''
 
@@ -40704,11 +40702,11 @@ Multihack.prototype._initRemote = function (cb) {
     self._remote.on('deleteFile', function (data) {
       var parentElement = Interface.treeview.getParentElement(data.filePath)
       var workingFile = Editor.getWorkingFile()
-      
+
       if (workingFile && data.filePath === workingFile.path) {
         Editor.close()
       }
-      
+
       if (parentElement) {
         Interface.treeview.remove(parentElement, FileSystem.get(data.filePath))
       }
@@ -40720,7 +40718,7 @@ Multihack.prototype._initRemote = function (cb) {
       Interface.treeview.rerender(FileSystem.getTree())
       if (!Editor.getWorkingFile()) {
         Editor.open(data.filePath)
-        Interface.fileOpened(e.path)
+        Interface.fileOpened(data.filePath)
       }
     })
     self._remote.on('createDir', function (data) {
@@ -40731,14 +40729,14 @@ Multihack.prototype._initRemote = function (cb) {
       if (self.embed) return
       Interface.flashTooltip('tooltip-lostpeer', lg('lost_connection', {nickname: peer.metadata.nickname}))
     })
-    
+
     Editor.on('change', function (data) {
       self._remote.changeFile(data.filePath, data.change)
     })
     Editor.on('selection', function (data) {
       self._remote.changeSelection(data)
     })
-    
+
     cb()
   }
 
@@ -40784,7 +40782,7 @@ function Interface () {
   self.treeview.on('remove', function (e) {
     self.emit('removeDir', e)
   })
-  
+
   Tabs.on('change', function (e) {
     self.emit('openFile', e)
   })
@@ -40835,7 +40833,7 @@ function Interface () {
   document.getElementById('deploy').addEventListener('click', function () {
     self.emit('deploy')
   })
-  
+
   // Network button
   document.getElementById('network').addEventListener('click', function () {
     self.emit('showNetwork')
@@ -40848,8 +40846,6 @@ function Interface () {
 }
 
 Interface.prototype.newFileDialog = function (path, cb) {
-  var self = this
-
   var modal = new Modal('newFile', {
     title: lg('create_title'),
     path: path
@@ -40860,7 +40856,7 @@ Interface.prototype.newFileDialog = function (path, cb) {
     var name = e.inputs[0].value
     var type = e.target.dataset['type']
     if (!name) {
-      name = (type === 'dir' ? lg('new_folder') : lg('new_file')) + '-' + cuid().slice(-7,-1)
+      name = (type === 'dir' ? lg('new_folder') : lg('new_file')) + '-' + cuid().slice(-7, -1)
     }
     if (cb) cb(name, type)
   })
@@ -40870,7 +40866,7 @@ Interface.prototype.newFileDialog = function (path, cb) {
   modal.open()
 }
 
-Interface.prototype.confirmDelete = function(fileName, cb) {
+Interface.prototype.confirmDelete = function (fileName, cb) {
   var modal = new Modal('confirm-delete', {
     fileName: fileName
   })
@@ -40897,7 +40893,7 @@ Interface.prototype.getProject = function (cb) {
     if (cb) cb(null)
   })
   projectModal.open()
-  
+
   var input = projectModal.el.querySelector('input[type="file"]')
   projectModal.el.querySelector('#file-button').addEventListener('click', function () {
     input.click()
@@ -40929,8 +40925,6 @@ Interface.prototype.getRoom = function (roomID, cb) {
 }
 
 Interface.prototype.getNickname = function (room, cb) {
-  var self = this
-
   var modal = new Modal('force-input', {
     title: lg('nickname_prompt_title'),
     message: lg('nickname_prompt'),
@@ -40939,10 +40933,12 @@ Interface.prototype.getNickname = function (room, cb) {
   })
   modal.on('done', function (e) {
     modal.close()
-    if (cb) cb({
-      room: room,
-      nickname: e.inputs[0].value
-    })
+    if (cb) {
+      cb({
+        room: room,
+        nickname: e.inputs[0].value
+      })
+    }
   })
   modal.open()
 }
@@ -40962,11 +40958,11 @@ Interface.prototype.alert = function (title, message, cb) {
 Interface.prototype.flashTooltip = function (id, message) {
   var tooltip = document.getElementById(id)
   var span = tooltip.querySelector('span')
-  
+
   span.innerHTML = message
   tooltip.style.opacity = 1
   tooltip.style.display = ''
-  
+
   setTimeout(function () {
     tooltip.style.opacity = 0
     setTimeout(function () {
@@ -40989,9 +40985,9 @@ Interface.prototype.alertHTML = function (title, message, cb) {
 
 Interface.prototype.embedMode = function () {
   var self = this
-  
+
   self.collapsed = true
-  document.querySelector('body').className+=' embed'
+  document.querySelector('body').className += ' embed'
   document.querySelector('#sidebar').className = 'sidebar theme-light collapsed'
 }
 
@@ -41000,21 +40996,20 @@ Interface.prototype.setRoom = function (roomID) {
 }
 
 Interface.prototype.showNetwork = function (peers, room, nop2p, mustForward) {
-
   var modal = new Modal('network', {
     room: room
   })
-  
+
   modal.on('cancel', function () {
     modal.close()
   })
-  
+
   modal.open()
-  
+
   var el = document.querySelector('#network-graph')
   el.style.overflow = 'hidden'
   var graph = new PeerGraph(el)
-  
+
   graph.add({
     id: 'Me',
     me: true,
@@ -41032,7 +41027,7 @@ Interface.prototype.showNetwork = function (peers, room, nop2p, mustForward) {
     graph.connect('Server', 'Me')
   }
 
-  for (var i=0; i<peers.length;i++){
+  for (var i = 0; i < peers.length; i++) {
     graph.add({
       id: peers[i].id,
       me: false,
@@ -41085,11 +41080,10 @@ function Lang () {
   var langLocale = navigator.languages
     ? navigator.languages[0]
     : (navigator.language || navigator.userLanguage)
-  
+
   self.lang = langLocale.split('-')[0]
   self.locale = langLocale.split('-')[1] // TODO: locale support
-  
-  
+
   // translate the DOM
   document.querySelector('#save > span').innerHTML = self.get('save')
   document.querySelector('#deploy > span').innerHTML = self.get('deploy')
@@ -41099,15 +41093,15 @@ function Lang () {
 
 Lang.prototype.get = function (key, data) {
   var self = this
-  
+
   data = data || {}
-  
+
   console.log(key)
-  
+
   var lookup = translations[self.lang] || translations['en']
   return mustache.render(lookup[key] || translations['en'][key], data)
 }
-  
+
 module.exports = new Lang()
 
 },{"./translations":415,"events":428,"inherits":332,"mustache":341}],415:[function(require,module,exports){
@@ -41285,14 +41279,14 @@ inherits(Tab, EventEmitter)
 function Tab (filepath) {
   var self = this
   if (!(self instanceof Tab)) return new Tab()
-  
+
   self.el = document.createElement('div')
   self.el.className = 'tab active'
   self.el.innerHTML = mustache.render(template, {filename: util.getFilename(filepath)})
-  
+
   self.el.addEventListener('click', self._onclick.bind(self))
   self.el.querySelector('.close').addEventListener('click', self.close.bind(self))
-  
+
   self.filepath = filepath
 }
 
@@ -41315,14 +41309,15 @@ Tab.prototype.close = function (e) {
 
 Tab.prototype.rename = function (newFilepath) {
   var self = this
-  
+
   self.filepath = newFilepath
-  
+
   self.el.innerHTML = mustache.render(template, {filename: util.getFilename(newFilepath)})
   self.el.querySelector('.close').addEventListener('click', self._onclose.bind(self))
 }
-  
+
 module.exports = Tab
+
 },{"./../filesystem/util":411,"events":428,"inherits":332,"mustache":341}],418:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
@@ -41338,62 +41333,60 @@ var workspace = document.querySelector('.workspace')
 function Tabs () {
   var self = this
   if (!(self instanceof Tabs)) return new Tabs()
-  
+
   self.el = document.querySelector('#tabs')
 }
 
 Tabs.prototype.fileOpened = function (filepath) {
   var self = this
-  
+
   var lastTab = self.el.querySelector('.active.tab')
   if (lastTab) lastTab.className = 'tab'
-  
-  for (var i=0; i<tabs.length; i++) {
+
+  for (var i = 0; i < tabs.length; i++) {
     if (tabs[i].filepath === filepath) {
       tabs[i].setActive()
       return
     }
   }
-  
+
   self._newTab(filepath)
 }
 
 Tabs.prototype._newTab = function (filepath) {
   var self = this
-  
+
   var tab = new Tab(filepath)
-  
+
   tab.on('click', function () {
     self.emit('change', {
       path: tab.filepath
     })
   })
-  
+
   tab.on('close', function () {
     self.el.removeChild(tab.el)
-    
+
     tabs.splice(tabs.indexOf(tab), 1)
     if (tabs.length === 0) {
       workspace.className = workspace.className + ' tabs-hidden'
     }
     console.log(tabs)
   })
-  
+
   tabs.push(tab)
   self.el.insertBefore(tab.el, self.el.firstChild)
-  
+
   if (tabs.length > MAX_TABS) {
     tabs[0].close()
     tabs.splice(0, 1)
   }
-  
+
   workspace.className = workspace.className.replace(new RegExp('tabs-hidden', 'g'), '')
-} 
+}
 
 Tabs.prototype.fileRenamed = function (filepath, newFilepath) {
-  var self = this
-  
-  for (var i=0; i<tabs.length; i++) {
+  for (var i = 0; i < tabs.length; i++) {
     if (tabs[i].filepath === filepath) {
       tabs[i].rename(newFilepath)
       return
@@ -41402,17 +41395,16 @@ Tabs.prototype.fileRenamed = function (filepath, newFilepath) {
 }
 
 Tabs.prototype.fileDeleted = function (filepath) {
-  var self = this
-  
-  for (var i=0; i<tabs.length; i++) {
+  for (var i = 0; i < tabs.length; i++) {
     if (tabs[i].filepath === filepath) {
       tabs[i].close()
       return
     }
   }
 }
-  
+
 module.exports = new Tabs()
+
 },{"./tab":417,"events":428,"inherits":332}],419:[function(require,module,exports){
 var dict = {}
 var lang = require('./lang/lang')
@@ -41422,50 +41414,51 @@ dict['file'] =
     '<h1>{{title}}</h1>' +
     '<p>{{message}}</p>' +
     '<input style="display:none" type="file">' +
-    '<button id="file-button" class="go-button">'+lg('upload')+'</button>' +
-    '<button class="no-button">'+lg('skip')+'</button>'
+    '<button id="file-button" class="go-button">' + lg('upload') + '</button>' +
+    '<button class="no-button">' + lg('skip') + '</button>'
 
 dict['input'] =
     '<h1>{{title}}</h1>' +
     '<p>{{message}}</p>' +
     '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text"><br>' +
-    '<button class="go-button">'+lg('join')+'</button>' 
+    '<button class="go-button">' + lg('join') + '</button>'
 
 dict['confirm-delete'] =
     '<h1>{{title}}</h1>' +
     '<p>Are you sure you want to delete "{{fileName}}"?</p>' +
-    '<button class="go-button">'+lg('delete')+'</button>' +
-    '<button class="no-button">'+lg('cancel')+'</button>'
+    '<button class="go-button">' + lg('delete') + '</button>' +
+    '<button class="no-button">' + lg('cancel') + '</button>'
 
 dict['force-input'] =
     '<h1>{{title}}</h1>' +
     '<p>{{message}}</p>' +
     '<input class="modal-input" placeholder="{{placeholder}}" value="{{default}}" type="text"><br>' +
-    '<button class="go-button">'+lg('join')+'</button>'
+    '<button class="go-button">' + lg('join') + '</button>'
 
 dict['alert'] =
     '<h1>{{title}}</h1>' +
     '<p>{{message}}</p>' +
-    '<button class="go-button">'+lg('continue')+'</button>'
+    '<button class="go-button">' + lg('continue') + '</button>'
 
 dict['alert-html'] =
     '<h1>{{title}}</h1>' +
     '<p>{{{message}}}</p>' +
-    '<button class="go-button">'+lg('continue')+'</button>'
+    '<button class="go-button">' + lg('continue') + '</button>'
 
 dict['newFile'] =
     '<h1>{{title}}</h1>' +
-    '<input type="text" placeholder="'+lg('name')+'"></input><br>' +
-    '<button class="go-button" data-type="file">'+lg('file')+'</button>' +
-    '<button class="go-button" data-type="dir">'+lg('folder')+'</button>' +
-    '<button class="no-button">'+lg('cancel')+'</button>'
+    '<input type="text" placeholder="' + lg('name') + '"></input><br>' +
+    '<button class="go-button" data-type="file">' + lg('file') + '</button>' +
+    '<button class="go-button" data-type="dir">' + lg('folder') + '</button>' +
+    '<button class="no-button">' + lg('cancel') + '</button>'
 
-dict['network'] = 
+dict['network'] =
     '<h1>Room <b>{{room}}</b></h1>' +
-    '<div id="network-graph"></div>'+
-    '<button class="no-button">'+lg('close')+'</button>'
+    '<div id="network-graph"></div>' +
+    '<button class="no-button">' + lg('close') + '</button>'
 
 module.exports = dict
+
 },{"./lang/lang":414}],420:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
@@ -41673,8 +41666,8 @@ function VoiceCall (socket, client, room) {
   self.peers = []
   self.socket = socket
   self.client = client
-  
-  socket.on('voice-discover', function (peerIDs) {    
+
+  socket.on('voice-discover', function (peerIDs) {
     console.log('voice peers', peerIDs)
 
     if (self.stream) {
@@ -41695,11 +41688,11 @@ function VoiceCall (socket, client, room) {
       }
     }
   })
-  
+
   self.client.on('request', function (request) {
     if (!request.metadata.voice) return
     if (!self.stream) return
-    
+
     request.accept({
       stream: self.stream,
       answerConstraints: {
@@ -41714,7 +41707,7 @@ function VoiceCall (socket, client, room) {
       voice: true
     })
   })
-  
+
   self.client.on('peer', function (peer) {
     if (!peer.metadata.voice) return
     self.peers.push(peer)
@@ -41726,18 +41719,18 @@ function VoiceCall (socket, client, room) {
       audio.setAttribute('src', window.URL.createObjectURL(stream))
       document.body.appendChild(audio)
     })
-    
+
     peer.on('close', function () {
-       document.body.removeChild(audio)
-       self._removePeer(peer)
+      document.body.removeChild(audio)
+      self._removePeer(peer)
     })
   })
 }
 
 VoiceCall.prototype._removePeer = function (peer) {
   var self = this
-  
-  for (var i=0; i<self.peers.length; i++) {
+
+  for (var i = 0; i < self.peers.length; i++) {
     if (self.peers[i].id === peer.id) {
       self.peers.splice(i, 1)
       return
@@ -41748,7 +41741,7 @@ VoiceCall.prototype._removePeer = function (peer) {
 VoiceCall.prototype.leave = function () {
   var self = this
   if (!self.stream) return
-  
+
   console.log('voice leave')
 
   while (self.peers[0]) {
@@ -41766,7 +41759,7 @@ VoiceCall.prototype.leave = function () {
 VoiceCall.prototype.join = function () {
   var self = this
   if (self.stream) return
-  
+
   console.log('voice join')
 
   getusermedia(function (err, stream) {
@@ -41778,7 +41771,7 @@ VoiceCall.prototype.join = function () {
 
 VoiceCall.prototype.toggle = function () {
   var self = this
-  
+
   console.log('voice toggle')
 
   console.log(self.stream)
