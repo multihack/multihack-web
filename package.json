@@ -1,6 +1,6 @@
 {
   "name": "multihack-web",
-  "version": "4.1.1",
+  "version": "4.2.0",
   "description": "A web-based editor with realtime collaboration and voice calls.",
   "main": "src/index.js",
   "directories": {

@@ -47,8 +47,7 @@ util.getViewMapping = function (path) {
 util.getLoadMode = function (path) {
   switch (util.getViewMapping(path)) {
     case 'image':
-      return 'base64';
-      break;
+      return 'base64'
     default:
       return 'string'
   }
@@ -69,13 +68,13 @@ util.zipTree = function (zip, nodeList) {
 }
 
 util.getParameterByName = function (name) {
-    var url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
+  var url = window.location.href
+  name = name.replace(/[[\]]/g, '\\$&')
+  var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)')
+  var results = regex.exec(url)
+  if (!results) return null
+  if (!results[2]) return ''
+  return decodeURIComponent(results[2].replace(/\+/g, ' '))
 }
 
 module.exports = util

@@ -9,8 +9,8 @@ function VoiceCall (socket, client, room) {
   self.peers = []
   self.socket = socket
   self.client = client
-  
-  socket.on('voice-discover', function (peerIDs) {    
+
+  socket.on('voice-discover', function (peerIDs) {
     console.log('voice peers', peerIDs)
 
     if (self.stream) {
@@ -31,11 +31,11 @@ function VoiceCall (socket, client, room) {
       }
     }
   })
-  
+
   self.client.on('request', function (request) {
     if (!request.metadata.voice) return
     if (!self.stream) return
-    
+
     request.accept({
       stream: self.stream,
       answerConstraints: {
@@ -50,7 +50,7 @@ function VoiceCall (socket, client, room) {
       voice: true
     })
   })
-  
+
   self.client.on('peer', function (peer) {
     if (!peer.metadata.voice) return
     self.peers.push(peer)
@@ -62,18 +62,18 @@ function VoiceCall (socket, client, room) {
       audio.setAttribute('src', window.URL.createObjectURL(stream))
       document.body.appendChild(audio)
     })
-    
+
     peer.on('close', function () {
-       document.body.removeChild(audio)
-       self._removePeer(peer)
+      document.body.removeChild(audio)
+      self._removePeer(peer)
     })
   })
 }
 
 VoiceCall.prototype._removePeer = function (peer) {
   var self = this
-  
-  for (var i=0; i<self.peers.length; i++) {
+
+  for (var i = 0; i < self.peers.length; i++) {
     if (self.peers[i].id === peer.id) {
       self.peers.splice(i, 1)
       return
@@ -84,7 +84,7 @@ VoiceCall.prototype._removePeer = function (peer) {
 VoiceCall.prototype.leave = function () {
   var self = this
   if (!self.stream) return
-  
+
   console.log('voice leave')
 
   while (self.peers[0]) {
@@ -102,7 +102,7 @@ VoiceCall.prototype.leave = function () {
 VoiceCall.prototype.join = function () {
   var self = this
   if (self.stream) return
-  
+
   console.log('voice join')
 
   getusermedia(function (err, stream) {
@@ -114,7 +114,7 @@ VoiceCall.prototype.join = function () {
 
 VoiceCall.prototype.toggle = function () {
   var self = this
-  
+
   console.log('voice toggle')
 
   console.log(self.stream)
