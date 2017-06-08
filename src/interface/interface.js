@@ -3,6 +3,7 @@ var inherits = require('inherits')
 var Modal = require('./modal')
 var TreeView = require('./treeview')
 var PeerGraph = require('p2p-graph')
+var Tabs = require('./tabs')
 var cuid = require('cuid')
 var lang = require('./lang/lang')
 var lg = lang.get.bind(lang)
@@ -21,6 +22,10 @@ function Interface () {
 
   self.treeview.on('remove', function (e) {
     self.emit('removeDir', e)
+  })
+
+  Tabs.on('change', function (e) {
+    self.emit('openFile', e)
   })
 
   self.addCounter = 1
@@ -69,7 +74,7 @@ function Interface () {
   document.getElementById('deploy').addEventListener('click', function () {
     self.emit('deploy')
   })
-  
+
   // Network button
   document.getElementById('network').addEventListener('click', function () {
     self.emit('showNetwork')
@@ -82,8 +87,6 @@ function Interface () {
 }
 
 Interface.prototype.newFileDialog = function (path, cb) {
-  var self = this
-
   var modal = new Modal('newFile', {
     title: lg('create_title'),
     path: path
@@ -94,7 +97,7 @@ Interface.prototype.newFileDialog = function (path, cb) {
     var name = e.inputs[0].value
     var type = e.target.dataset['type']
     if (!name) {
-      name = (type === 'dir' ? lg('new_folder') : lg('new_file')) + '-' + cuid().slice(-7,-1)
+      name = (type === 'dir' ? lg('new_folder') : lg('new_file')) + '-' + cuid().slice(-7, -1)
     }
     if (cb) cb(name, type)
   })
@@ -104,7 +107,7 @@ Interface.prototype.newFileDialog = function (path, cb) {
   modal.open()
 }
 
-Interface.prototype.confirmDelete = function(fileName, cb) {
+Interface.prototype.confirmDelete = function (fileName, cb) {
   var modal = new Modal('confirm-delete', {
     fileName: fileName
   })
@@ -131,7 +134,7 @@ Interface.prototype.getProject = function (cb) {
     if (cb) cb(null)
   })
   projectModal.open()
-  
+
   var input = projectModal.el.querySelector('input[type="file"]')
   projectModal.el.querySelector('#file-button').addEventListener('click', function () {
     input.click()
@@ -163,8 +166,6 @@ Interface.prototype.getRoom = function (roomID, cb) {
 }
 
 Interface.prototype.getNickname = function (room, cb) {
-  var self = this
-
   var modal = new Modal('force-input', {
     title: lg('nickname_prompt_title'),
     message: lg('nickname_prompt'),
@@ -173,10 +174,12 @@ Interface.prototype.getNickname = function (room, cb) {
   })
   modal.on('done', function (e) {
     modal.close()
-    if (cb) cb({
-      room: room,
-      nickname: e.inputs[0].value
-    })
+    if (cb) {
+      cb({
+        room: room,
+        nickname: e.inputs[0].value
+      })
+    }
   })
   modal.open()
 }
@@ -196,11 +199,11 @@ Interface.prototype.alert = function (title, message, cb) {
 Interface.prototype.flashTooltip = function (id, message) {
   var tooltip = document.getElementById(id)
   var span = tooltip.querySelector('span')
-  
+
   span.innerHTML = message
   tooltip.style.opacity = 1
   tooltip.style.display = ''
-  
+
   setTimeout(function () {
     tooltip.style.opacity = 0
     setTimeout(function () {
@@ -223,9 +226,9 @@ Interface.prototype.alertHTML = function (title, message, cb) {
 
 Interface.prototype.embedMode = function () {
   var self = this
-  
+
   self.collapsed = true
-  document.querySelector('body').className+=' embed'
+  document.querySelector('body').className += ' embed'
   document.querySelector('#sidebar').className = 'sidebar theme-light collapsed'
 }
 
@@ -234,21 +237,20 @@ Interface.prototype.setRoom = function (roomID) {
 }
 
 Interface.prototype.showNetwork = function (peers, room, nop2p, mustForward) {
-
   var modal = new Modal('network', {
     room: room
   })
-  
+
   modal.on('cancel', function () {
     modal.close()
   })
-  
+
   modal.open()
-  
+
   var el = document.querySelector('#network-graph')
   el.style.overflow = 'hidden'
   var graph = new PeerGraph(el)
-  
+
   graph.add({
     id: 'Me',
     me: true,
@@ -266,7 +268,7 @@ Interface.prototype.showNetwork = function (peers, room, nop2p, mustForward) {
     graph.connect('Server', 'Me')
   }
 
-  for (var i=0; i<peers.length;i++){
+  for (var i = 0; i < peers.length; i++) {
     graph.add({
       id: peers[i].id,
       me: false,
@@ -282,6 +284,14 @@ Interface.prototype.showNetwork = function (peers, room, nop2p, mustForward) {
   modal.on('done', function (e) {
     graph.destroy()
   })
+}
+
+Interface.prototype.fileOpened = function (filepath) {
+  Tabs.fileOpened(filepath)
+}
+
+Interface.prototype.fileDeleted = function (filepath) {
+  Tabs.fileDeleted(filepath)
 }
 
 Interface.prototype.hideOverlay = function (msg, cb) {

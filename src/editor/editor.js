@@ -49,9 +49,9 @@ function Editor () {
 
 Editor.prototype._onchange = function (cm, change) {
   var self = this
-  
+
   if (self._mutex) return
-  
+
   change.start = self._cm.indexFromPos(change.from)
   self.emit('change', {
     filePath: self._workingFile.path,
@@ -61,9 +61,9 @@ Editor.prototype._onchange = function (cm, change) {
 
 Editor.prototype._onSelectionChange = function (cm, change) {
   var self = this
-  
+
   var ranges = change.ranges.map(self._putHeadBeforeAnchor)
-  
+
   self.emit('selection', {
     filePath: self._workingFile.path,
     change: {
@@ -75,9 +75,9 @@ Editor.prototype._onSelectionChange = function (cm, change) {
 
 Editor.prototype.highlight = function (selections) {
   var self = this
-  
+
   self._lastSelections = selections
-  
+
   // Timeout so selections are always applied after changes
   window.setTimeout(function () {
     if (!self._workingFile) return
@@ -111,8 +111,8 @@ Editor.prototype._insertRemoteCaret = function (range) {
   var caretEl = document.createElement('div')
 
   caretEl.classList.add('remoteCaret')
-  caretEl.style.height = self._cm.defaultTextHeight() + "px"
-  caretEl.style.marginTop = "-" + self._cm.defaultTextHeight() + "px"
+  caretEl.style.height = self._cm.defaultTextHeight() + 'px'
+  caretEl.style.marginTop = '-' + self._cm.defaultTextHeight() + 'px'
 
   self._remoteCarets.push(caretEl)
 
@@ -120,14 +120,13 @@ Editor.prototype._insertRemoteCaret = function (range) {
 }
 
 Editor.prototype._removeRemoteCaret = function (caret) {
-  var self = this
   caret.parentNode.removeChild(caret)
 }
 
 // Handle an external change
 Editor.prototype.change = function (filePath, change) {
   var self = this
-  
+
   if (!self._workingFile || filePath !== self._workingFile.path) {
     FileSystem.getFile(filePath).doc.replaceRange(change.text, change.to, change.from)
   } else {
@@ -139,7 +138,7 @@ Editor.prototype.change = function (filePath, change) {
 
 Editor.prototype.posFromIndex = function (index) {
   var self = this
-  
+
   return self._cm.posFromIndex(index)
 }
 
@@ -147,7 +146,7 @@ Editor.prototype.open = function (filePath) {
   var self = this
   if (self._workingFile && filePath === self._workingFile.path) return
   self._workingFile = FileSystem.get(filePath)
-  document.getElementById('working-file').innerHTML = self._workingFile.name
+  document.getElementById('working-file').innerHTML = self._workingFile.path
   switch (self._workingFile.viewMapping) {
     case 'image':
       document.querySelector('.editor-wrapper').style.display = 'none'
@@ -160,7 +159,7 @@ Editor.prototype.open = function (filePath) {
       self._cm.swapDoc(self._workingFile.doc)
       break
   }
-  
+
   self.highlight(self._lastSelections)
 }
 

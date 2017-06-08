@@ -1,4 +1,4 @@
-/* globals JSZip, Blob, CodeMirror */
+/* globals JSZip, CodeMirror */
 
 var File = require('./file')
 var Directory = require('./directory')
@@ -56,7 +56,7 @@ FileSystem.prototype.saveProject = function (saveType, cb) {
 // Makes a directory, building paths
 FileSystem.prototype.mkdir = function (path) {
   var self = this
-  
+
   var parentPath = path.split('/')
   parentPath.splice(-1, 1)
   parentPath = parentPath.join('/')
@@ -64,7 +64,7 @@ FileSystem.prototype.mkdir = function (path) {
   self._buildPath(parentPath)
   if (self._getNode(path, self._getNode(parentPath).nodes)) return false
   self._getNode(parentPath).nodes.push(new Directory(path))
-  
+
   return true
 }
 
@@ -78,24 +78,24 @@ FileSystem.prototype.mkfile = function (path) {
   self._buildPath(parentPath)
   if (self._getNode(path, self._getNode(parentPath).nodes)) return false
   self._getNode(parentPath).nodes.push(new File(path))
-  
+
   return true
 }
 
 FileSystem.prototype.getContained = function (path) {
   var self = this
-  
+
   var dir = self.getFile(path)
   if (!dir.isDir) return [dir]
-  
+
   var contained = []
-  
+
   dir.nodes.forEach(function (node) {
     self.getContained(node.path).forEach(function (c) {
       contained.push(c)
     })
   })
-  
+
   return contained
 }
 
@@ -115,7 +115,7 @@ FileSystem.prototype._buildPath = function (path) {
 // Recursive node search
 FileSystem.prototype._getNode = function (path, nodeList) {
   var self = this
-  
+
   nodeList = nodeList || self._tree
   for (var i = 0; i < nodeList.length; i++) {
     if (nodeList[i].path === path) {
@@ -154,11 +154,11 @@ FileSystem.prototype.get = function (path) {
 // Gets an existing file, or creates one if none exists
 FileSystem.prototype.getFile = function (path) {
   var self = this
-  
+
   var parentPath = path.split('/')
-  parentPath.splice(-1,1)
+  parentPath.splice(-1, 1)
   parentPath = parentPath.join('/')
-  
+
   self._buildPath(parentPath)
   return self._getNode(path) || (function () {
     self.mkfile(path)
@@ -210,11 +210,11 @@ FileSystem.prototype.getAllFiles = function () {
 // Loads a project from a zip file
 FileSystem.prototype.unzip = function (file, cb) {
   var self = this
-  
+
   JSZip.loadAsync(file).then(function (zip) {
     var awaiting = Object.keys(zip.files).length
-    zip.forEach(function (relativePath, zipEntry) {    
-      if (relativePath[0] !== '/') relativePath = '/'+relativePath
+    zip.forEach(function (relativePath, zipEntry) {
+      if (relativePath[0] !== '/') relativePath = '/' + relativePath
 
       // Filter out ignored files
       for (var i = 0; i < ignoredFilenames.length; i++) {

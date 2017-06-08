@@ -83,6 +83,9 @@
 .theme-atom .beside.plus:hover {
     color: #2BDA77;
 }
+.workspace .tabs .tab .close:hover {
+    color: #2BDA77;
+}
 .theme-atom .beside.delete:hover {
     color: firebrick;
 }

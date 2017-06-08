@@ -1,3 +1,5 @@
+/* globals CodeMirror */
+
 var util = require('./util')
 
 function File (path) {
@@ -9,15 +11,15 @@ function File (path) {
   self.isDir = false
   self.viewMapping = util.getViewMapping(path)
   self.alreadyLink = false
-  
+
   self.doc = new CodeMirror.Doc('', util.pathToMode(path))
-  
+
   Object.defineProperty(self, 'content', {
     get: function () {
       return self.doc.getValue()
     }
   })
-  
+
   Object.defineProperty(self, 'size', {
     get: function () {
       return self.doc.getValue().length

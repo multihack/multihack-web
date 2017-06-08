@@ -136,7 +136,7 @@ img ,
     width: 150px;
     position: fixed;
     left: 0;
-    top: 60px;
+    top: 61px;
     bottom: 0px;
     z-index: 1;
     overflow: auto;
@@ -208,6 +208,7 @@ img ,
     left: 150px;
     right: 0;
     bottom: 0px;
+    border-top: 1px solid black;
 }
 
 .embed .workspace {
@@ -248,7 +249,7 @@ img ,
 .workspace .image-wrapper {
     position: absolute;
     left: 0;
-    top: 0;
+    top: 25px;
     right: 0;
     bottom: -16px;
     background: black;
@@ -257,18 +258,77 @@ img ,
     overflow: auto;
 }
 
+.workspace.tabs-hidden .image-wrapper {
+    top: 0;
+}
+
 .workspace .image-wrapper > img{
     margin-top: 40px;
     width: 70%;
     margin-bottom: 60px;
 }
 
-.workspace .editor-wrapper {
+.workspace .tabs {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
+    height: 25px;
+    overflow: hidden;
+}
+
+.workspace.tabs-hidden .tabs {
+    height: 0;
+}
+
+.workspace .tabs .tab {
+    display: inline-block;
+    height: 25px;
+    background: #303030;
+    width: 110px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid black;
+    color: #b2b2b2;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.workspace .tabs .tab span {
+    width: 80px;
+    padding: 4px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: default;
+}
+
+.workspace .tabs .tab .close {
+    position: absolute;
+    right: 4px;
+    top: 3px;
+    cursor: pointer;
+}
+
+.workspace .tabs .tab.active {
+    background: #222222;
+}
+
+.workspace .editor-wrapper {
+    position: absolute;
+    top: 25px;
+    left: 0;
+    right: 0;
     bottom: 20px;
+}
+
+.workspace.tabs-hidden .editor-wrapper {
+    top: 0;
 }
 
 .workspace .editor {
