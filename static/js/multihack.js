@@ -22604,6 +22604,16 @@ function RemoteManager (opts) {
     }
   }
   
+  self.onceReady = function (f) {
+    if (!self.yfs) {
+      self.once('ready', function () {
+        f()
+      })
+    } else {
+      f()
+    }
+  }
+  
   Y({
     db: {
       name: 'memory' // Store the CRDT model in memory
@@ -22704,14 +22714,18 @@ RemoteManager.prototype.getContent = function (filePath) {
 RemoteManager.prototype.createFile = function (filePath, contents) {
   var self = this
   
-  self.yfs.set(filePath, Y.Text)
-  insertChunked(self.yfs.get(filePath), 0, contents || '')
+  self.onceReady(function () {
+    self.yfs.set(filePath, Y.Text)
+    insertChunked(self.yfs.get(filePath), 0, contents || '')
+  })
 }
 
 RemoteManager.prototype.createDir = function (filePath, contents) {
   var self = this
   
-  self.yfs.set(filePath, 'DIR')
+  self.onceReady(function () {
+    self.yfs.set(filePath, 'DIR')
+  })
 }
 
 function insertChunked(ytext, start, str) {
@@ -22737,57 +22751,68 @@ function chunkString(str, size) {
 RemoteManager.prototype.replaceFile = function (oldPath, newPath) {
   var self = this
   
-  self.yfs.set(newPath, self.yfs.get(oldPath))
+  self.onceReady(function () {
+    self.yfs.set(newPath, self.yfs.get(oldPath))
+  })
 }
   
 RemoteManager.prototype.deleteFile = function (filePath) {
   var self = this
   
-  self.yfs.delete(filePath)
+  self.onceReady(function () {
+    self.yfs.delete(filePath)
+  })
 }
 
 RemoteManager.prototype.changeFile = function (filePath, delta) {
   var self = this
   
-  self.mutualExcluse(filePath, function () {
-    var ytext = self.yfs.get(filePath)
-    if (!ytext) self.createFile(filePath, '')
-
-    // apply the delta to the ytext instance
-    var start = delta.start
-
-    // apply the delete operation first
-    if (delta.removed.length > 0) {
-      var delLength = 0
-      for (var j = 0; j < delta.removed.length; j++) {
-        delLength += delta.removed[j].length
+  self.onceReady(function () {
+    self.mutualExcluse(filePath, function () {
+      var ytext = self.yfs.get(filePath)
+      if (!ytext) {
+        self.createFile(filePath, '')
+        ytext = self.yfs.get(filePath)
       }
-      // "enter" is also a character in our case
-      delLength += delta.removed.length - 1
-      ytext.delete(start, delLength)
-    }
 
-    // apply insert operation
-    insertChunked(ytext, start, delta.text.join('\n'))
+      // apply the delta to the ytext instance
+      var start = delta.start
+
+      // apply the delete operation first
+      if (delta.removed.length > 0) {
+        var delLength = 0
+        for (var j = 0; j < delta.removed.length; j++) {
+          delLength += delta.removed[j].length
+        }
+        // "enter" is also a character in our case
+        delLength += delta.removed.length - 1
+        ytext.delete(start, delLength)
+      }
+
+      // apply insert operation
+      insertChunked(ytext, start, delta.text.join('\n'))
+    })
   })
 }
 
 RemoteManager.prototype.changeSelection = function (data) {
   var self = this
   
-  // remove our last select first
-  if (self.lastSelection !== null) {
-    self.ySelections.toArray().forEach(function (a, i) {
-      if (a.tracker === self.lastSelection) {
-        self.ySelections.delete(i)
-      }
-    })
-  } 
-  
-  data.id = self.id
-  data.tracker = Math.random()
-  self.lastSelection = data.tracker
-  self.ySelections.push([data])
+  self.onceReady(function () {
+    // remove our last select first
+    if (self.lastSelection !== null) {
+      self.ySelections.toArray().forEach(function (a, i) {
+        if (a.tracker === self.lastSelection) {
+          self.ySelections.delete(i)
+        }
+      })
+    } 
+
+    data.id = self.id
+    data.tracker = Math.random()
+    self.lastSelection = data.tracker
+    self.ySelections.push([data])
+  })
 }
 
 RemoteManager.prototype._onYTextAdd = function (filePath, event) {
@@ -33865,8 +33890,6 @@ function extend (Y) {
 
       // the parent of this type
       this._parent = null
-      // how the parent accesses this type. E.g. parent.get(parentSub) = this
-      this._parentSub
       this._deepEventHandler = new Y.utils.EventListenerHandler()
 
       // this._debugEvents = [] // TODO: remove!!
@@ -33909,7 +33932,6 @@ function extend (Y) {
             length = 1
             let type = this.os.getType(op.opContent)
             type._parent = this._model
-            type._parentSub = pos
             values = [type]
           } else {
             var contents = op.content.map(function (c, i) {
@@ -33979,13 +34001,17 @@ function extend (Y) {
         }
       })
     }
+    _getPathToChild (childId) {
+      return this._content.findIndex(c =>
+        c.type != null && Y.utils.compareIds(c.type, childId)
+      )
+    }
     _destroy () {
       this.eventHandler.destroy()
       this.eventHandler = null
       this._content = null
       this._model = null
       this._parent = null
-      this._parentSub = null
       this.os = null
     }
     get length () {
@@ -34190,7 +34216,8 @@ function extend (Y) {
         }
       })
       for (var i = 0; i < _types.length; i++) {
-        yield* this.store.initType.call(this, _types[i])
+        var type = yield* this.store.initType.call(this, _types[i])
+        type._parent = model.id
       }
       return new YArray(os, model.id, _content)
     },
@@ -34223,7 +34250,6 @@ function extend (Y /* :any */) {
       super()
       this._model = model.id
       this._parent = null
-      this._parentSub = null
       this._deepEventHandler = new Y.utils.EventListenerHandler()
       this.os = os
       this.map = Y.utils.copyObject(model.map)
@@ -34248,7 +34274,6 @@ function extend (Y /* :any */) {
             if (op.opContent != null) {
               value = this.os.getType(op.opContent)
               value._parent = this._model
-              value._parentSub = key
               delete this.contents[key]
               if (op.deleted) {
                 delete this.opContents[key]
@@ -34298,6 +34323,11 @@ function extend (Y /* :any */) {
         }
       })
     }
+    _getPathToChild (childId) {
+      return Object.keys(this.opContents).find(key =>
+        Y.utils.compareIds(this.opContents[key], childId)
+      )
+    }
     _destroy () {
       this.eventHandler.destroy()
       this.eventHandler = null
@@ -34305,7 +34335,6 @@ function extend (Y /* :any */) {
       this.opContents = null
       this._model = null
       this._parent = null
-      this._parentSub = null
       this.os = null
       this.map = null
     }
@@ -34516,7 +34545,8 @@ function extend (Y /* :any */) {
         if (op.deleted) continue
         if (op.opContent != null) {
           opContents[name] = op.opContent
-          yield* this.store.initType.call(this, op.opContent)
+          var type = yield* this.store.initType.call(this, op.opContent)
+          type._parent = model.id
         } else {
           contents[name] = op.content[0]
         }
@@ -36148,7 +36178,7 @@ module.exports = function (Y/* :any */) {
     }
     reconnect () {
       this.log('reconnecting..')
-      this.y.db.startGarbageCollector()
+      return this.y.db.startGarbageCollector()
     }
     disconnect () {
       this.log('discronnecting..')
@@ -36157,7 +36187,8 @@ module.exports = function (Y/* :any */) {
       this.currentSyncTarget = null
       this.syncingClients = []
       this.whenSyncedListeners = []
-      return this.y.db.stopGarbageCollector()
+      this.y.db.stopGarbageCollector()
+      return this.y.db.whenTransactionsFinished()
     }
     repair () {
       this.log('Repairing the state of Yjs. This can happen if messages get lost, and Yjs detects that something is wrong. If this happens often, please report an issue here: https://github.com/y-js/yjs/issues')
@@ -38899,9 +38930,13 @@ module.exports = function (Y /* : any*/) {
     event.path = []
     while (type != null && type._deepEventHandler != null) {
       type._deepEventHandler.callEventListeners(event)
-      if (type._parent != null && type._parentSub != null) {
-        event.path = [type._parentSub].concat(event.path)
-        type = type.os.getType(type._parent)
+      var parent = null
+      if (type._parent != null) {
+        parent = type.os.getType(type._parent)
+      }
+      if (parent != null && parent._getPathToChild != null) {
+        event.path = [parent._getPathToChild(type._model)].concat(event.path)
+        type = parent
       } else {
         type = null
       }
@@ -39346,7 +39381,20 @@ module.exports = function (Y /* : any*/) {
     Default class of custom types!
   */
   class CustomType {
-
+    getPath () {
+      var parent = null
+      if (this._parent != null) {
+        parent = this.os.getType(this._parent)
+      }
+      if (parent != null && parent._getPathToChild != null) {
+        var firstKey = parent._getPathToChild(this._model)
+        var parentKeys = parent.getPath()
+        parentKeys.push(firstKey)
+        return parentKeys
+      } else {
+        return []
+      }
+    }
   }
   Y.utils.CustomType = CustomType
 
