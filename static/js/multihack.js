@@ -22665,7 +22665,7 @@ function RemoteManager (opts) {
     self.yfs.observe(function (event) {
       var filePath = event.name
 
-      if (event.type === 'add') { // create file/folder     
+      if (event.type === 'add' || event.type === 'update') { // create file/folder     
 
         if (event.value instanceof Y.Text.typeDefinition.class) {
           event.value.observe(self._onYTextAdd.bind(self, filePath))
@@ -22677,22 +22677,6 @@ function RemoteManager (opts) {
         } else {
           self.emit('createDir', {
             path: filePath
-          })
-        }
-      } else if (event.type === 'update') { 
-        // a file with the same name has been added
-        self.emit('deleteFile', {
-          filePath: filePath
-        })
-        if (event.value instanceof Y.Text.typeDefinition.class) {
-          event.value.observe(self._onYTextAdd.bind(self, filePath))
-          self.emit('createFile', {
-            filePath: filePath,
-            content: event.value.toString()
-          })
-        } else {
-          self.emit('createDir', {
-            filePath: filePath
           })
         }
       } else if (event.type === 'delete') { // delete
@@ -26943,13 +26927,17 @@ exports.PassThrough = require('./lib/_stream_passthrough.js');
 var buffer = require('buffer')
 var Buffer = buffer.Buffer
 
+// alternative to using Object.keys for old browsers
+function copyProps (src, dst) {
+  for (var key in src) {
+    dst[key] = src[key]
+  }
+}
 if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
   module.exports = buffer
 } else {
   // Copy properties from require('buffer')
-  Object.keys(buffer).forEach(function (prop) {
-    exports[prop] = buffer[prop]
-  })
+  copyProps(buffer, exports)
   exports.Buffer = SafeBuffer
 }
 
@@ -26958,9 +26946,7 @@ function SafeBuffer (arg, encodingOrOffset, length) {
 }
 
 // Copy static methods from Buffer
-Object.keys(Buffer).forEach(function (prop) {
-  SafeBuffer[prop] = Buffer[prop]
-})
+copyProps(Buffer, SafeBuffer)
 
 SafeBuffer.from = function (arg, encodingOrOffset, length) {
   if (typeof arg === 'number') {
