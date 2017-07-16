@@ -9,7 +9,7 @@ var inherits = require('inherits')
 
 inherits(FileSystem, EventEmitter)
 
-var ignoredFilenames = ['__MACOSX', '.DS_Store']
+var ignoredFilenames = ['__MACOSX', '.DS_Store', 'node_modules']
 
 function FileSystem () {
   var self = this
