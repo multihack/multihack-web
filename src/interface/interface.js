@@ -7,6 +7,7 @@ var Tabs = require('./tabs')
 var cuid = require('cuid')
 var lang = require('./lang/lang')
 var lg = lang.get.bind(lang)
+var Clipboard = require('clipboard')
 
 inherits(Interface, EventEmitter)
 
@@ -51,6 +52,13 @@ function Interface () {
       sidebar.className = sidebar.className.replace('collapsed', '')
     }
   })
+  
+  // Click room ID to copy share link
+  new Clipboard('#room', {
+    text: function(trigger) {
+      return window.location.href
+    }
+  });
 
   // Setup contrast toggle
   var contrast = false
