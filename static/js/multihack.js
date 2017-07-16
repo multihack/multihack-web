@@ -6512,7 +6512,7 @@ exports.allocUnsafeSlow = function allocUnsafeSlow(size) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"buffer":426}],302:[function(require,module,exports){
+},{"buffer":427}],302:[function(require,module,exports){
 /**
  * Slice reference.
  */
@@ -6821,7 +6821,7 @@ function objectToString(o) {
 }
 
 }).call(this,{"isBuffer":require("../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
-},{"../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":431}],306:[function(require,module,exports){
+},{"../../../../../../../../../../usr/local/lib/node_modules/browserify/node_modules/is-buffer/index.js":432}],306:[function(require,module,exports){
 /**
  * cuid.js
  * Collision-resistant UID generator for browsers and node.
@@ -16677,7 +16677,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":309,"_process":434}],309:[function(require,module,exports){
+},{"./debug":309,"_process":435}],309:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -18765,7 +18765,7 @@ Polling.prototype.uri = function () {
   return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
 };
 
-},{"../transport":313,"component-inherit":304,"debug":320,"engine.io-parser":323,"parseqs":344,"xmlhttprequest-ssl":319,"yeast":399}],318:[function(require,module,exports){
+},{"../transport":313,"component-inherit":304,"debug":320,"engine.io-parser":323,"parseqs":344,"xmlhttprequest-ssl":319,"yeast":400}],318:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -19054,7 +19054,7 @@ WS.prototype.check = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":313,"component-inherit":304,"debug":320,"engine.io-parser":323,"parseqs":344,"ws":424,"yeast":399}],319:[function(require,module,exports){
+},{"../transport":313,"component-inherit":304,"debug":320,"engine.io-parser":323,"parseqs":344,"ws":425,"yeast":400}],319:[function(require,module,exports){
 (function (global){
 // browser shim for xmlhttprequest module
 
@@ -19276,7 +19276,7 @@ function localstorage(){
 }
 
 }).call(this,require('_process'))
-},{"./debug":321,"_process":434}],321:[function(require,module,exports){
+},{"./debug":321,"_process":435}],321:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -22232,7 +22232,7 @@ RateLimiter.prototype = {
 module.exports = RateLimiter;
 
 }).call(this,require('_process'))
-},{"./tokenBucket":337,"_process":434}],337:[function(require,module,exports){
+},{"./tokenBucket":337,"_process":435}],337:[function(require,module,exports){
 (function (process){
 
 /**
@@ -22401,7 +22401,7 @@ TokenBucket.prototype = {
 module.exports = TokenBucket;
 
 }).call(this,require('_process'))
-},{"_process":434}],338:[function(require,module,exports){
+},{"_process":435}],338:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -22559,6 +22559,7 @@ require('babel-polyfill')
 
 var Y = require('yjs')
 require('y-memory')(Y)
+require('y-indexeddb')(Y)
 require('y-array')(Y)
 require('y-map')(Y)
 require('y-multihack')(Y)
@@ -22616,7 +22617,7 @@ function RemoteManager (opts) {
   
   Y({
     db: {
-      name: 'memory' // Store the CRDT model in memory
+      name: 'indexeddb'
     },
     connector: {
       name: 'multihack', // TODO: Use a custom connector
@@ -22854,7 +22855,7 @@ RemoteManager.prototype.destroy = function () {
 }
 
 module.exports = RemoteManager
-},{"babel-polyfill":3,"events":428,"inherits":332,"y-array":393,"y-map":394,"y-memory":395,"y-multihack":397,"y-text":398,"yjs":406}],340:[function(require,module,exports){
+},{"babel-polyfill":3,"events":429,"inherits":332,"y-array":393,"y-indexeddb":394,"y-map":395,"y-memory":396,"y-multihack":398,"y-text":399,"yjs":407}],340:[function(require,module,exports){
 // The streaming binary wire protocol for Multihack
 // Why? Because JSON/msgpack/schemapack/protobuf/anything weren't fast enough with chunking.
 // For large and/or rapid sequential file transfer over ws/webrtc
@@ -24130,7 +24131,7 @@ P2PGraph.prototype.getLinkIndex = function (source, target) {
   return -1
 }
 
-},{"d3":307,"debug":308,"events":428,"inherits":332,"throttleit":380}],343:[function(require,module,exports){
+},{"d3":307,"debug":308,"events":429,"inherits":332,"throttleit":380}],343:[function(require,module,exports){
 (function (global){
 /**
  * JSON parse.
@@ -24292,7 +24293,7 @@ function nextTick(fn, arg1, arg2, arg3) {
 }
 
 }).call(this,require('_process'))
-},{"_process":434}],347:[function(require,module,exports){
+},{"_process":435}],347:[function(require,module,exports){
 (function (process,global){
 'use strict'
 
@@ -24334,7 +24335,7 @@ function randomBytes (size, cb) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":434,"safe-buffer":357}],348:[function(require,module,exports){
+},{"_process":435,"safe-buffer":357}],348:[function(require,module,exports){
 // a duplex stream is just a stream that is both readable and writable.
 // Since JS doesn't have multiple prototypal inheritance, this class
 // prototypally inherits from Readable, and then parasitically from
@@ -25375,7 +25376,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'))
-},{"./_stream_duplex":348,"./internal/streams/BufferList":353,"./internal/streams/stream":354,"_process":434,"buffer":426,"buffer-shims":301,"core-util-is":305,"events":428,"inherits":332,"isarray":333,"process-nextick-args":346,"string_decoder/":379,"util":424}],351:[function(require,module,exports){
+},{"./_stream_duplex":348,"./internal/streams/BufferList":353,"./internal/streams/stream":354,"_process":435,"buffer":427,"buffer-shims":301,"core-util-is":305,"events":429,"inherits":332,"isarray":333,"process-nextick-args":346,"string_decoder/":379,"util":425}],351:[function(require,module,exports){
 // a transform stream is a readable/writable stream where you do
 // something with the data.  Sometimes it's called a "filter",
 // but that's not a great name for it, since that implies a thing where
@@ -26105,7 +26106,7 @@ function CorkedRequest(state) {
   };
 }
 }).call(this,require('_process'))
-},{"./_stream_duplex":348,"./internal/streams/stream":354,"_process":434,"buffer":426,"buffer-shims":301,"core-util-is":305,"inherits":332,"process-nextick-args":346,"util-deprecate":382}],353:[function(require,module,exports){
+},{"./_stream_duplex":348,"./internal/streams/stream":354,"_process":435,"buffer":427,"buffer-shims":301,"core-util-is":305,"inherits":332,"process-nextick-args":346,"util-deprecate":382}],353:[function(require,module,exports){
 'use strict';
 
 var Buffer = require('buffer').Buffer;
@@ -26170,10 +26171,10 @@ BufferList.prototype.concat = function (n) {
   }
   return ret;
 };
-},{"buffer":426,"buffer-shims":301}],354:[function(require,module,exports){
+},{"buffer":427,"buffer-shims":301}],354:[function(require,module,exports){
 module.exports = require('events').EventEmitter;
 
-},{"events":428}],355:[function(require,module,exports){
+},{"events":429}],355:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = exports;
 exports.Readable = exports;
@@ -26986,7 +26987,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
   return buffer.SlowBuffer(size)
 }
 
-},{"buffer":426}],358:[function(require,module,exports){
+},{"buffer":427}],358:[function(require,module,exports){
  /* eslint-env node */
 'use strict';
 
@@ -28348,7 +28349,7 @@ Peer.prototype._transformConstraints = function (constraints) {
 function noop () {}
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":426,"debug":308,"get-browser-rtc":326,"inherits":332,"randombytes":347,"readable-stream":355}],360:[function(require,module,exports){
+},{"buffer":427,"debug":308,"get-browser-rtc":326,"inherits":332,"randombytes":347,"readable-stream":355}],360:[function(require,module,exports){
 module.exports = SimpleSignalClient
 
 var SimplePeer = require('simple-peer')
@@ -29700,7 +29701,7 @@ function url (uri, loc) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"debug":366,"parseuri":345}],366:[function(require,module,exports){
 arguments[4][320][0].apply(exports,arguments)
-},{"./debug":367,"_process":434,"dup":320}],367:[function(require,module,exports){
+},{"./debug":367,"_process":435,"dup":320}],367:[function(require,module,exports){
 arguments[4][321][0].apply(exports,arguments)
 },{"dup":321,"ms":368}],368:[function(require,module,exports){
 arguments[4][322][0].apply(exports,arguments)
@@ -31015,7 +31016,7 @@ module.exports = {
     Throttle: Throttle,
     ThrottleGroup: ThrottleGroup
 };
-},{"limiter":335,"stream":446,"util":451}],379:[function(require,module,exports){
+},{"limiter":335,"stream":447,"util":452}],379:[function(require,module,exports){
 'use strict';
 
 var Buffer = require('buffer').Buffer;
@@ -31289,7 +31290,7 @@ function simpleWrite(buf) {
 function simpleEnd(buf) {
   return buf && buf.length ? this.write(buf) : '';
 }
-},{"buffer":426,"buffer-shims":301}],380:[function(require,module,exports){
+},{"buffer":427,"buffer-shims":301}],380:[function(require,module,exports){
 module.exports = throttle;
 
 /**
@@ -34219,6 +34220,367 @@ if (typeof Y !== 'undefined') {
 }
 
 },{}],394:[function(require,module,exports){
+/* global Y, IDBKeyRange, indexedDB, localStorage, IDBRequest, IDBOpenDBRequest, IDBCursor, IDBCursorWithValue, addEventListener */
+'use strict'
+// Thx to @jed for this script https://gist.github.com/jed/982883
+function generateGuid(a){return a?(a^Math.random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,generateGuid)} // eslint-disable-line
+
+function extend (Y) {
+  Y.requestModules(['memory']).then(function () {
+    class Store {
+      constructor (transaction, name) {
+        this.store = transaction.objectStore(name)
+      }
+      * find (id) {
+        return yield this.store.get(id)
+      }
+      * put (v) {
+        yield this.store.put(v)
+      }
+      * delete (id) {
+        yield this.store.delete(id)
+      }
+      * findWithLowerBound (start) {
+        return yield this.store.openCursor(IDBKeyRange.lowerBound(start))
+      }
+      * findWithUpperBound (end) {
+        return yield this.store.openCursor(IDBKeyRange.upperBound(end), 'prev')
+      }
+      * findNext (id) {
+        return yield* this.findWithLowerBound([id[0], id[1] + 1])
+      }
+      * findPrev (id) {
+        return yield* this.findWithUpperBound([id[0], id[1] - 1])
+      }
+      * iterate (t, start, end, gen) {
+        var range = null
+        if (start != null && end != null) {
+          range = IDBKeyRange.bound(start, end)
+        } else if (start != null) {
+          range = IDBKeyRange.lowerBound(start)
+        } else if (end != null) {
+          range = IDBKeyRange.upperBound(end)
+        }
+        var cursorResult
+        if (range != null) {
+          cursorResult = this.store.openCursor(range)
+        } else {
+          cursorResult = this.store.openCursor()
+        }
+        while ((yield cursorResult) != null) {
+          yield* gen.call(t, cursorResult.result.value)
+          cursorResult.result.continue()
+        }
+      }
+      * flush () {}
+    }
+
+    function createStoreClone (Store) {
+      class Clone extends Store {
+        constructor () {
+          super(...arguments)
+          this.buffer = []
+          this._copyTo = null
+        }
+        // copy to this store
+        // it may be neccessary to reset this every time you create a transaction
+        copyTo (store) {
+          this._copyTo = store
+          return this
+        }
+        * put (v, dontCopy) {
+          if (!dontCopy) {
+            this.buffer.push(this._copyTo.put(v))
+          }
+          yield* super.put(v)
+        }
+        * delete (id) {
+          this.buffer.push(this._copyTo.delete(id))
+          yield* super.delete(id)
+        }
+        * flush () {
+          yield* super.flush()
+          for (var i = 0; i < this.buffer.length; i++) {
+            yield* this.buffer[i]
+          }
+          yield* this._copyTo.flush()
+        }
+      }
+      return Clone
+    }
+    Y.utils.createStoreClone = createStoreClone
+
+    var BufferedStore = Y.utils.createSmallLookupBuffer(Store)
+    // var ClonedStore = Y.utils.createStoreClone(Y.utils.RBTree)
+
+    class Transaction extends Y.Transaction {
+      constructor (store) {
+        super(store)
+        var transaction = store.db.transaction(['OperationStore', 'StateStore', 'DeleteStore'], 'readwrite')
+        this.store = store
+        this.ss = new BufferedStore(transaction, 'StateStore')
+        this.os = new BufferedStore(transaction, 'OperationStore')
+        // this._ds = new BufferedStore(transaction, 'DeleteStore')
+        // this.ds = store.dsClone.copyTo(this._ds)
+        this.ds = new BufferedStore(transaction, 'DeleteStore')
+      }
+    }
+    class OperationStore extends Y.AbstractDatabase {
+      constructor (y, options) {
+        /**
+         * There will be no garbage collection when using this connector!
+         * There may be several instances that communicate via localstorage,
+         * and we don't want too many instances to garbage collect.
+         * Currently, operationAdded (see AbstractDatabase) does not communicate updates to the garbage collector.
+         *
+         * While this could work, it only decreases performance.
+         * Operations are automatically garbage collected when the client syncs (the server still garbage collects, if there is any).
+         * Another advantage is that now the indexeddb adapter works with y-webrtc (since no gc is in place).
+         *
+         */
+        if (options.gc == null) {
+          options.gc = false
+        }
+        super(y, options)
+        // dsClone is persistent over transactions!
+        // _ds is not
+        // this.dsClone = new ClonedStore()
+        if (options == null) {
+          options = {}
+        }
+        this.options = options
+        if (options.namespace == null) {
+          if (y.options.connector.room == null) {
+            throw new Error('IndexedDB: expect a string (options.namespace)! (you can also skip this step if your connector has a room property)')
+          } else {
+            options.namespace = y.options.connector.room
+          }
+        }
+        if (options.idbVersion != null) {
+          this.idbVersion = options.idbVersion
+        } else {
+          this.idbVersion = 5
+        }
+        var store = this
+        // initialize database!
+        this.requestTransaction(function * () {
+          store.db = yield indexedDB.open(options.namespace, store.idbVersion)
+        })
+        if (options.cleanStart) {
+          if (typeof localStorage !== 'undefined') {
+            delete localStorage[JSON.stringify(['Yjs_indexeddb', options.namespace])]
+          }
+          this.requestTransaction(function * () {
+            yield this.os.store.clear()
+            yield this.ds.store.clear() // formerly only _ds
+            yield this.ss.store.clear()
+          })
+        }
+        this.whenUserIdSet(function (userid) {
+          if (typeof localStorage !== 'undefined' && localStorage[JSON.stringify(['Yjs_indexeddb', options.namespace])] == null) {
+            localStorage[JSON.stringify(['Yjs_indexeddb', options.namespace])] = JSON.stringify([userid, 0])
+          }
+        })
+        this.requestTransaction(function * () {
+          // this should be executed after the previous two defined transactions
+          // after we computed the upgrade event (see `yield indexedDB.open(..)`), we can check if userid is still stored on localstorage
+          var uid = null
+          if (typeof localStorage !== 'undefined') {
+            uid = localStorage[JSON.stringify(['Yjs_indexeddb', options.namespace])]
+          }
+          if (uid != null) {
+            store.setUserId(uid)
+            if (typeof localStorage !== 'undefined') {
+              var nextuid = JSON.parse(uid)
+              nextuid[1] = nextuid[1] + 1
+              localStorage[JSON.stringify(['Yjs_indexeddb', options.namespace])] = JSON.stringify(nextuid)
+            }
+          } else {
+            // wait for a 200ms before setting a random user id
+            setTimeout(function () {
+              if (store.userId == null) {
+                // the user is probably offline, so that the connector can't get a user id
+                store.setUserId(generateGuid()) // TODO: maybe it is best to always use a generated uid
+              }
+            }, 200)
+          }
+          // copy from persistent Store to non persistent StoreClone. (there could already be content in Store)
+          /*
+          yield* this._ds.iterate(this, null, null, function * (o) {
+            yield* this.ds.put(o, true)
+          })
+          */
+        })
+        var operationsToAdd = []
+        this.communicationObserver = function (op) {
+          operationsToAdd.push(op)
+          if (operationsToAdd.length === 1) {
+            store.requestTransaction(function * () {
+              var _toAdd = []
+              /*
+              There is a special case (see issue y-js/y-indexeddb#2) which we need to handle:
+              Assume a user creates a new type (lets say an Array) and then inserts something in it. Assume both operations are in operationsToAdd.
+              Since a type is initialized first, it already knows about the insertion, and we no longer need to call .operationAdded.
+              If we don't handle this case the type inserts the same operation twice.
+              => So wee need to filter out the operations whose parent is also inclduded in operationsToAdd!
+              */
+              for (var i = 0; i < operationsToAdd.length; i++) {
+                var op = operationsToAdd[i]
+                if (op.parent == null || operationsToAdd.every(function (p) {
+                  return !Y.utils.compareIds(p.id, op.parent)
+                })) {
+                  _toAdd.push(op)
+                }
+              }
+              operationsToAdd = []
+
+              for (i = 0; i < _toAdd.length; i++) {
+                yield* this.store.operationAdded(this, _toAdd[i], true)
+              }
+            })
+          }
+        }
+        Y.utils.localCommunication.addObserver(this.options.namespace, this.communicationObserver)
+      }
+      * operationAdded (transaction, op, noAdd) {
+        yield* super.operationAdded(transaction, op)
+        if (!noAdd) {
+          Y.utils.localCommunication.broadcast(this.options.namespace, op)
+        }
+      }
+      transact (makeGen) {
+        var transaction = this.db != null ? new Transaction(this) : null
+        var store = this
+
+        var gen = makeGen.call(transaction)
+        handleTransactions(gen.next())
+
+        function handleTransactions (result) {
+          var request = result.value
+          if (result.done) {
+            makeGen = store.getNextRequest()
+            if (makeGen != null) {
+              if (transaction == null && store.db != null) {
+                transaction = new Transaction(store)
+              }
+              gen = makeGen.call(transaction)
+              handleTransactions(gen.next())
+            } // else no transaction in progress!
+            return
+          }
+          // console.log('new request', request.source != null ? request.source.name : null)
+          if (request.constructor === IDBRequest) {
+            request.onsuccess = function () {
+              var res = request.result
+              if (res != null && res.constructor === IDBCursorWithValue) {
+                res = res.value
+              }
+              handleTransactions(gen.next(res))
+            }
+            request.onerror = function (err) {
+              gen.throw(err)
+            }
+          } else if (request.constructor === IDBCursor) {
+            request.onsuccess = function () {
+              handleTransactions(gen.next(request.result != null ? request.result.value : null))
+            }
+            request.onerror = function (err) {
+              gen.throw(err)
+            }
+          } else if (request.constructor === IDBOpenDBRequest) {
+            request.onsuccess = function (event) {
+              var db = event.target.result
+              handleTransactions(gen.next(db))
+            }
+            request.onerror = function () {
+              gen.throw("Couldn't open IndexedDB database!")
+            }
+            request.onupgradeneeded = function (event) {
+              var db = event.target.result
+              if (typeof localStorage !== 'undefined') {
+                delete localStorage[JSON.stringify(['Yjs_indexeddb', store.options.namespace])]
+              }
+              if (db.objectStoreNames.contains('OperationStore')) {
+                // delete only if exists (we skip the remaining tests)
+                db.deleteObjectStore('OperationStore')
+                db.deleteObjectStore('DeleteStore')
+                db.deleteObjectStore('StateStore')
+              }
+              db.createObjectStore('OperationStore', {keyPath: 'id'})
+              db.createObjectStore('DeleteStore', {keyPath: 'id'})
+              db.createObjectStore('StateStore', {keyPath: 'id'})
+            }
+          } else {
+            gen.throw('You must not yield this type!')
+          }
+        }
+      }
+      // TODO: implement "free"..
+      * destroy () {
+        this.db.close()
+      }
+      deleteDB () {
+        Y.utils.localCommunication.removeObserver(this.options.namespace, this.communicationObserver)
+        indexedDB.deleteDatabase(this.options.namespace)
+        return Promise.resolve()
+      }
+    }
+    if (Y.utils.localCommunication == null) {
+      // localCommunication uses localStorage to communicate with all tabs / windows
+      // Using pure localStorage does not call the event listener on the tab the event is created on.
+      // Using this implementation the event is also called on the tab the event is created on.
+      Y.utils.localCommunication = {
+        observer: {},
+        addObserver: function (room, f) {
+          var listener = this.observer[room]
+          if (listener == null) {
+            listener = []
+            this.observer[room] = listener
+          }
+          listener.push(f)
+        },
+        removeObserver: function (room, f) {
+          this.observer[room] = this.observer[room].filter(function (g) { return f !== g })
+        },
+        broadcast: function (room, m) {
+          if (typeof localStorage !== 'undefined') {
+            localStorage.setItem(JSON.stringify(['__YJS__', room]), JSON.stringify(m))
+          }
+          this.observer[room].map(function (f) {
+            f(m)
+          })
+        }
+      }
+      if (typeof localStorage !== 'undefined') {
+        addEventListener('storage', function (event) {
+          var room
+          try {
+            var parsed = JSON.parse(event.key)
+            if (parsed[0] === '__YJS__') {
+              room = parsed[1]
+            } else {
+              return
+            }
+          } catch (e) { return }
+          var listener = Y.utils.localCommunication.observer[room]
+          if (listener != null) {
+            listener.map(function (f) {
+              f(JSON.parse(event.newValue))
+            })
+          }
+        })
+      }
+    }
+    Y.extend('indexeddb', OperationStore)
+  })
+}
+
+module.exports = extend
+if (typeof Y !== 'undefined') {
+  extend(Y)
+}
+
+},{}],395:[function(require,module,exports){
 /* global Y */
 'use strict'
 
@@ -34550,7 +34912,7 @@ if (typeof Y !== 'undefined') {
   extend(Y)
 }
 
-},{}],395:[function(require,module,exports){
+},{}],396:[function(require,module,exports){
 /* global Y */
 'use strict'
 
@@ -34624,7 +34986,7 @@ if (typeof Y !== 'undefined') {
   extend(Y)
 }
 
-},{"./RedBlackTree.js":396}],396:[function(require,module,exports){
+},{"./RedBlackTree.js":397}],397:[function(require,module,exports){
 'use strict'
 
 /*
@@ -35129,7 +35491,7 @@ module.exports = function (Y) {
   Y.utils.RBTree = RBTree
 }
 
-},{}],397:[function(require,module,exports){
+},{}],398:[function(require,module,exports){
 /* globals Y */
 
 var Y = require('yjs')
@@ -35310,7 +35672,9 @@ Connector.prototype._setupP2P = function (room, nickname) {
       self._destroyPeer(peer)
     })
     
-    
+    peer.on('error', function (err) {
+      console.error(err)
+    })
   })
 }
 
@@ -35471,7 +35835,7 @@ if (typeof Y !== 'undefined') {
   extend(Y)
 }
 
-},{"get-browser-rtc":326,"multihack-wire":340,"simple-signal-client":360,"socket.io-client":361,"stream-throttle":377,"yjs":406}],398:[function(require,module,exports){
+},{"get-browser-rtc":326,"multihack-wire":340,"simple-signal-client":360,"socket.io-client":361,"stream-throttle":377,"yjs":407}],399:[function(require,module,exports){
 /* global Y, Element */
 'use strict'
 
@@ -35494,7 +35858,46 @@ function extend (Y) {
         }).join('')
       }
       insert (pos, content) {
-        super.insert(pos, content.split(''))
+        var arr = content.split('')
+        for (var i = 0; i < arr.length; i++) {
+          if (/[\uD800-\uDFFF]/.test(arr[i])) {
+            // is surrogate pair
+            arr[i] = arr[i] + arr[i + 1]
+            arr[i + 1] = ''
+            i++
+          }
+        }
+        super.insert(pos, arr)
+      }
+      delete (pos, length) {
+        if (length == null) { length = 1 }
+        if (typeof length !== 'number') {
+          throw new Error('length must be a number!')
+        }
+        if (typeof pos !== 'number') {
+          throw new Error('pos must be a number!')
+        }
+        if (pos + length > this._content.length || pos < 0 || length < 0) {
+          throw new Error('The deletion range exceeds the range of the array!')
+        }
+        if (length === 0) {
+          return
+        }
+        // This is for the case that part of a surrogate pair is deleted
+        // we store surrogate pairs like this: [.., '🐇', '', ..] (string, code)
+        if (this._content.length > pos + length && this._content[pos + length].val === '' && this._content[pos + length - 1].val.length === 2) {
+          // case one. first part of the surrogate pair is deleted
+          let token = this._content[pos + length - 1].val[0]
+          super.delete(pos, length + 1)
+          super.insert(pos, [token])
+        } else if (pos > 0 && this._content[pos].val === '' && this._content[pos - 1].val.length === 2) {
+          // case two. second part of the surrogate pair is deleted
+          let token = this._content[pos - 1].val[1]
+          super.delete(pos - 1, length + 1)
+          super.insert(pos - 1, [token])
+        } else {
+          super.delete(pos, length)
+        }
       }
       unbindAll () {
         this.unbindTextareaAll()
@@ -35547,7 +35950,7 @@ function extend (Y) {
             //    var start = monacoInstance.model.getOffsetAt({column: event.range.startColumn, lineNumber: event.range.startLineNumber})
             // So we compute the offset using the _content of this type
             for (var i = 0, line = 1; line < event.range.startLineNumber; i++) {
-              if (self._content[i].val === event.eol) {
+              if (self._content[i].val === '\n') {
                 line++
               }
             }
@@ -36012,7 +36415,7 @@ if (typeof Y !== 'undefined') {
   extend(Y)
 }
 
-},{"fast-diff":325}],399:[function(require,module,exports){
+},{"fast-diff":325}],400:[function(require,module,exports){
 'use strict';
 
 var alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'.split('')
@@ -36082,7 +36485,7 @@ yeast.encode = encode;
 yeast.decode = decode;
 module.exports = yeast;
 
-},{}],400:[function(require,module,exports){
+},{}],401:[function(require,module,exports){
 /* @flow */
 'use strict'
 
@@ -36580,7 +36983,7 @@ module.exports = function (Y/* :any */) {
   Y.AbstractConnector = AbstractConnector
 }
 
-},{}],401:[function(require,module,exports){
+},{}],402:[function(require,module,exports){
 /* global getRandom, async */
 'use strict'
 
@@ -36760,7 +37163,7 @@ module.exports = function (Y) {
   Y.Test = Test
 }
 
-},{}],402:[function(require,module,exports){
+},{}],403:[function(require,module,exports){
 /* @flow */
 'use strict'
 
@@ -37366,7 +37769,7 @@ module.exports = function (Y /* :any */) {
   Y.AbstractDatabase = AbstractDatabase
 }
 
-},{}],403:[function(require,module,exports){
+},{}],404:[function(require,module,exports){
 /* @flow */
 'use strict'
 
@@ -37782,7 +38185,7 @@ module.exports = function (Y/* :any */) {
   Y.Struct = Struct
 }
 
-},{}],404:[function(require,module,exports){
+},{}],405:[function(require,module,exports){
 /* @flow */
 'use strict'
 
@@ -38882,7 +39285,7 @@ module.exports = function (Y/* :any */) {
   Y.Transaction = TransactionInterface
 }
 
-},{}],405:[function(require,module,exports){
+},{}],406:[function(require,module,exports){
 /* @flow */
 'use strict'
 
@@ -39679,7 +40082,7 @@ module.exports = function (Y /* : any*/) {
   Y.utils.generateGuid = generateGuid
 }
 
-},{}],406:[function(require,module,exports){
+},{}],407:[function(require,module,exports){
 /* @flow */
 'use strict'
 
@@ -39918,7 +40321,7 @@ class YConfig {
   }
 }
 
-},{"./Connector.js":400,"./Connectors/Test.js":401,"./Database.js":402,"./Struct.js":403,"./Transaction.js":404,"./Utils.js":405,"debug":308}],407:[function(require,module,exports){
+},{"./Connector.js":401,"./Connectors/Test.js":402,"./Database.js":403,"./Struct.js":404,"./Transaction.js":405,"./Utils.js":406,"debug":308}],408:[function(require,module,exports){
 /* globals CodeMirror */
 
 var EventEmitter = require('events').EventEmitter
@@ -40168,7 +40571,7 @@ var ExcludedIntelliSenseTriggerKeys = {
   '222': 'quote'
 }
 
-},{"./../filesystem/filesystem":410,"events":428,"inherits":332}],408:[function(require,module,exports){
+},{"./../filesystem/filesystem":411,"events":429,"inherits":332}],409:[function(require,module,exports){
 var util = require('./util')
 
 function Directory (path) {
@@ -40183,7 +40586,7 @@ function Directory (path) {
 
 module.exports = Directory
 
-},{"./util":411}],409:[function(require,module,exports){
+},{"./util":412}],410:[function(require,module,exports){
 /* globals CodeMirror */
 
 var util = require('./util')
@@ -40228,7 +40631,7 @@ File.prototype.read = function (cb) {
 
 module.exports = File
 
-},{"./util":411}],410:[function(require,module,exports){
+},{"./util":412}],411:[function(require,module,exports){
 /* globals JSZip, CodeMirror */
 
 var File = require('./file')
@@ -40240,7 +40643,7 @@ var inherits = require('inherits')
 
 inherits(FileSystem, EventEmitter)
 
-var ignoredFilenames = ['__MACOSX', '.DS_Store']
+var ignoredFilenames = ['__MACOSX', '.DS_Store', 'node_modules']
 
 function FileSystem () {
   var self = this
@@ -40485,7 +40888,7 @@ FileSystem.prototype.unzip = function (file, cb) {
 
 module.exports = new FileSystem()
 
-},{"./directory":408,"./file":409,"./util":411,"events":428,"inherits":332}],411:[function(require,module,exports){
+},{"./directory":409,"./file":410,"./util":412,"events":429,"inherits":332}],412:[function(require,module,exports){
 var util = {}
 
 util.getFilename = function (path) {
@@ -40567,7 +40970,7 @@ util.getParameterByName = function (name) {
 
 module.exports = util
 
-},{}],412:[function(require,module,exports){
+},{}],413:[function(require,module,exports){
 var FileSystem = require('./filesystem/filesystem')
 var Interface = require('./interface/interface')
 var Editor = require('./editor/editor')
@@ -40790,7 +41193,7 @@ Multihack.prototype._initRemote = function (cb) {
 
 module.exports = Multihack
 
-},{"./editor/editor":407,"./filesystem/filesystem":410,"./filesystem/util":411,"./interface/interface":413,"./interface/lang/lang":414,"./network/hyperhostwrapper":421,"./network/voice":422,"multihack-core":339}],413:[function(require,module,exports){
+},{"./editor/editor":408,"./filesystem/filesystem":411,"./filesystem/util":412,"./interface/interface":414,"./interface/lang/lang":415,"./network/hyperhostwrapper":422,"./network/voice":423,"multihack-core":339}],414:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 var Modal = require('./modal')
@@ -41098,7 +41501,7 @@ Interface.prototype.showOverlay = function (msg, cb) {
 
 module.exports = new Interface()
 
-},{"./lang/lang":414,"./modal":416,"./tabs":418,"./treeview":420,"cuid":306,"events":428,"inherits":332,"p2p-graph":342}],414:[function(require,module,exports){
+},{"./lang/lang":415,"./modal":417,"./tabs":419,"./treeview":421,"cuid":306,"events":429,"inherits":332,"p2p-graph":342}],415:[function(require,module,exports){
 var translations = require('./translations')
 
 var mustache = require('mustache')
@@ -41138,7 +41541,7 @@ Lang.prototype.get = function (key, data) {
 
 module.exports = new Lang()
 
-},{"./translations":415,"events":428,"inherits":332,"mustache":341}],415:[function(require,module,exports){
+},{"./translations":416,"events":429,"inherits":332,"mustache":341}],416:[function(require,module,exports){
 module.exports={
   "en": {
     "save_success_title": "Save Completed",
@@ -41234,7 +41637,7 @@ module.exports={
   }
 }
 
-},{}],416:[function(require,module,exports){
+},{}],417:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 var mustache = require('mustache')
@@ -41300,7 +41703,7 @@ Modal.prototype.close = function () {
 
 module.exports = Modal
 
-},{"./templates":419,"events":428,"inherits":332,"mustache":341}],417:[function(require,module,exports){
+},{"./templates":420,"events":429,"inherits":332,"mustache":341}],418:[function(require,module,exports){
 var mustache = require('mustache')
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
@@ -41352,7 +41755,7 @@ Tab.prototype.rename = function (newFilepath) {
 
 module.exports = Tab
 
-},{"./../filesystem/util":411,"events":428,"inherits":332,"mustache":341}],418:[function(require,module,exports){
+},{"./../filesystem/util":412,"events":429,"inherits":332,"mustache":341}],419:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 
@@ -41439,7 +41842,7 @@ Tabs.prototype.fileDeleted = function (filepath) {
 
 module.exports = new Tabs()
 
-},{"./tab":417,"events":428,"inherits":332}],419:[function(require,module,exports){
+},{"./tab":418,"events":429,"inherits":332}],420:[function(require,module,exports){
 var dict = {}
 var lang = require('./lang/lang')
 var lg = lang.get.bind(lang)
@@ -41493,7 +41896,7 @@ dict['network'] =
 
 module.exports = dict
 
-},{"./lang/lang":414}],420:[function(require,module,exports){
+},{"./lang/lang":415}],421:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 
@@ -41645,7 +42048,7 @@ TreeView.prototype.addDir = function (parentElement, file) {
 
 module.exports = TreeView
 
-},{"events":428,"inherits":332}],421:[function(require,module,exports){
+},{"events":429,"inherits":332}],422:[function(require,module,exports){
 /* globals HyperHost */
 
 // Wraps the HyperHost instance
@@ -41688,7 +42091,7 @@ HyperHostWrapper.prototype.deploy = function (tree) {
 
 module.exports = new HyperHostWrapper()
 
-},{"events":428,"inherits":332}],422:[function(require,module,exports){
+},{"events":429,"inherits":332}],423:[function(require,module,exports){
 var getusermedia = require('getusermedia')
 
 function VoiceCall (socket, client, room) {
@@ -41818,7 +42221,7 @@ VoiceCall.prototype.toggle = function () {
 
 module.exports = VoiceCall
 
-},{"getusermedia":327}],423:[function(require,module,exports){
+},{"getusermedia":327}],424:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -41934,11 +42337,11 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],424:[function(require,module,exports){
-
 },{}],425:[function(require,module,exports){
+
+},{}],426:[function(require,module,exports){
 arguments[4][301][0].apply(exports,arguments)
-},{"buffer":426,"dup":301}],426:[function(require,module,exports){
+},{"buffer":427,"dup":301}],427:[function(require,module,exports){
 (function (global){
 /*!
  * The buffer module from node.js, for the browser.
@@ -43731,7 +44134,7 @@ function isnan (val) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"base64-js":423,"ieee754":429,"isarray":432}],427:[function(require,module,exports){
+},{"base64-js":424,"ieee754":430,"isarray":433}],428:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -43842,7 +44245,7 @@ function objectToString(o) {
 }
 
 }).call(this,{"isBuffer":require("../../is-buffer/index.js")})
-},{"../../is-buffer/index.js":431}],428:[function(require,module,exports){
+},{"../../is-buffer/index.js":432}],429:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -44146,7 +44549,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],429:[function(require,module,exports){
+},{}],430:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -44232,9 +44635,9 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],430:[function(require,module,exports){
+},{}],431:[function(require,module,exports){
 arguments[4][332][0].apply(exports,arguments)
-},{"dup":332}],431:[function(require,module,exports){
+},{"dup":332}],432:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -44257,11 +44660,11 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
-},{}],432:[function(require,module,exports){
+},{}],433:[function(require,module,exports){
 arguments[4][333][0].apply(exports,arguments)
-},{"dup":333}],433:[function(require,module,exports){
+},{"dup":333}],434:[function(require,module,exports){
 arguments[4][346][0].apply(exports,arguments)
-},{"_process":434,"dup":346}],434:[function(require,module,exports){
+},{"_process":435,"dup":346}],435:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -44443,14 +44846,14 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],435:[function(require,module,exports){
+},{}],436:[function(require,module,exports){
 module.exports = require("./lib/_stream_duplex.js")
 
-},{"./lib/_stream_duplex.js":436}],436:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":437}],437:[function(require,module,exports){
 arguments[4][348][0].apply(exports,arguments)
-},{"./_stream_readable":438,"./_stream_writable":440,"core-util-is":427,"dup":348,"inherits":430,"process-nextick-args":433}],437:[function(require,module,exports){
+},{"./_stream_readable":439,"./_stream_writable":441,"core-util-is":428,"dup":348,"inherits":431,"process-nextick-args":434}],438:[function(require,module,exports){
 arguments[4][349][0].apply(exports,arguments)
-},{"./_stream_transform":439,"core-util-is":427,"dup":349,"inherits":430}],438:[function(require,module,exports){
+},{"./_stream_transform":440,"core-util-is":428,"dup":349,"inherits":431}],439:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -45390,7 +45793,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'))
-},{"./_stream_duplex":436,"./internal/streams/BufferList":441,"_process":434,"buffer":426,"buffer-shims":425,"core-util-is":427,"events":428,"inherits":430,"isarray":432,"process-nextick-args":433,"string_decoder/":447,"util":424}],439:[function(require,module,exports){
+},{"./_stream_duplex":437,"./internal/streams/BufferList":442,"_process":435,"buffer":427,"buffer-shims":426,"core-util-is":428,"events":429,"inherits":431,"isarray":433,"process-nextick-args":434,"string_decoder/":448,"util":425}],440:[function(require,module,exports){
 // a transform stream is a readable/writable stream where you do
 // something with the data.  Sometimes it's called a "filter",
 // but that's not a great name for it, since that implies a thing where
@@ -45571,7 +45974,7 @@ function done(stream, er) {
 
   return stream.push(null);
 }
-},{"./_stream_duplex":436,"core-util-is":427,"inherits":430}],440:[function(require,module,exports){
+},{"./_stream_duplex":437,"core-util-is":428,"inherits":431}],441:[function(require,module,exports){
 (function (process){
 // A bit simpler than readable streams.
 // Implement an async ._write(chunk, encoding, cb), and it'll handle all
@@ -46100,12 +46503,12 @@ function CorkedRequest(state) {
   };
 }
 }).call(this,require('_process'))
-},{"./_stream_duplex":436,"_process":434,"buffer":426,"buffer-shims":425,"core-util-is":427,"events":428,"inherits":430,"process-nextick-args":433,"util-deprecate":448}],441:[function(require,module,exports){
+},{"./_stream_duplex":437,"_process":435,"buffer":427,"buffer-shims":426,"core-util-is":428,"events":429,"inherits":431,"process-nextick-args":434,"util-deprecate":449}],442:[function(require,module,exports){
 arguments[4][353][0].apply(exports,arguments)
-},{"buffer":426,"buffer-shims":425,"dup":353}],442:[function(require,module,exports){
+},{"buffer":427,"buffer-shims":426,"dup":353}],443:[function(require,module,exports){
 module.exports = require("./lib/_stream_passthrough.js")
 
-},{"./lib/_stream_passthrough.js":437}],443:[function(require,module,exports){
+},{"./lib/_stream_passthrough.js":438}],444:[function(require,module,exports){
 (function (process){
 var Stream = (function (){
   try {
@@ -46125,13 +46528,13 @@ if (!process.browser && process.env.READABLE_STREAM === 'disable' && Stream) {
 }
 
 }).call(this,require('_process'))
-},{"./lib/_stream_duplex.js":436,"./lib/_stream_passthrough.js":437,"./lib/_stream_readable.js":438,"./lib/_stream_transform.js":439,"./lib/_stream_writable.js":440,"_process":434}],444:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":437,"./lib/_stream_passthrough.js":438,"./lib/_stream_readable.js":439,"./lib/_stream_transform.js":440,"./lib/_stream_writable.js":441,"_process":435}],445:[function(require,module,exports){
 module.exports = require("./lib/_stream_transform.js")
 
-},{"./lib/_stream_transform.js":439}],445:[function(require,module,exports){
+},{"./lib/_stream_transform.js":440}],446:[function(require,module,exports){
 module.exports = require("./lib/_stream_writable.js")
 
-},{"./lib/_stream_writable.js":440}],446:[function(require,module,exports){
+},{"./lib/_stream_writable.js":441}],447:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -46260,7 +46663,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":428,"inherits":430,"readable-stream/duplex.js":435,"readable-stream/passthrough.js":442,"readable-stream/readable.js":443,"readable-stream/transform.js":444,"readable-stream/writable.js":445}],447:[function(require,module,exports){
+},{"events":429,"inherits":431,"readable-stream/duplex.js":436,"readable-stream/passthrough.js":443,"readable-stream/readable.js":444,"readable-stream/transform.js":445,"readable-stream/writable.js":446}],448:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -46483,18 +46886,18 @@ function base64DetectIncompleteChar(buffer) {
   this.charLength = this.charReceived ? 3 : 0;
 }
 
-},{"buffer":426}],448:[function(require,module,exports){
+},{"buffer":427}],449:[function(require,module,exports){
 arguments[4][382][0].apply(exports,arguments)
-},{"dup":382}],449:[function(require,module,exports){
+},{"dup":382}],450:[function(require,module,exports){
 arguments[4][332][0].apply(exports,arguments)
-},{"dup":332}],450:[function(require,module,exports){
+},{"dup":332}],451:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],451:[function(require,module,exports){
+},{}],452:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -47084,5 +47487,5 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":450,"_process":434,"inherits":449}]},{},[412])(412)
+},{"./support/isBuffer":451,"_process":435,"inherits":450}]},{},[413])(413)
 });
