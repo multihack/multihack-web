@@ -182,9 +182,29 @@ img ,
   transform: scale(0.95)
 }
 
+#delete {
+  position: absolute;
+  right: 20px;
+  cursor: pointer;
+  top: 2px;
+  padding: 5px;
+  z-index: 10;
+}
+
 .sidebar.collapsed > .panel-topbar {
   display: none;
   width: 24px;
+}
+
+#room {
+  max-width: 70px;
+  overflow: hidden;
+  display: inline-block;
+  cursor: pointer;
+}
+
+#room:hover {
+  color: gray;
 }
 
 .sidebar.collapsed > .tree {
@@ -228,14 +248,6 @@ img ,
 .icon-button img {
     width: 13px;
     height: 13px;
-}
-.workspace .delete {
-    background: firebrick;
-    position: absolute;
-    right: 10px;
-    bottom: 30px;
-    border-color: red;
-    z-index: 10;
 }
 
 .workspace .image-contrast {
@@ -613,6 +625,9 @@ span.mobile-hide{
     }
     span.mobile-hide{
         display: inline-block;
+    }
+    #room {
+      max-width: 260px;
     }
 }
 
