@@ -22,7 +22,7 @@
     "events": "^1.1.1",
     "getusermedia": "^2.0.1",
     "inherits": "^2.0.3",
-    "multihack-core": "^2.1.6",
+    "multihack-core": "^2.1.7",
     "mustache": "^2.3.0",
     "p2p-graph": "^1.1.1"
   }
