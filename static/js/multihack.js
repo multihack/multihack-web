@@ -45602,7 +45602,7 @@ function Multihack (config) {
     if (!e.activePath) {
       Editor.close()
     } else {
-      
+      Editor.open(e.activePath)
     }
   })
 
@@ -46295,7 +46295,7 @@ Modal.prototype.open = function () {
     self.emit('cancel')
   }
 
-  var ip = Array.prototype.slice.call(self.el.querySelectorAll('.modal-input'))
+  var ip = Array.prototype.slice.call(self.el.querySelectorAll('.modal-input,.filename-input'))
   while (ip[0]) {
     if (ip[0].tagName === 'INPUT') {
       ip[0].addEventListener('keyup', keyUp)
@@ -46524,7 +46524,7 @@ dict['alert-html'] =
 
 dict['newFile'] =
     '<h1>{{title}}</h1>' +
-    '<input type="text" placeholder="' + lg('name') + '"></input><br>' +
+    '<input type="text" class="filename-input" data-type="file" placeholder="' + lg('name') + '"></input><br>' +
     '<button class="go-button" data-type="file">' + lg('file') + '</button>' +
     '<button class="go-button" data-type="dir">' + lg('folder') + '</button>' +
     '<button class="no-button">' + lg('cancel') + '</button>'

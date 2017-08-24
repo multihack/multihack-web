@@ -34,7 +34,7 @@ function Multihack (config) {
     if (!e.activePath) {
       Editor.close()
     } else {
-      
+      Editor.open(e.activePath)
     }
   })
 
