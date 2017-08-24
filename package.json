@@ -14,8 +14,10 @@
   "author": "Thomas Mullen",
   "license": "MIT",
   "devDependencies": {
+    "browserify": "^14.4.0",
     "standard": "^8.6.0",
-    "tape": "^4.6.3"
+    "tape": "^4.6.3",
+    "watchify": "^3.9.0"
   },
   "dependencies": {
     "clipboard": "^1.7.1",

@@ -29,6 +29,10 @@ function Interface () {
     self.emit('openFile', e)
   })
 
+  Tabs.on('close', function(e) {
+    self.emit('closeFile', e)
+  })
+
   self.addCounter = 1
   self.treeview.on('add', function (e) {
     self.newFileDialog(e.path, function (name, type) {
