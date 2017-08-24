@@ -166,8 +166,8 @@ Editor.prototype.open = function (filePath) {
 
 Editor.prototype.focus = function () {
   var self = this
-  self._cm.focus();
-  self._cm.setCursor(0, 0);
+  self._cm.focus()
+  self._cm.setCursor(0, 0)
 }
 
 Editor.prototype.close = function () {
