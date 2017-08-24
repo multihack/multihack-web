@@ -45079,7 +45079,14 @@ Editor.prototype.open = function (filePath) {
       break
   }
 
+  self.focus()
   self.highlight(self._lastSelections)
+}
+
+Editor.prototype.focus = function () {
+  var self = this
+  self._cm.focus();
+  self._cm.setCursor(0, 0);
 }
 
 Editor.prototype.close = function () {
