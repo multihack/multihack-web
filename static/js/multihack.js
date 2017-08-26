@@ -45817,7 +45817,7 @@ var Clipboard = require('clipboard')
 
 inherits(Interface, EventEmitter)
 
-function Interface () {
+function Interface() {
   var self = this
   if (!(self instanceof Interface)) return new Interface()
 
@@ -45835,7 +45835,7 @@ function Interface () {
     self.emit('openFile', e)
   })
 
-  Tabs.on('close', function(e) {
+  Tabs.on('close', function (e) {
     self.emit('closeFile', e)
   })
 
@@ -45862,10 +45862,10 @@ function Interface () {
       sidebar.className = sidebar.className.replace('collapsed', '')
     }
   })
-  
+
   // Click room ID to copy share link
   new Clipboard('#room', {
-    text: function(trigger) {
+    text: function (trigger) {
       return window.location.href
     }
   });
@@ -46404,7 +46404,7 @@ inherits(Tabs, EventEmitter)
 var tabs = []
 var workspace = document.querySelector('.workspace')
 
-function Tabs () {
+function Tabs() {
   var self = this
   if (!(self instanceof Tabs)) return new Tabs()
 
@@ -46442,12 +46442,12 @@ Tabs.prototype._newTab = function (filepath) {
     self.el.removeChild(tab.el)
 
     var activePath = ''
-    var index = tabs.indexOf(tab);
+    var index = tabs.indexOf(tab)
     tabs.splice(index, 1)
     if (tabs.length === 0) {
       workspace.className = workspace.className + ' tabs-hidden'
     } else {
-      var nextTab = tabs[index] ? tabs[index] : tabs[index - 1];
+      var nextTab = tabs[index] || tabs[index - 1]
       console.log(`Setting ${nextTab.filepath} as active tab`)
       nextTab.setActive()
       activePath = nextTab.filepath
