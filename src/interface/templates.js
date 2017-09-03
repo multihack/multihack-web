@@ -39,7 +39,7 @@ dict['alert-html'] =
 
 dict['newFile'] =
     '<h1>{{title}}</h1>' +
-    '<input type="text" placeholder="' + lg('name') + '"></input><br>' +
+    '<input type="text" class="filename-input" data-type="file" placeholder="' + lg('name') + '"></input><br>' +
     '<button class="go-button" data-type="file">' + lg('file') + '</button>' +
     '<button class="go-button" data-type="dir">' + lg('folder') + '</button>' +
     '<button class="no-button">' + lg('cancel') + '</button>'
