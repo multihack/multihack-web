@@ -24,6 +24,6 @@ Please include OS version, browser version, and any network information (same ne
 <summary>Click to expand</summary>
 
 ```
-Paste your console log here
+[Paste your console log here]
 ```
 <details>
