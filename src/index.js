@@ -30,6 +30,14 @@ function Multihack (config) {
     self._remote.createFile(e.path)
   })
 
+  Interface.on('closeFile', function(e) {
+    if (!e.activePath) {
+      Editor.close()
+    } else {
+      Editor.open(e.activePath)
+    }
+  })
+
   FileSystem.on('unzipFile', function (file) {
     file.read(function (content) {
       self._remote.createFile(file.path, content)
