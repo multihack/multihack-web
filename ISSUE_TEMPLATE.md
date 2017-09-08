@@ -21,7 +21,7 @@ Please include OS version, browser version, and any network information (same ne
 ### Console Log
 <details>
 
-<summary>Console Log</summary>
+<summary>Click to expand</summary>
 
 ```
 Paste your console log here
