@@ -14,8 +14,10 @@
   "author": "Thomas Mullen",
   "license": "MIT",
   "devDependencies": {
+    "browserify": "^14.4.0",
     "standard": "^8.6.0",
-    "tape": "^4.6.3"
+    "tape": "^4.6.3",
+    "watchify": "^3.9.0"
   },
   "dependencies": {
     "clipboard": "^1.7.1",
@@ -23,7 +25,7 @@
     "events": "^1.1.1",
     "getusermedia": "^2.0.1",
     "inherits": "^2.0.3",
-    "multihack-core": "^2.1.7",
+    "multihack-core": "^2.2.0",
     "mustache": "^2.3.0",
     "p2p-graph": "^1.1.1"
   }

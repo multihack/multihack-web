@@ -40,7 +40,7 @@ Modal.prototype.open = function () {
     self.emit('cancel')
   }
 
-  var ip = Array.prototype.slice.call(self.el.querySelectorAll('.modal-input'))
+  var ip = Array.prototype.slice.call(self.el.querySelectorAll('.modal-input,.filename-input'))
   while (ip[0]) {
     if (ip[0].tagName === 'INPUT') {
       ip[0].addEventListener('keyup', keyUp)

@@ -11,7 +11,7 @@ var Clipboard = require('clipboard')
 
 inherits(Interface, EventEmitter)
 
-function Interface () {
+function Interface() {
   var self = this
   if (!(self instanceof Interface)) return new Interface()
 
@@ -27,6 +27,10 @@ function Interface () {
 
   Tabs.on('change', function (e) {
     self.emit('openFile', e)
+  })
+
+  Tabs.on('close', function (e) {
+    self.emit('closeFile', e)
   })
 
   self.addCounter = 1
@@ -52,10 +56,10 @@ function Interface () {
       sidebar.className = sidebar.className.replace('collapsed', '')
     }
   })
-  
+
   // Click room ID to copy share link
   new Clipboard('#room', {
-    text: function(trigger) {
+    text: function (trigger) {
       return window.location.href
     }
   });
