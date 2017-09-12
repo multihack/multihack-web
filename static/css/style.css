@@ -48,9 +48,9 @@ body {
 .nav .logo {
     color: white;
     font-family: SourceCodeLight;
-    margin-top: 10px;
-    margin-left: 30px;
-    font-size: 30px;
+    margin-top: 15px;
+    margin-left: 20px;
+    font-size: 24px;
     cursor: pointer;
     float: left;
 }
@@ -628,6 +628,11 @@ span.mobile-hide{
     }
     #room {
       max-width: 260px;
+    }
+    .logo {
+      margin-top: 10px;
+      margin-left: 30px;
+      font-size: 30px;
     }
 }
 
