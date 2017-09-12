@@ -243,7 +243,7 @@ FileSystem.prototype.unzip = function (file, cb) {
       } else {
         self.mkfile(relativePath)
         zipEntry.async(util.getLoadMode(relativePath)).then(function (content) {
-          self.get(relativePath).doc = new CodeMirror.Doc(content, util.pathToMode(relativePath))
+          self.get(relativePath).write(content)
           self.emit('unzipFile', self.get(relativePath))
           if (--awaiting <= 0) cb()
         })

@@ -41451,7 +41451,9 @@ function Editor () {
     matchBrackets: true,
     autoCloseBrackets: true,
     matchTags: {bothTags: true},
-    autoCloseTags: true
+    autoCloseTags: true,
+    maxHighlightLength: 2000,
+    crudeMeasuringFrom: 2000
   }
 
   self._cm = CodeMirror.fromTextArea(textArea, options)
@@ -41577,7 +41579,9 @@ Editor.prototype.open = function (filePath) {
     case 'image':
       document.querySelector('.editor-wrapper').style.display = 'none'
       document.querySelector('.image-wrapper').style.display = ''
-      document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,' + self._workingFile.doc.getValue()
+      self._workingFile.read(function (content) {
+        document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,' + content
+      })
       break
     default:
       document.querySelector('.editor-wrapper').style.display = ''
@@ -41709,33 +41713,54 @@ function File (path) {
   self.isDir = false
   self.viewMapping = util.getViewMapping(path)
   self.alreadyLink = false
-
-  self.doc = new CodeMirror.Doc('', util.pathToMode(path))
-
-  Object.defineProperty(self, 'content', {
+  self.content = ''
+  self.size = 0
+  self._doc = null // holds temporary CodeMirror document reference
+  self._releaseTimer = null
+  
+  Object.defineProperty(self, 'doc', {
     get: function () {
-      return self.doc.getValue()
-    }
-  })
-
-  Object.defineProperty(self, 'size', {
-    get: function () {
-      return self.doc.getValue().length
+      if (!self._doc) {
+        self._doc = new CodeMirror.Doc(self.content, util.pathToMode(self.path))
+      }
+      if (!self._releaseTimer) {
+        self._releaseTimer = window.setTimeout(function () {
+          self.content = self._doc.getValue() // save the value
+          self._doc = null // allow garbage collection
+          self._releaseTimer = null
+        }, 30000) // release document reference after 30 seconds
+      } else {
+        window.clearTimeout(self._releaseTimer)
+      }
+      return self._doc
     }
   })
 }
 
 File.prototype.write = function (content, cb) {
   var self = this
-
-  self.doc.setValue(content)
-  if (cb) cb()
+  
+  cb = cb || function () {}
+  
+  if (self._doc) {
+    self._doc.setValue(content)
+  } else {
+    self.content = content
+  }
+  
+  self.size = content.length
 }
 
 File.prototype.read = function (cb) {
   var self = this
-
-  if (cb) cb(self.doc.getValue())
+  
+  cb = cb || function () {}
+  
+  if (self._doc) {
+    cb(self._doc.getValue())
+  } else {
+    cb(self.content)
+  }
 }
 
 module.exports = File
@@ -41986,7 +42011,7 @@ FileSystem.prototype.unzip = function (file, cb) {
       } else {
         self.mkfile(relativePath)
         zipEntry.async(util.getLoadMode(relativePath)).then(function (content) {
-          self.get(relativePath).doc = new CodeMirror.Doc(content, util.pathToMode(relativePath))
+          self.get(relativePath).write(content)
           self.emit('unzipFile', self.get(relativePath))
           if (--awaiting <= 0) cb()
         })

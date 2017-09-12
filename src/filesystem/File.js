@@ -11,33 +11,54 @@ function File (path) {
   self.isDir = false
   self.viewMapping = util.getViewMapping(path)
   self.alreadyLink = false
-
-  self.doc = new CodeMirror.Doc('', util.pathToMode(path))
-
-  Object.defineProperty(self, 'content', {
+  self.content = ''
+  self.size = 0
+  self._doc = null // holds temporary CodeMirror document reference
+  self._releaseTimer = null
+  
+  Object.defineProperty(self, 'doc', {
     get: function () {
-      return self.doc.getValue()
-    }
-  })
-
-  Object.defineProperty(self, 'size', {
-    get: function () {
-      return self.doc.getValue().length
+      if (!self._doc) {
+        self._doc = new CodeMirror.Doc(self.content, util.pathToMode(self.path))
+      }
+      if (!self._releaseTimer) {
+        self._releaseTimer = window.setTimeout(function () {
+          self.content = self._doc.getValue() // save the value
+          self._doc = null // allow garbage collection
+          self._releaseTimer = null
+        }, 30000) // release document reference after 30 seconds
+      } else {
+        window.clearTimeout(self._releaseTimer)
+      }
+      return self._doc
     }
   })
 }
 
 File.prototype.write = function (content, cb) {
   var self = this
-
-  self.doc.setValue(content)
-  if (cb) cb()
+  
+  cb = cb || function () {}
+  
+  if (self._doc) {
+    self._doc.setValue(content)
+  } else {
+    self.content = content
+  }
+  
+  self.size = content.length
 }
 
 File.prototype.read = function (cb) {
   var self = this
-
-  if (cb) cb(self.doc.getValue())
+  
+  cb = cb || function () {}
+  
+  if (self._doc) {
+    cb(self._doc.getValue())
+  } else {
+    cb(self.content)
+  }
 }
 
 module.exports = File
