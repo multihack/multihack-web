@@ -25,7 +25,9 @@ function Editor () {
     matchBrackets: true,
     autoCloseBrackets: true,
     matchTags: {bothTags: true},
-    autoCloseTags: true
+    autoCloseTags: true,
+    maxHighlightLength: 2000,
+    crudeMeasuringFrom: 2000
   }
 
   self._cm = CodeMirror.fromTextArea(textArea, options)
@@ -151,7 +153,9 @@ Editor.prototype.open = function (filePath) {
     case 'image':
       document.querySelector('.editor-wrapper').style.display = 'none'
       document.querySelector('.image-wrapper').style.display = ''
-      document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,' + self._workingFile.doc.getValue()
+      self._workingFile.read(function (content) {
+        document.querySelector('.image-wrapper > img').src = 'data:text/javascript;base64,' + content
+      })
       break
     default:
       document.querySelector('.editor-wrapper').style.display = ''
