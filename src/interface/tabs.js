@@ -49,7 +49,7 @@ Tabs.prototype._newTab = function (filepath) {
     var activePath = ''
     var index = tabs.indexOf(tab)
     tabs.splice(index, 1)
-    if (self.el.childen.length === 0) {
+    if (tabs.length === 0) {
       workspace.className = workspace.className + ' tabs-hidden'
     } else {
       var nextTab = tabs[index] || tabs[index - 1]
