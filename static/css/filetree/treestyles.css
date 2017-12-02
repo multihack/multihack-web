@@ -34,14 +34,14 @@ li.file {
 }
 
 li.file a {
-    color: #fff;
+    color: #9DA5AB;
     text-decoration: none;
     display: block;
     cursor: pointer;
 }
 
 li.file a:hover {
-    color: #688491;
+    color: gray;
 }
 
 li input {
@@ -86,7 +86,7 @@ li label {
 }
 
 li label:hover{
-    color: #637e8b;
+    color: gray;
 }
 
 li input:checked ~ ol {
