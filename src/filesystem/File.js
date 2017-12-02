@@ -15,6 +15,7 @@ function File (path) {
   self.size = 0
   self._doc = null // holds temporary CodeMirror document reference
   self._releaseTimer = null
+  self.lastCursor = null
   
   Object.defineProperty(self, 'doc', {
     get: function () {

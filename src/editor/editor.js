@@ -65,6 +65,8 @@ Editor.prototype._onSelectionChange = function (cm, change) {
   var self = this
 
   var ranges = change.ranges.map(self._putHeadBeforeAnchor)
+  
+  self._workingFile.lastCursor = ranges[0].head
 
   self.emit('selection', {
     filePath: self._workingFile.path,
@@ -161,10 +163,16 @@ Editor.prototype.open = function (filePath) {
       document.querySelector('.editor-wrapper').style.display = ''
       document.querySelector('.image-wrapper').style.display = 'none'
       self._cm.swapDoc(self._workingFile.doc)
+      if (self._workingFile.lastCursor) {
+        self._cm.focus()
+        self._cm.scrollIntoView(self._workingFile.lastCursor)
+        self._cm.setCursor(self._workingFile.lastCursor)
+      } else {
+        self.focus()
+      }
       break
   }
 
-  self.focus()
   self.highlight(self._lastSelections)
 }
 
