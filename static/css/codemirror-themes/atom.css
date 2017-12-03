@@ -9,9 +9,9 @@
 
 */
 
-.cm-s-atom.CodeMirror {background: #1d1f21; color: #c5c8c6; border-top: black solid 1px;}
+.cm-s-atom.CodeMirror {background: #1E1E1E; color: #c5c8c6;}
 .cm-s-atom div.CodeMirror-selected {background: #444444 !important;}
-.cm-s-atom .CodeMirror-gutters {background: #292C2F; border-right: solid black 1px;}
+.cm-s-atom .CodeMirror-gutters {background: #1E1E1E; border-right: none}
 .cm-s-atom .CodeMirror-linenumber {color: #c5c8c6;}
 .cm-s-atom .CodeMirror-cursor {border-left: 1px solid #d4cfc9 !important;}
 
