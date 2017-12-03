@@ -1,5 +1,6 @@
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
+var icons = require('file-icons-js')
 
 inherits(TreeView, EventEmitter)
 
@@ -86,7 +87,16 @@ TreeView.prototype.addFile = function (parentElement, file) {
   var a = document.createElement('a')
   a.className = 'filelink'
   a.id = file.path
-  a.innerHTML = file.name
+
+  var icon = document.createElement('i')
+  icon.className = icons.getClassWithColor(file.path)
+
+  var span = document.createElement('span')
+  span.innerHTML = file.name
+
+  a.appendChild(icon)
+  a.appendChild(span)
+
   a.addEventListener('click', function (e) {
     self.emit('open', {
       target: e.target,

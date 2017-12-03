@@ -40,6 +40,10 @@ li.file a {
     cursor: pointer;
 }
 
+li.file a span {
+    margin-left: 5px;
+}
+
 li.file a:hover {
     color: gray;
 }

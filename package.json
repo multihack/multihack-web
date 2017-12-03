@@ -23,6 +23,7 @@
     "clipboard": "^1.7.1",
     "cuid": "^1.3.8",
     "events": "^1.1.1",
+    "file-icons-js": "github:websemantics/file-icons-js",
     "getusermedia": "^2.0.1",
     "inherits": "^2.0.3",
     "multihack-core": "^2.2.0",
