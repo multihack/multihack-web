@@ -24,7 +24,7 @@ body {
     width: 100%;
     overflow: hidden;
     font-size: 14px;
-    background: black;
+    background: #0F0F0F;
     color: #9DA5AB;
     font-size: 12px;
 }
@@ -42,6 +42,13 @@ body {
     padding-right: 10px;
     z-index: 1;
     background: #252526;
+    background: rgb(62,62,64);
+    background: -moz-radial-gradient(center, ellipse cover,  rgb(62,62,64) 0%, rgb(21,21,22) 100%);
+    background: -webkit-radial-gradient(center, ellipse cover,  rgb(62,62,64) 0%,rgb(21,21,22) 100%);
+    background: radial-gradient(ellipse at center,  rgb(62,62,64) 0%,rgb(21,21,22) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3e3e40', endColorstr='#151516',GradientType=1 );   
+    background-size: 100% 150%;
+    background-position: 100% 100%; 
 }
 
 .embed .nav {
@@ -53,13 +60,9 @@ body {
 }
 
 .nav .logo {
-    color: white;
-    font-family: SourceCodeLight;
-    margin-top: 15px;
+    width: 110px;
+    margin-top: 10px;
     margin-left: 20px;
-    font-size: 24px;
-    cursor: pointer;
-    float: left;
 }
 
 .nav .icon-button {
@@ -157,6 +160,7 @@ img ,
     z-index: 1;
     overflow: auto;
     background: #252526;
+    border-top: 1px solid black;
 }
 
 .embed .sidebar {
@@ -174,13 +178,12 @@ img ,
 
 .panel-topbar {
     height: 20px;
-    border-bottom: solid transparent 1px;
     position: fixed;
     top: 62px;
     width: 142px;
     left: 0;
     text-align: center;
-    padding: 5px;
+    border-bottom: 1px solid black;
 }
 
 .embed .panel-topbar {
@@ -189,10 +192,9 @@ img ,
 
 #root-plus {
   position: absolute;
-  right: 3px;
+  right: 10px;
+  top: 0px;
   cursor: pointer;
-  top: -1px;
-  padding: 5px;
   z-index: 10;
 }
 #root-plus:active {
@@ -201,10 +203,9 @@ img ,
 
 #delete {
   position: absolute;
-  right: 20px;
+  right: 30px;
   cursor: pointer;
   top: 2px;
-  padding: 5px;
   z-index: 10;
 }
 
@@ -218,6 +219,7 @@ img ,
   overflow: hidden;
   display: inline-block;
   cursor: pointer;
+  margin-top: 2px;
 }
 
 #room:hover {
@@ -328,7 +330,7 @@ img ,
 }
 
 .workspace .tabs .tab span {
-    width: 80px;
+    width: 87px;
     padding: 4px;
     position: absolute;
     top: 0;
@@ -383,10 +385,9 @@ img ,
 
 .sidebar #collapsesidebar{
     position: absolute;
-    left: 0;
-    top: 2px;
+    left: -4px;
+    top: -1px;
     cursor: pointer;
-    padding: 5px;
 }
 .sidebar #collapsesidebar:active {
   transform: scale(0.95)
@@ -637,7 +638,7 @@ span.mobile-hide{
       width: 340px;
     }
     .sidebar .panel-topbar {
-        width: 330px;
+        width: 340px;
     }
     .icon-button {
         min-width: 70px;
@@ -651,13 +652,7 @@ span.mobile-hide{
     #room {
       max-width: 260px;
     }
-    .logo {
-      margin-top: 10px;
-      margin-left: 30px;
-      font-size: 30px;
-    }
 }
-
 
 /* Medium Devices, Desktops */
 

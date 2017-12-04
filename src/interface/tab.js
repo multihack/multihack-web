@@ -3,7 +3,7 @@ var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 var util = require('./../filesystem/util')
 
-var template = '<span>{{filename}}</span><div class="close">ⓧ</div>'
+var template = '<span>{{filename}}</span><div class="close">×</div>'
 
 inherits(Tab, EventEmitter)
 
