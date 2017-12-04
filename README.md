@@ -12,7 +12,7 @@
 
 <b>Compatible with <a href="https://github.com/RationalCoding/multihack-brackets">multihack-brackets</a>!</b>
 
-Tired of struggling to set up remote collaboration with your team? Try <a href="https://rationalcoding.github.io/multihack-web/">multihack.co</a>
+Tired of struggling to set up remote collaboration with your team? Try <a href="https://multihack.github.io/multihack-web/">multihack.co</a>
 
 **Still in active development. Fully working, but expect constant updates.**
 
