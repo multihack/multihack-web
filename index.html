@@ -1,27 +1,20 @@
-<!doctype html>
-<html lang="en" class="theme-atom">
+<!DOCTYPE HTML>
+<html manifest="./cache.manifest" lang="en" class="theme-atom">
 <head>
     <meta charset="utf-8" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <title>MultiHack - Realtime IDE</title>
-    <link href="https://fonts.googleapis.com/css?family=Anonymous+Pro" rel="stylesheet">
-    <!-- CodeMirro -->
+    <!-- CodeMirror -->
     <link rel="stylesheet" href="static/css/codemirror.css">
     <link rel="stylesheet" href="static/css/codemirror-themes/material.css">
     <link rel="stylesheet" href="static/css/show-hint.css">
     <!-- MultiHack -->
-    <link rel="stylesheet" href="static/css/codemirror-themes/atom.css">
-    <!--atom-->
-    <link rel="stylesheet" href="static/css/codemirror-themes/codepen.css">
-    <!--codepen -->
-    <link rel="stylesheet" href="static/css/codemirror-themes/brackets.css">
-    <!--brackets -->
+    <link rel="stylesheet" href="static/css/codemirror-themes/theme.css">
     <link rel="stylesheet" href="static/css/filetree/treestyles.css">
     <link rel="stylesheet" href="static/css/filetree/file-icons.css">
     <link rel="stylesheet" href="static/css/style.css"> 
   
     <!-- manifest and mobile -->
-    <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="apple-touch-icon" href="static/img/icon192.png">
@@ -117,8 +110,7 @@
 <!-- Core modules -->
 <script src="static/js/multihack.js"></script>
 <script>Multihack({
-    hostname: 'https://quiet-shelf-57463.herokuapp.com'
+    hostname: 'http://localhost:6011'
   })
-  
 </script>
 </html>

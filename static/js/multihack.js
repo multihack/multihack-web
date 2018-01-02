@@ -47862,6 +47862,7 @@ function Tabs() {
   if (!(self instanceof Tabs)) return new Tabs()
 
   self.el = document.querySelector('#tabs')
+  self._activePath = ''
 }
 
 Tabs.prototype.fileOpened = function (filepath) {
@@ -47886,29 +47887,14 @@ Tabs.prototype._newTab = function (filepath) {
   var tab = new Tab(filepath)
 
   tab.on('click', function () {
+    self._activePath = tab.filepath
     self.emit('change', {
       path: tab.filepath
     })
   })
 
   tab.on('close', function () {
-    self.el.removeChild(tab.el)
-
-    var activePath = ''
-    var index = tabs.indexOf(tab)
-    tabs.splice(index, 1)
-    if (tabs.length === 0) {
-      workspace.className = workspace.className + ' tabs-hidden'
-    } else {
-      var nextTab = tabs[index] || tabs[index - 1]
-      console.log(`Setting ${nextTab.filepath} as active tab`)
-      nextTab.setActive()
-      activePath = nextTab.filepath
-    }
-    console.log(tabs)
-    self.emit('close', {
-      activePath: activePath,
-    })
+    self._closeTab(tab)
   })
 
   tabs.push(tab)
@@ -47916,10 +47902,29 @@ Tabs.prototype._newTab = function (filepath) {
 
   if (tabs.length > MAX_TABS) {
     tabs[0].close()
-    tabs.splice(0, 1)
   }
 
   workspace.className = workspace.className.replace(new RegExp('tabs-hidden', 'g'), '')
+}
+
+Tabs.prototype._closeTab = function (tab) {
+  var self = this
+
+  self.el.removeChild(tab.el)
+
+  var index = tabs.indexOf(tab)
+  tabs.splice(index, 1)
+  if (tabs.length === 0) {
+    workspace.className = workspace.className + ' tabs-hidden'
+  } else if (self._activePath === tab.filepath) {
+    var nextTab = tabs[index] || tabs[index - 1]
+    console.log(`Setting ${nextTab.filepath} as active tab`)
+    nextTab.setActive()
+    self._activePath = nextTab.filepath
+    self.emit('close', {
+      activePath: self._activePath,
+    })
+  }
 }
 
 Tabs.prototype.fileRenamed = function (filepath, newFilepath) {
