@@ -22,6 +22,10 @@ ol.tree {
   display: inline-block;
 }
 
+.file i {
+    font-style: normal;   
+}
+
 li {
     position: relative;
     margin-left: -15px;

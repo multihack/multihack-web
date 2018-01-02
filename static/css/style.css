@@ -57,6 +57,7 @@ body {
 
 .modal {
     background: black;
+    border: 1px solid rgb(62,62,64);
 }
 
 .nav .logo {
@@ -78,6 +79,13 @@ body {
     background: black;
     border: none;
     border-radius: 0;
+    cursor: pointer !important;
+    outline: 1px solid #439bda;
+    min-width: 80px;
+}
+
+.no-button:hover, .go-button:hover {
+    outline: 1px solid white;
 }
 
 .nav .icon-button span {
@@ -99,6 +107,14 @@ body {
   height: 100%;
   text-align: center;
   transition: opacity .3s ease-in-out;
+}
+
+.nav a {
+    position: absolute;
+    top: 0;
+    left: 0px;
+    bottom: 10px;
+    width: 150px;
 }
 
 .nav .icon-button .tooltip > span {
@@ -415,7 +431,6 @@ img ,
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border: transparent 10px solid;
     padding: 20px;
     max-height: 100%;
     overflow-y: auto;
@@ -507,7 +522,8 @@ input[type="text"] {
     border: 3px transparent solid;
     outline: none;
     font-size: 16px;
-    padding: 5px;
+    padding: 5px;    
+    border: 1px solid rgb(62,62,64);
     transition: all .3s;
     max-width: 100% !important;
 }
@@ -585,7 +601,7 @@ input[type='file']::before {
     display: inline-block;
     outline: none;
     white-space: nowrap;
-    cursor: pointer;
+    cursor: pointer !important;
     padding: 10px 15px;
     font-size: 13px;
     color: white;
