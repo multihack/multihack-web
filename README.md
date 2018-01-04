@@ -6,7 +6,7 @@
 </h1>
 <h3 align="center">Real-Time Editor and Voice Chat.</h3>  
 
-[![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![Gitter chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/multihack/multihack)
 ![Alpha](https://img.shields.io/badge/status-alpha-green.svg?style=flat)
 
