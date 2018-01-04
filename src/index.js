@@ -75,9 +75,9 @@ function Multihack (config) {
   Interface.on('deleteCurrent', function (e) {
     var workingFile = Editor.getWorkingFile()
     if (!workingFile) return
-    Editor.close()
 
     Interface.confirmDelete(workingFile.name, function () {
+      Editor.close()
       var workingPath = workingFile.path
       var parentElement = Interface.treeview.getParentElement(workingPath)
       if (parentElement) {

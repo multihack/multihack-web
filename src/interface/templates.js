@@ -17,7 +17,7 @@ dict['input'] =
 
 dict['confirm-delete'] =
     '<h1>{{title}}</h1>' +
-    '<p>Are you sure you want to delete "{{fileName}}"?</p>' +
+    '<p>'+ lg('confirm_delete') +'</p>' +
     '<button class="go-button noselect">' + lg('delete') + '</button>' +
     '<button class="no-button noselect">' + lg('cancel') + '</button>'
 

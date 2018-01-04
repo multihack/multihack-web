@@ -47103,9 +47103,9 @@ function Multihack (config) {
   Interface.on('deleteCurrent', function (e) {
     var workingFile = Editor.getWorkingFile()
     if (!workingFile) return
-    Editor.close()
 
     Interface.confirmDelete(workingFile.name, function () {
+      Editor.close()
       var workingPath = workingFile.path
       var parentElement = Interface.treeview.getParentElement(workingPath)
       if (parentElement) {
@@ -47379,7 +47379,7 @@ Interface.prototype.newFileDialog = function (path, cb) {
 }
 
 Interface.prototype.confirmDelete = function (fileName, cb) {
-  var modal = new Modal('confirm-delete', {
+  var modal = new Modal('confirm_delete', {
     fileName: fileName
   })
 
@@ -47628,9 +47628,11 @@ module.exports={
     "deploy_success": "Anyone can visit your site at<br><a target=\"_blank\" href=\"{{{url}}}\">{{{url}}}</a>",
     "lost_connection": "Your connection to \"{{nickname}}\" has been lost.",
     "history_item": "Multihack Room {{room}}",
+    "confirm_delete": "Are you sure you want to delete \"{{fileName}}\"?",
     "server": "Server",
     "you": "You",
     "optional": "Optional",
+    "confirm": "Confirm",
     "cancel": "Cancel",
     "skip": "Skip",
     "join": "Join",
@@ -47967,7 +47969,7 @@ dict['input'] =
 
 dict['confirm-delete'] =
     '<h1>{{title}}</h1>' +
-    '<p>Are you sure you want to delete "{{fileName}}"?</p>' +
+    '<p>'+ lg('confirm_delete') +'</p>' +
     '<button class="go-button noselect">' + lg('delete') + '</button>' +
     '<button class="no-button noselect">' + lg('cancel') + '</button>'
 

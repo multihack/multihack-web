@@ -208,10 +208,12 @@ img ,
 
 #root-plus {
   position: absolute;
-  right: 10px;
-  top: 0px;
-  cursor: pointer;
+  right: 5px;
+  top: 2px;
+  cursor: pointer !important;
   z-index: 10;
+  pointer-events: all;
+  width: 15px;
 }
 #root-plus:active {
   transform: scale(0.95)
@@ -220,10 +222,15 @@ img ,
 #delete {
   position: absolute;
   right: 30px;
-  cursor: pointer;
+  cursor: pointer !important;
   top: 2px;
   z-index: 10;
+  pointer-events: all;
+  width: 15px;
 }
+#delete:active {
+    transform: scale(0.95)
+  }
 
 .sidebar.collapsed > .panel-topbar {
   display: none;
