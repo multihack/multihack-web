@@ -14,7 +14,7 @@
 
 Tired of struggling to set up remote collaboration with your team? Try <a href="https://multihack.github.io/multihack-web/">multihack.co</a>
 
-**Still in active development. Fully working, but expect constant updates.**
+**Still in active development. Expect instability and constant updates.**
 
 ## Usage:
 
