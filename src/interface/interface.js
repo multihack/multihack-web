@@ -160,21 +160,31 @@ Interface.prototype.getProject = function (cb) {
 Interface.prototype.getRoom = function (roomID, cb) {
   var self = this
 
-  var roomModal = new Modal('input', {
+  var joinCreateModal = new Modal('prompt', {
+    title: lg('choose_room_title'),
+    message: lg('join_or_create_prompt'),
+    no: lg('join'),
+    yes: lg('create')
+  })
+  var joinModal = new Modal('input', {
     title: lg('choose_room_title'),
     message: lg('choose_room_prompt'),
-    placeholder: lg('room_placeholder'),
     default: roomID
   })
-  roomModal.on('done', function (e) {
-    roomModal.close()
+  joinCreateModal.on('done', function (e) {
+    joinCreateModal.close()
+    self.getNickname(null, cb)
+  })
+  joinCreateModal.on('cancel', function (e) {
+    joinCreateModal.close()
+    joinModal.open()
+  })
+  
+  joinModal.on('done', function (e) {
+    joinModal.close()
     self.getNickname(e.inputs[0].value, cb)
   })
-  roomModal.on('cancel', function () {
-    roomModal.close()
-    self.alertHTML(lg('offline_title'), lg('offline_alert'))
-  })
-  roomModal.open()
+  joinCreateModal.open()
 }
 
 Interface.prototype.getNickname = function (room, cb) {

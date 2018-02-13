@@ -21,6 +21,12 @@ dict['confirm-delete'] =
     '<button class="go-button noselect">' + lg('delete') + '</button>' +
     '<button class="no-button noselect">' + lg('cancel') + '</button>'
 
+dict['prompt'] =
+    '<h1>{{title}}</h1>' +
+    '<p>{{message}}</p>' +
+    '<button class="go-button noselect">{{yes}}</button>' +
+    '<button class="no-button noselect">{{no}}</button>'
+
 dict['force-input'] =
     '<h1>{{title}}</h1>' +
     '<p>{{message}}</p>' +

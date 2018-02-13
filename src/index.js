@@ -8,7 +8,7 @@ var Voice = require('./network/voice')
 var lang = require('./interface/lang/lang')
 var lg = lang.get.bind(lang)
 
-function Multihack (config) {
+function Multihack(config) {
   var self = this
   if (!(self instanceof Multihack)) return new Multihack(config)
 
@@ -30,7 +30,7 @@ function Multihack (config) {
     self._remote.createFile(e.path)
   })
 
-  Interface.on('closeFile', function(e) {
+  Interface.on('closeFile', function (e) {
     if (!e.activePath) {
       Editor.close()
     } else {
@@ -112,17 +112,15 @@ function Multihack (config) {
     })
 
     HyperHostWrapper.on('ready', function (url) {
-      Interface.alertHTML(lg('deploy_title'), lg('deploy_success', {url: url}))
+      Interface.alertHTML(lg('deploy_title'), lg('deploy_success', { url: url }))
     })
 
     HyperHostWrapper.deploy(FileSystem.getTree())
   })
 
   Interface.hideOverlay()
-  if (self.embed) {
-    self._initRemote()
-  } else {
-    self._initRemote(function () {
+  self._initRemote(function () {
+    if (!self.embed && self.roomOwner) {
       Interface.getProject(function (project) {
         if (project) {
           Interface.showOverlay()
@@ -132,17 +130,18 @@ function Multihack (config) {
           })
         }
       })
-    })
-  }
+    }
+  })
 }
 
 Multihack.prototype._initRemote = function (cb) {
   var self = this
 
-  function onRoom (data) {
-    self.roomID = data.room
+  function onRoom(data) {
+    self.roomOwner = data.room == null
+    self.roomID = data.room || Math.random().toString(36).substr(2)
     Interface.setRoom(self.roomID)
-    window.history.pushState('Multihack', lg('history_item', {room: self.roomID}), '?room=' + self.roomID + (self.embed ? '&embed=true' : ''))
+    window.history.pushState('Multihack', lg('history_item', { room: self.roomID }), '?room=' + self.roomID + (self.embed ? '&embed=true' : ''))
     self.nickname = data.nickname
     self._remote = new Remote({
       hostname: self.hostname,
@@ -199,7 +198,7 @@ Multihack.prototype._initRemote = function (cb) {
     })
     self._remote.on('lostPeer', function (peer) {
       if (self.embed) return
-      Interface.flashTooltip('tooltip-lostpeer', lg('lost_connection', {nickname: peer.metadata.nickname}))
+      Interface.flashTooltip('tooltip-lostpeer', lg('lost_connection', { nickname: peer.metadata.nickname }))
     })
 
     Editor.on('change', function (data) {
@@ -220,7 +219,7 @@ Multihack.prototype._initRemote = function (cb) {
   } else {
     Interface.embedMode()
     onRoom({
-      room: self.roomID || Math.random().toString(36).substr(2),
+      room: self.roomID || null,
       nickname: lg('default_nickname')
     })
   }
