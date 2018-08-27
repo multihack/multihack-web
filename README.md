@@ -10,7 +10,7 @@
 [![Gitter chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/multihack/multihack)
 ![Alpha](https://img.shields.io/badge/status-alpha-green.svg?style=flat)
 
-<b>Compatible with <a href="https://github.com/RationalCoding/multihack-brackets">multihack-brackets</a>!</b>
+<b>Compatible with <a href="https://github.com/t-mullen/multihack-brackets">multihack-brackets</a>!</b>
 
 Tired of struggling to set up remote collaboration with your team? Try <a href="https://multihack.github.io/multihack-web/">multihack.co</a>
 
@@ -18,7 +18,7 @@ Tired of struggling to set up remote collaboration with your team? Try <a href="
 
 ## Usage:
 
-1. Upload your project as a ZIP to <a href="https://rationalcoding.github.io/multihack-web/">multihack.co</a>, or use <a href="https://github.com/RationalCoding/multihack-brackets">multihack-brackets</a>.
+1. Upload your project as a ZIP to <a href="https://t-mullen.github.io/multihack-web/">multihack.co</a>, or use <a href="https://github.com/t-mullen/multihack-brackets">multihack-brackets</a>.
 
 2. Decide on a secret room ID, and have everyone enter it.
 
@@ -44,7 +44,7 @@ Save your project as a ZIP archive and use it in your favourite native IDE.
 
 ## Run Your Own Instance
 
-To run your own instance, see [multihack-server](https://github.com/RationalCoding/multihack-server).  
+To run your own instance, see [multihack-server](https://github.com/t-mullen/multihack-server).  
 
 ## Introducting Version 4.0!
 
