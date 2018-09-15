@@ -12,13 +12,13 @@
 
 <b>Compatible with <a href="https://github.com/t-mullen/multihack-brackets">multihack-brackets</a>!</b>
 
-Tired of struggling to set up remote collaboration with your team? Try <a href="https://multihack.github.io/multihack-web/">multihack.co</a>
+Tired of struggling to set up remote collaboration with your team? <a href="https://multihack.github.io/multihack-web/">Try multihack</a>
 
 **Still in active development. Expect instability and constant updates.**
 
 ## Usage:
 
-1. Upload your project as a ZIP to <a href="https://t-mullen.github.io/multihack-web/">multihack.co</a>, or use <a href="https://github.com/t-mullen/multihack-brackets">multihack-brackets</a>.
+1. Upload your project as a ZIP to <a href="https://t-mullen.github.io/multihack-web/">https://multihack.github.io/multihack-web/</a>, or use <a href="https://github.com/t-mullen/multihack-brackets">multihack-brackets</a>.
 
 2. Decide on a secret room ID, and have everyone enter it.
 
